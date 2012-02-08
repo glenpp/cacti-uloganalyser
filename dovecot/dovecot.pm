@@ -118,6 +118,16 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
+		} elsif ( $line =~ s/^Aborted login // ) {
+			$$stats{"dovecot:$protocol:login:aborted"} += $multiply;
+			if ( $line =~ s/^\(no auth attempts\):// ) {
+				$$stats{"dovecot:$protocol:login:aborted:noauthattempt"} += $multiply;
+			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
+				$$stats{"dovecot:$protocol:login:aborted:authfailed"} += $multiply;
+			} else {
+				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
+				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			}
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";

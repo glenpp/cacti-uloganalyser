@@ -30,3 +30,7 @@ printf "%d\n" `grep ^dovecot:imap:login:disconnected= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:imap:login:disconnected:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:imap:login:disconnected:noauthattempt= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:imap:login:disconnected:authfailed= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:login:aborted= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:login:aborted:other= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:login:aborted:noauthattempt= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:login:aborted:authfailed= $STATS | cut -d '=' -f2`
