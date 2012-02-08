@@ -1,0 +1,140 @@
+#!/usr/bin/perl
+BEGIN { unshift @INC, '/etc/snmp/uloganalyser-plugin'; }
+use strict;
+use warnings;
+# process a log with plugins and place the results in a file
+
+# Copyright (C) 2009-2011  Glen Pitt-Pladdy
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+#
+# See: http://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
+#
+my $VERSION = 20110611;
+#
+# Thanks for ideas, unhandled log lines, patches and feedback to:
+#
+# nobody.... yet
+
+
+
+# usage:  postfix-loganalyser <old mail log> <current mail log> <stats file>
+my ( $logold, $lognew, $statsfile, @modules ) = @ARGV;
+# quick and dirty plugin setup - depends on module returning ref to register sub
+my @lines;
+my @ends;
+foreach (@modules) {
+	my $register = require "$_.pm";
+	&$register ( \@lines, \@ends );
+}
+
+
+# santiy check
+if ( ! $logold or  ! -f $logold ) {
+#	warn "WARNING - old mail log file not found\n";
+}
+if ( ! $lognew or ! -f $lognew ) {
+	die "FATAL - current mail log file not found\n";
+}
+if ( ! $statsfile ) {
+	die "FATAL - stats file not specified\n";
+}
+
+# read in the current stats if it exists
+my %stats;
+if ( -f $statsfile ) {
+	open ST, $statsfile or die "FATAL - can't read previous statistics: $!\n";
+	while ( defined ( my $line = <ST> ) ) {
+		chomp $line;
+		if ( $line !~ /^([\w\-_:]+)=(\d+)$/ ) {
+			die "FATAL - don't understand line \"$line\" in stats\n";
+		}
+		$stats{$1} = $2;
+	}
+	close ST;
+}
+
+# initialise basics
+if ( ! $stats{lastrun} ) { $stats{lastrun} = $^T; }
+if ( ! $stats{lastline} ) { $stats{lastline} = 0; }
+if ( ! $stats{lastposition} ) { $stats{lastposition} = 0; }
+
+# process the log files
+# we only look at the old log file if it is newer than the last run
+if ( $stats{lastinode} and -f $logold and ( stat ( $logold ) )[1] == $stats{lastinode} ) {
+	# read in old file from $stats{lastline}
+	readlogfile ( $logold );
+	# set $stats{lastline} to zero to start at the beginning of the new file
+	$stats{lastline} = 0;
+	$stats{lastposition} = 0;
+}
+# current log file
+readlogfile ( $lognew );
+# wrap up with end stuff
+for (@ends) {
+	if ( $_ ) { &$_( \%stats ) };
+}
+
+# update for our run
+$stats{lastrun} = $^T;
+
+# write stats to temporary file
+open ST, ">$statsfile.TMP.$$"
+	or die "FATAL - can't write \"$statsfile.TMP.$$\": $!\n";
+print ST "lastrun=$stats{lastrun}\n";
+delete $stats{lastrun};
+print ST "lastline=$stats{lastline}\n";
+delete $stats{lastline};
+print ST "lastposition=$stats{lastposition}\n";
+delete $stats{lastposition};
+# dump rest of stats
+foreach my $stat (sort keys %stats) {
+	print ST "$stat=$stats{$stat}\n";
+}
+close ST;
+rename "$statsfile.TMP.$$", $statsfile
+	or die "FATAL - can't move \"$statsfile.TMP.$$\" to \"$statsfile\": $!\n";
+
+
+sub readlogfile {
+	my $log = shift;
+	open LOG, $log or die "FATAL - can't read \"$log\": $!\n";
+	# skip to where we left off
+	seek LOG, $stats{lastposition}, 0;
+	my $i = $stats{lastline};
+	# read lines from here
+	my $line;
+	while ( defined ( $line = <LOG> ) ) {
+		chomp $line;
+		# run through each plugin 
+		for (@lines) {
+			&$_( $line, $i, $log, \%stats ) and last;
+		}
+		++$i;
+	}
+	$stats{'lastline'} = $i;	# save for next time
+	$stats{'lastposition'} = tell LOG;	# save for next time
+	$stats{'lastinode'} = ( stat LOG )[1];
+	close LOG;
+}
+
+
+
+
+
+
+
+

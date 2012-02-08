@@ -1,0 +1,40 @@
+#!/bin/sh
+# Copyright (C) 2011  Glen Pitt-Pladdy
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+#
+# See: http://www.pitt-pladdy.com/
+
+
+PATH=/bin:/usr/bin
+STATS=/var/local/snmp/mail
+
+
+printf "%d\n" `grep ^dovecot:imap:loginmethod:other= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:plain= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:login= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:crammd5= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:digestmd5= $STATS | cut -d '=' -f2`
+# this is POP3 only, but here for consistency
+printf "%d\n" `grep ^dovecot:imap:loginmethod:apop= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:ntlm= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:gssspnego= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:gssapi= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:rpa= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:anonymous= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:otp= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:skey= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:loginmethod:external= $STATS | cut -d '=' -f2`
