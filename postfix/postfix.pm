@@ -19,10 +19,10 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20091122-164951%2B0000%20Postfix%20stats%20on%20Cacti%20%28via%20SNMP%29/
+# See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20110905;
+our $VERSION = 20111204;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -288,7 +288,8 @@ sub analyse {
 		} elsif ( $line =~ s/^Untrusted TLS connection established to\s*// ) {
 			# untrusted TLS
 			++$$stats{'postfix:smtp:TLS:Untrusted'};
-		} elsif ( $line =~ s/^server certificate verification failed for\s*// ) {
+		} elsif ( $line =~ s/^certificate verification failed for\s*//
+			or $line =~ s/^server certificate verification failed for\s*// ) {
 			# certificate verification failed for some reason
 			++$$stats{'postfix:smtp:TLS:certverifyfail'};
 			if ( $line =~ s/^.*:\s*self-signed certificate$// ) {
@@ -354,7 +355,7 @@ sub analyse {
 				or $message =~ s/Unexpected failure//i
 				) )
 				or $line =~ s/^.* Connection refused$//i
-# TODO timed out
+				or $line =~ s/^.* Connection timed out$//i
 				or $line =~ s/mail for .+ loops back to myself//i ) {	# TODO - many other possible reasons to add
 				# other side is broken
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
@@ -372,6 +373,7 @@ sub analyse {
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
 				or $message =~ s/Temporarily rejected//i
+				or $message =~ s/unverified address: Address verification in progress//i
 				or $message =~ s/(try again|please retry|retry later|try later)// ) ) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
