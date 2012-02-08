@@ -2948,7 +2948,7 @@
 				<task_item_id>hash_080021a54e0baa405e8ef8ec8a4f3360dcc450</task_item_id>
 				<color_id>EA8F00</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>8</graph_type_id>
+				<graph_type_id>7</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -3050,7 +3050,7 @@
 				<task_item_id>hash_080021a5009b15ae11d642ae29e6f44e9cf9cc</task_item_id>
 				<color_id>EA8F00</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>8</graph_type_id>
+				<graph_type_id>7</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -3152,7 +3152,7 @@
 				<task_item_id>hash_080021e6182d8ba7c7732a82beb8383733651d</task_item_id>
 				<color_id>EA8F00</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>8</graph_type_id>
+				<graph_type_id>7</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
