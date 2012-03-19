@@ -22,13 +22,14 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20111204;
+our $VERSION = 20120319;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
 # "Ronny"
 # Scott Merrill
 # "Charles"
+# Przemek Przechowski
 
 
 
@@ -361,6 +362,7 @@ sub analyse {
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( $message ne '' and (
 				$message =~ s/closing connection//
+				or $message =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:25: Connection timed out//i
 				or $message =~ s/Could not complete recipient verify callout//i
 				or $message =~ s/Could not complete sender verify callout//i
 				or $message =~ s/\(DYN:T1\) http:\/\/postmaster\.info\.aol\.com\/errors\/421dynt1\.html//i
@@ -377,7 +379,12 @@ sub analyse {
 				or $message =~ s/(try again|please retry|retry later|try later)// ) ) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
-			} elsif ( $line =~ s/^Host or domain not found//i ) {
+			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
+				# presumably a misconfigured server - other side is broken
+				++$$stats{'postfix:smtp:deferred:brokenserver'};
+			} elsif ( $line =~ s/^Host or domain not found//i
+				or $line =~ s/^Host or domain name not found//i
+				or $line =~ s/^Domain not found//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
 			} elsif ( $line =~ s/^.*timeout.*$//i ) {
@@ -391,8 +398,8 @@ sub analyse {
 				# some other
 				++$$stats{'postfix:smtp:deferred:other'};
 				# don't squark directly about this - add to the lists of new stuff
-#				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				push @deferreasons, __LINE__.":$origline\n";
+				push @deferreasons, __LINE__.":\$message: $message\n";
 			}
 		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=bounced \((.*)\)$/$1/ ) {
 			# bounced - failed message
