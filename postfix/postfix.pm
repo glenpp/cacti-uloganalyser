@@ -354,9 +354,11 @@ sub analyse {
 				or $message =~ s/Too many (concurrent|connections)//i
 				or $message =~ s/Unable to accept this email at the moment//i
 				or $message =~ s/Unexpected failure//i
+				or $message =~ s/Recipient address rejected: User unknown in local recipient table//i	# should normally bounce, hence broken server
 				) )
 				or $line =~ s/^.* Connection refused$//i
 				or $line =~ s/^.* Connection timed out$//i
+				or $line =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:25: No route to host$//i
 				or $line =~ s/mail for .+ loops back to myself//i ) {	# TODO - many other possible reasons to add
 				# other side is broken
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
@@ -384,7 +386,7 @@ sub analyse {
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( $line =~ s/^Host or domain not found//i
 				or $line =~ s/^Host or domain name not found//i
-				or $line =~ s/^Domain not found//i ) {
+				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
 			} elsif ( $line =~ s/^.*timeout.*$//i ) {
