@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120319;
+our $VERSION = 20120320;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
