@@ -34,3 +34,4 @@ printf "%d\n" `grep ^dovecot:pop3:login:aborted= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:pop3:login:aborted:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:pop3:login:aborted:noauthattempt= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:pop3:login:aborted:authfailed= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:pop3:login:maxconnections= $STATS | cut -d '=' -f2`

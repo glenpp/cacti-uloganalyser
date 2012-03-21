@@ -23,12 +23,5 @@ PATH=/bin:/usr/bin
 STATS=/var/local/snmp/mail
 
 
-printf "%d\n" `grep ^postfix:smtp:sent= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:bounced= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:other= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:greylist= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:timeout= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:brokenserver= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:dnserror= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtp:deferred:lostconnection= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:other= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:denied= $STATS | cut -d '=' -f2`

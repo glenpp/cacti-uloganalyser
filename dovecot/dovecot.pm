@@ -22,10 +22,12 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120208;
+our $VERSION = 20120321;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
+# Daniele Palumbo
+# Przemek Orzechowski
 
 
 sub register {
@@ -108,8 +110,12 @@ sub analyse {
 				$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
-		} elsif ( $line =~ s/^Disconnected // ) {
+		} elsif ( $line =~ s/^Disconnected[:\s]*// ) {
 			$$stats{"dovecot:$protocol:login:disconnected"} += $multiply;
+			# some dovecot versions give extra info TODO
+			if ( $line =~ s/^Inactivity // ) {
+				# TODO not currently used
+			}
 			if ( $line =~ s/^\(no auth attempts\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
@@ -118,7 +124,7 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
-		} elsif ( $line =~ s/^Aborted login // ) {
+		} elsif ( $line =~ s/^Aborted login[:\s]*// ) {
 			$$stats{"dovecot:$protocol:login:aborted"} += $multiply;
 			if ( $line =~ s/^\(no auth attempts\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:noauthattempt"} += $multiply;
@@ -128,6 +134,8 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
+		} elsif ( $line =~ s/^Maximum number of connections from user+IP exceeded // ) {
+			$$stats{"dovecot:$protocol:login:maxconnections"} += $multiply;
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -144,15 +152,16 @@ sub analyse {
 		# event types
 		if ( $line =~ s/Disconnected[:\s]*// ) {
 			$$stats{"dovecot:$protocol:disconnect"} += $multiply;
-			if ( $line eq 'for inactivity' ) {
+			if ( $line =~ /^for inactivity/ ) {
 				$$stats{"dovecot:$protocol:disconnect:inactivity"} += $multiply;
-			} elsif ( $line eq 'Logged out' ) {
+			} elsif ( $line =~ /^Logged out/ ) {
 				$$stats{"dovecot:$protocol:disconnect:loggedout"} += $multiply;
-			} elsif ( $line eq 'in IDLE' ) {
+			} elsif ( $line =~ /^in IDLE/ ) {
 				$$stats{"dovecot:$protocol:disconnect:idle"} += $multiply;
-			} elsif ( $line eq 'in APPEND' ) {
+			} elsif ( $line =~ /^in APPEND/ ) {
 				$$stats{"dovecot:$protocol:disconnect:append"} += $multiply;
-			} elsif ( $line eq '' ) {
+			} elsif ( $line eq ''
+				or $line eq 'Disconnected' ) {
 				$$stats{"dovecot:$protocol:disconnect:none"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:disconnect:other"} += $multiply;

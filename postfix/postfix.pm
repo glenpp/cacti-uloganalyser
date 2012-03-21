@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120320;
+our $VERSION = 20120321;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -125,7 +125,8 @@ sub analyse {
 		} elsif ( $line =~ s/^[0-9A-F]+: client=// ) {
 			# queued message
 			++$$stats{'postfix:smtpd:QUEUED'};
-		} elsif ( $line =~ s/^NOQUEUE:\s*// ) {
+		} elsif ( $line =~ s/^NOQUEUE:\s*//
+			or $line =~ /^reject:\s*/ ) {	# some versions seem to give a staign reject without NOQUEUE
 			# rejected for some reason
 			++$$stats{'postfix:smtpd:NOQUEUE'};
 			if ( $line =~ s/^reject: (RCPT|VRFY) from\s*// ) {
@@ -145,13 +146,14 @@ sub analyse {
 					if ( $line =~ s/^need fully-qualified address;//i ) {
 						# recipient address not fully qualified
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:fullyquallifiedaddr'};
-					} elsif ( $line =~ s/^.*\s*Greylisted\s*//i or $line =~ s/451 .*Please try again later//i ) {
+					} elsif ( $line =~ s/^.*\s*Greylisted\s*//i or $line =~ s/\s451 .*Please try again later//i
+						or $line =~ s/^.*\s450\s.+\sTry again later or login[\.\s]//i ) {
 						# greylisted
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:Greylisted'};
 					} elsif ( $line =~ s/^Access denied;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:denied'};
-					} elsif ( $line =~ s/^User unknown in (local|relay) recipient table;//i ) {
+					} elsif ( $line =~ s/^User unknown in (local|relay|virtual alias) recipient table;//i ) {
 						# don't know this user
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:unknownuser'};
 					} else {
@@ -184,6 +186,17 @@ sub analyse {
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:other'};
+						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+					}
+				} elsif ( $line =~ s/^.*: Client address rejected:\s*// ) {	# TODO put in templates
+					# don't like client
+					++$$stats{'postfix:smtpd:NOQUEUE:reject:Client'};
+					if ( $line =~ s/^Access denied;//i ) {
+						# explicitly denied
+						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:denied'};
+					} else {
+						# some other reason
+						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:other'};
 						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
 				} else {
@@ -336,6 +349,7 @@ sub analyse {
 				else { $message =~ s/\d\.\d\.\d //; }
 			if ( ( $message ne '' and (
 				$message =~ s/Cannot process .+ GRD failure//i
+				or $message =~ s/Internal server error//i
 				or $message =~ s/inusfficient system storage//i
 				or $message =~ s/load too high//i
 				or $message =~ s/No PTR record available in DNS//i
@@ -355,9 +369,10 @@ sub analyse {
 				or $message =~ s/Unable to accept this email at the moment//i
 				or $message =~ s/Unexpected failure//i
 				or $message =~ s/Recipient address rejected: User unknown in local recipient table//i	# should normally bounce, hence broken server
+				or $message =~ s/Server configuration problem//i
 				) )
 				or $line =~ s/^.* Connection refused$//i
-				or $line =~ s/^.* Connection timed out$//i
+				or $line =~ s/^.* Connection timed out$//i	# TODO should this be mixed up with in-conversation trimeouts below?
 				or $line =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:25: No route to host$//i
 				or $line =~ s/mail for .+ loops back to myself//i ) {	# TODO - many other possible reasons to add
 				# other side is broken
@@ -372,12 +387,15 @@ sub analyse {
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
+				or $message =~ s/Message temporarily deferred//i
 				or $message =~ s/not yet authorized//i
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
+				or $message =~ s/Sender address deferred by rule//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
 				or $message =~ s/Temporarily rejected//i
-				or $message =~ s/unverified address: Address verification in progress//i
+				or $message =~ s/Error: too much mail from //i
+				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
 				or $message =~ s/(try again|please retry|retry later|try later)// ) ) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
@@ -389,7 +407,11 @@ sub analyse {
 				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
-			} elsif ( $line =~ s/^.*timeout.*$//i ) {
+			} elsif ( $line =~ s/^lost connection with //i ) {
+				# lost connection
+				++$$stats{'postfix:smtp:deferred:lostconnection'};
+			} elsif ( $line =~ s/^.*timeout.*$//i
+				or $line =~ s/^.*timed out.*$//i ) {
 				# connection timed out
 				++$$stats{'postfix:smtp:deferred:timeout'};
 			} elsif ( $line =~ s/^.*Network is unreachable.*$//i ) {

@@ -606,6 +606,19 @@
 				<hard_return></hard_return>
 				<sequence>3</sequence>
 			</hash_1000219cfd1b891f7c535a60fe9eb391a591f5>
+			<hash_1000218cb1ed793a3826ef76540d92a45d99b5>
+				<task_item_id>hash_080021d19f0f7430bcd10739e9a4c8ccb0eea8</task_item_id>
+				<color_id>B90054</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Lost Connection</text_format>
+				<hard_return></hard_return>
+				<sequence>4</sequence>
+			</hash_1000218cb1ed793a3826ef76540d92a45d99b5>
 			<hash_100021a23263bc296819dc19ee06f5fccc3da3>
 				<task_item_id>hash_080021ad4db0475f85c46cdee046aecc571273</task_item_id>
 				<color_id>FF00FF</color_id>
@@ -617,7 +630,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Bounced</text_format>
 				<hard_return></hard_return>
-				<sequence>4</sequence>
+				<sequence>5</sequence>
 			</hash_100021a23263bc296819dc19ee06f5fccc3da3>
 			<hash_10002117265177b52c92d273916318b25ddc21>
 				<task_item_id>hash_080021a17829d14d64f542c85fc1c198cd4a9b</task_item_id>
@@ -630,7 +643,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>DNS Error</text_format>
 				<hard_return></hard_return>
-				<sequence>5</sequence>
+				<sequence>6</sequence>
 			</hash_10002117265177b52c92d273916318b25ddc21>
 			<hash_10002131f5740d567eb908839bc3221ced7a46>
 				<task_item_id>hash_080021acda41f3e12dab76ef5adc4f2d0a08f5</task_item_id>
@@ -643,7 +656,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Broken Server</text_format>
 				<hard_return></hard_return>
-				<sequence>6</sequence>
+				<sequence>7</sequence>
 			</hash_10002131f5740d567eb908839bc3221ced7a46>
 			<hash_100021e46aa93f783eec52e627f3a70c15747b>
 				<task_item_id>hash_0800217661cc2faf6d461331fb9c5c83f58ecd</task_item_id>
@@ -656,16 +669,16 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Deferred Other</text_format>
 				<hard_return></hard_return>
-				<sequence>7</sequence>
+				<sequence>8</sequence>
 			</hash_100021e46aa93f783eec52e627f3a70c15747b>
 		</items>
 		<inputs>
-			<hash_0900213005cc26f2fcaaa64a7d22eaac1111ec>
+			<hash_090021685ce3ac779b0ab86848fd6655f9d87b>
 				<name>Data Source [postfix_smtp_sent]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_0000218a22acbece9e6ddddb48a45cfd8202cb</items>
-			</hash_0900213005cc26f2fcaaa64a7d22eaac1111ec>
+			</hash_090021685ce3ac779b0ab86848fd6655f9d87b>
 			<hash_090021760fdd099683ee72b024c1e6479f0db7>
 				<name>Data Source [postfix_smtp_dfroth]</name>
 				<description></description>
@@ -702,6 +715,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_00002117265177b52c92d273916318b25ddc21</items>
 			</hash_0900219cc0d04bd063aa0329fa0bba1a1e796a>
+			<hash_0900210b78e2a9b2e221168b096b56827beb06>
+				<name>Data Source [postfix_smtp_lostcn]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_0000218cb1ed793a3826ef76540d92a45d99b5</items>
+			</hash_0900210b78e2a9b2e221168b096b56827beb06>
 		</inputs>
 	</hash_0000219491db1c5e803492c68c65604e561b91>
 	<hash_0000212478336041ed52acec27b6d70f720e48>
@@ -1055,6 +1074,32 @@
 				<hard_return>on</hard_return>
 				<sequence>16</sequence>
 			</hash_1000213783e18bd44307a5eaa632f70e3be502>
+			<hash_1000210ac258239a7dbb06eaae6d5b8f8d1b35>
+				<task_item_id>hash_08002183d08178e703fcbebb101e83e2d8ebc3</task_item_id>
+				<color_id>AD3B6E</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Reject Client Other</text_format>
+				<hard_return>on</hard_return>
+				<sequence>17</sequence>
+			</hash_1000210ac258239a7dbb06eaae6d5b8f8d1b35>
+			<hash_100021b11937a13b27dbda5f251e66cd4d3087>
+				<task_item_id>hash_0800217df00690108a01c47146b685e70d6013</task_item_id>
+				<color_id>FF7D00</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Reject Client Denied</text_format>
+				<hard_return>on</hard_return>
+				<sequence>18</sequence>
+			</hash_100021b11937a13b27dbda5f251e66cd4d3087>
 			<hash_10002187cced975c91cb92f6ffd75b3fc71b37>
 				<task_item_id>0</task_item_id>
 				<color_id>000000</color_id>
@@ -1066,7 +1111,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format></text_format>
 				<hard_return></hard_return>
-				<sequence>17</sequence>
+				<sequence>19</sequence>
 			</hash_10002187cced975c91cb92f6ffd75b3fc71b37>
 		</items>
 		<inputs>
@@ -1166,6 +1211,18 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_0000213783e18bd44307a5eaa632f70e3be502</items>
 			</hash_090021aea397efbd755f6f0a7e8bea61c71d2f>
+			<hash_090021eb2a5d5d5bbe071133cc465881367d7d>
+				<name>Data Source [postfix_smtpd_nclo]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_0000210ac258239a7dbb06eaae6d5b8f8d1b35</items>
+			</hash_090021eb2a5d5d5bbe071133cc465881367d7d>
+			<hash_09002100cc903f9263b2491d169329232ec537>
+				<name>Data Source [postfix_smtpd_ncld]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000021b11937a13b27dbda5f251e66cd4d3087</items>
+			</hash_09002100cc903f9263b2491d169329232ec537>
 		</inputs>
 	</hash_0000210a1d65e5addcbfecdbb638b0236cc646>
 	<hash_0000219b6a90d6597f8ab8a3e2957e0a1d70f8>
@@ -1377,12 +1434,12 @@
 			</hash_100021242c2f893dc27dd085fe2af86bfcb7e4>
 		</items>
 		<inputs>
-			<hash_090021705f69b924668979bd9364c1ce13f0d2>
+			<hash_0900210dd07bc147e4bc84bc050952d94df5cd>
 				<name>Data Source [postfix_smtpd_conn]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_000021050c7e451bacde8d90835e48e83d31e2</items>
-			</hash_090021705f69b924668979bd9364c1ce13f0d2>
+			</hash_0900210dd07bc147e4bc84bc050952d94df5cd>
 			<hash_09002195b073469c3e9929e26d05656b6fec8e>
 				<name>Data Source [postfix_smtpd_warn]</name>
 				<description></description>
@@ -2312,6 +2369,19 @@
 				<hard_return></hard_return>
 				<sequence>8</sequence>
 			</hash_100021559a815313aa1b11a652c3a47dc7b3ea>
+			<hash_10002185ab9a4cebc13361d059e003952417b0>
+				<task_item_id>hash_0800213a73847a0cb8af91cef193e496715d36</task_item_id>
+				<color_id>750F7D</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>4</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>External Host Sending as Our Domain</text_format>
+				<hard_return></hard_return>
+				<sequence>9</sequence>
+			</hash_10002185ab9a4cebc13361d059e003952417b0>
 		</items>
 		<inputs>
 			<hash_09002154fc90e10f1d5c5bf4a4a10a655aee8a>
@@ -2362,6 +2432,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021559a815313aa1b11a652c3a47dc7b3ea</items>
 			</hash_090021763a102e16706c8750d1e49e4544f3c6>
+			<hash_09002162dd590e91ad37627c5e33041b2426a8>
+				<name>Data Source [dkim_extsend]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_00002185ab9a4cebc13361d059e003952417b0</items>
+			</hash_09002162dd590e91ad37627c5e33041b2426a8>
 		</inputs>
 	</hash_000021b0027e9699aab239fad42763ca193581>
 	<hash_000021752061f8877fce8791b14c4c9aac2979>
@@ -4815,6 +4891,93 @@
 			</item_010>
 		</data>
 	</hash_010021b2df5e1a2b276287a3c019c098fed77e>
+	<hash_010021d242b2247f11d117c5f0340de03b30d9>
+		<name>postfix/smtp deferred Lost Connection</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - postfix/smtp deferred Lost Connection</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080021d19f0f7430bcd10739e9a4c8ccb0eea8>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>postfix_smtp_lostcn</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>1000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080021d19f0f7430bcd10739e9a4c8ccb0eea8>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtpstatus&quot;.9</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021d242b2247f11d117c5f0340de03b30d9>
 	<hash_010021c062b7727ee03cf8c12f61245e1a7350>
 		<name>postfix/smtpd Connect</name>
 		<ds>
@@ -6468,6 +6631,180 @@
 			</item_010>
 		</data>
 	</hash_010021c770dcb72a512ec89124000b0023bbc3>
+	<hash_010021d21bd899f740653e18de2dbc5cefffc8>
+		<name>postfix/smtpd NOQUEUE Client denied</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - postfix/smtpd NOQUEUE Client denied</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e|hash_150021283ea2bf1634d92ce081ec82a634f513</rra_items>
+		</ds>
+		<items>
+			<hash_0800217df00690108a01c47146b685e70d6013>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>postfix_smtpd_ncld</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>1000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800217df00690108a01c47146b685e70d6013>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtpdnqclnt&quot;.2</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021d21bd899f740653e18de2dbc5cefffc8>
+	<hash_010021a26c69019f7e2d4acccb8e9a5972cf12>
+		<name>postfix/smtpd NOQUEUE Client other</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - postfix/smtpd NOQUEUE Client other</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e|hash_150021283ea2bf1634d92ce081ec82a634f513</rra_items>
+		</ds>
+		<items>
+			<hash_08002183d08178e703fcbebb101e83e2d8ebc3>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>postfix_smtpd_nclo</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>1000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_08002183d08178e703fcbebb101e83e2d8ebc3>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtpdnqclnt&quot;.1</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021a26c69019f7e2d4acccb8e9a5972cf12>
 	<hash_010021da812f273006ca1234a5d411a971b8be>
 		<name>postfix/smtpd TLS Anonymous</name>
 		<ds>
@@ -10035,6 +10372,93 @@
 			</item_010>
 		</data>
 	</hash_010021f59a257722ca43b502ae252a8618b3b1>
+	<hash_010021a4b90d1b4ad8519aca385db6953cf6f8>
+		<name>dkim-filter External Host Sending our Domain</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dkim-filter External Host Sending our Domain</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e|hash_150021283ea2bf1634d92ce081ec82a634f513</rra_items>
+		</ds>
+		<items>
+			<hash_0800213a73847a0cb8af91cef193e496715d36>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dkim_extsend</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800213a73847a0cb8af91cef193e496715d36>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dkim&quot;.9</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021a4b90d1b4ad8519aca385db6953cf6f8>
 	<hash_0100212c5fb2dd221ed66805decfc2fc896aa8>
 		<name>postfix/policy-spf Other</name>
 		<ds>

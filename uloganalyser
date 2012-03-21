@@ -23,11 +23,11 @@ use warnings;
 #
 # See: http://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
 #
-my $VERSION = 20110611;
+my $VERSION = 20120321;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
-# nobody.... yet
+# Przemek Orzechowski
 
 
 
@@ -55,31 +55,35 @@ if ( ! $statsfile ) {
 
 # read in the current stats if it exists
 my %stats;
+my $repeatline = '';
 if ( -f $statsfile ) {
 	open ST, $statsfile or die "FATAL - can't read previous statistics: $!\n";
 	while ( defined ( my $line = <ST> ) ) {
 		chomp $line;
-		if ( $line !~ /^([\w\-_:]+)=(\d+)$/ ) {
+		if ( $line =~ /^([\w\-_:]+)=(\d+)$/ ) {
+			$stats{$1} = $2;
+		} elsif ( $line =~ /^repeatline=(.*)$/ ) {
+			$repeatline = $1;
+		} else {
 			die "FATAL - don't understand line \"$line\" in stats\n";
 		}
-		$stats{$1} = $2;
 	}
 	close ST;
 }
 
 # initialise basics
-if ( ! $stats{lastrun} ) { $stats{lastrun} = $^T; }
-if ( ! $stats{lastline} ) { $stats{lastline} = 0; }
-if ( ! $stats{lastposition} ) { $stats{lastposition} = 0; }
+if ( ! $stats{'lastrun'} ) { $stats{'lastrun'} = $^T; }
+if ( ! $stats{'lastline'} ) { $stats{'lastline'} = 0; }
+if ( ! $stats{'lastposition'} ) { $stats{'lastposition'} = 0; }
 
 # process the log files
 # we only look at the old log file if it is newer than the last run
-if ( $stats{lastinode} and -f $logold and ( stat ( $logold ) )[1] == $stats{lastinode} ) {
+if ( $stats{'lastinode'} and -f $logold and ( stat ( $logold ) )[1] == $stats{'lastinode'} ) {
 	# read in old file from $stats{lastline}
 	readlogfile ( $logold );
 	# set $stats{lastline} to zero to start at the beginning of the new file
-	$stats{lastline} = 0;
-	$stats{lastposition} = 0;
+	$stats{'lastline'} = 0;
+	$stats{'lastposition'} = 0;
 }
 # current log file
 readlogfile ( $lognew );
@@ -89,17 +93,18 @@ for (@ends) {
 }
 
 # update for our run
-$stats{lastrun} = $^T;
+$stats{'lastrun'} = $^T;
 
 # write stats to temporary file
 open ST, ">$statsfile.TMP.$$"
 	or die "FATAL - can't write \"$statsfile.TMP.$$\": $!\n";
 print ST "lastrun=$stats{lastrun}\n";
-delete $stats{lastrun};
+delete $stats{'lastrun'};
 print ST "lastline=$stats{lastline}\n";
-delete $stats{lastline};
+delete $stats{'lastline'};
 print ST "lastposition=$stats{lastposition}\n";
-delete $stats{lastposition};
+delete $stats{'lastposition'};
+print ST "repeatline=$repeatline\n";
 # dump rest of stats
 foreach my $stat (sort keys %stats) {
 	print ST "$stat=$stats{$stat}\n";
@@ -113,15 +118,26 @@ sub readlogfile {
 	my $log = shift;
 	open LOG, $log or die "FATAL - can't read \"$log\": $!\n";
 	# skip to where we left off
-	seek LOG, $stats{lastposition}, 0;
-	my $i = $stats{lastline};
+	seek LOG, $stats{'lastposition'}, 0;
+	my $i = $stats{'lastline'};
 	# read lines from here
 	my $line;
 	while ( defined ( $line = <LOG> ) ) {
 		chomp $line;
-		# run through each plugin 
-		for (@lines) {
-			&$_( $line, $i, $log, \%stats ) and last;
+		# check for repeats & expand if needed
+		if ( $line =~ / message repeated (\d+) times?$/ ) {
+			my $repeat = $1;
+			while ( $repeat-- > 0 ) {
+				for (@lines) {
+					&$_( $repeatline, $i, $log, \%stats ) and last;
+				}
+			}
+		} else {
+			# run through each plugin 
+			for (@lines) {
+				&$_( $line, $i, $log, \%stats ) and last;
+			}
+			$repeatline = $line;
 		}
 		++$i;
 	}
