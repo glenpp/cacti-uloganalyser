@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009  Glen Pitt-Pladdy
+# Copyright (C) 2009-2012  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120321;
+our $VERSION = 20120322;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -134,7 +134,7 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
-		} elsif ( $line =~ s/^Maximum number of connections from user+IP exceeded // ) {
+		} elsif ( $line =~ s/^Maximum number of connections from user\+IP exceeded // ) {
 			$$stats{"dovecot:$protocol:login:maxconnections"} += $multiply;
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
