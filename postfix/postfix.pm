@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009  Glen Pitt-Pladdy
+# Copyright (C) 2009-2012  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120321;
+our $VERSION = 20120324;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -30,6 +30,7 @@ our $VERSION = 20120321;
 # Scott Merrill
 # "Charles"
 # Przemek Przechowski
+# "Denho"
 
 
 
@@ -352,6 +353,7 @@ sub analyse {
 				or $message =~ s/Internal server error//i
 				or $message =~ s/inusfficient system storage//i
 				or $message =~ s/load too high//i
+				or $message =~ s/Mailbox disabled//i	# should normally bounce, hence broken server
 				or $message =~ s/No PTR record available in DNS//i
 				or $message =~ s/not accepting (messages|network messages)//i
 				or $message =~ s/over quota//i
@@ -367,8 +369,9 @@ sub analyse {
 				or $message =~ s/Too much load//i
 				or $message =~ s/Too many (concurrent|connections)//i
 				or $message =~ s/Unable to accept this email at the moment//i
+				or $message =~ s/undeliverable address: unknown user//i	# should normally bounce, hence broken server
 				or $message =~ s/Unexpected failure//i
-				or $message =~ s/Recipient address rejected: User unknown in local recipient table//i	# should normally bounce, hence broken server
+				or $message =~ s/Recipient address rejected: User unknown in (local|virtual) recipient table//i	# should normally bounce, hence broken server
 				or $message =~ s/Server configuration problem//i
 				) )
 				or $line =~ s/^.* Connection refused$//i
@@ -387,6 +390,7 @@ sub analyse {
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
+				or $message =~ s/message is probably spam//i
 				or $message =~ s/Message temporarily deferred//i
 				or $message =~ s/not yet authorized//i
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
@@ -394,9 +398,10 @@ sub analyse {
 				or $message =~ s/Sender address deferred by rule//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
 				or $message =~ s/Temporarily rejected//i
-				or $message =~ s/Error: too much mail from //i
+				or $message =~ s/too much mail from //i
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
-				or $message =~ s/(try again|please retry|retry later|try later)// ) ) {	# TODO - many other possible reasons to add
+				or $message =~ s/visit http:\/\/support\.google\.com\/mail\/bin\/answer\.py\?answer=6592//
+				or $message =~ s/(try again|please retry|retry later|try later)//i ) ) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
 			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
