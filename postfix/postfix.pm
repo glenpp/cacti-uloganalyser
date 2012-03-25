@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120324;
+our $VERSION = 20120325;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -127,7 +127,7 @@ sub analyse {
 			# queued message
 			++$$stats{'postfix:smtpd:QUEUED'};
 		} elsif ( $line =~ s/^NOQUEUE:\s*//
-			or $line =~ /^reject:\s*/ ) {	# some versions seem to give a staign reject without NOQUEUE
+			or $line =~ /^[0-9A-F]+: reject:\s*/ ) {	# some versions/config seem to give reject after queueing
 			# rejected for some reason
 			++$$stats{'postfix:smtpd:NOQUEUE'};
 			if ( $line =~ s/^reject: (RCPT|VRFY) from\s*// ) {
@@ -154,7 +154,7 @@ sub analyse {
 					} elsif ( $line =~ s/^Access denied;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:denied'};
-					} elsif ( $line =~ s/^User unknown in (local|relay|virtual alias) recipient table;//i ) {
+					} elsif ( $line =~ s/^User unknown in (local recipient|relay recipient|virtual alias) table;//i ) {
 						# don't know this user
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:unknownuser'};
 					} else {
@@ -189,7 +189,7 @@ sub analyse {
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:other'};
 						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
-				} elsif ( $line =~ s/^.*: Client address rejected:\s*// ) {	# TODO put in templates
+				} elsif ( $line =~ s/^.*: Client (address|host) rejected:\s*// ) {
 					# don't like client
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:Client'};
 					if ( $line =~ s/^Access denied;//i ) {
@@ -294,6 +294,12 @@ sub analyse {
 				++$$stats{'postfix:smtp:connother'};
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
+		} elsif ( $line =~ s/^[0-9A-F]+: lost connection with .+ while //i ) {	# TODO
+			# failed connection - lost
+			++$$stats{'postfix:smtp:lostconnection'};
+		} elsif ( $line =~ s/^[0-9A-F]+: conversation with .+ timed out while //i ) {	# TODO
+			# failed connection - time out (vanishing packets?)
+			++$$stats{'postfix:smtp:timeout'};
 		} elsif ( $line =~ s/^setting up TLS connection to\s*// ) {
 			# we are at least trying - currently not used
 			++$$stats{'postfix:smtp:TLS'};
@@ -371,7 +377,7 @@ sub analyse {
 				or $message =~ s/Unable to accept this email at the moment//i
 				or $message =~ s/undeliverable address: unknown user//i	# should normally bounce, hence broken server
 				or $message =~ s/Unexpected failure//i
-				or $message =~ s/Recipient address rejected: User unknown in (local|virtual) recipient table//i	# should normally bounce, hence broken server
+				or $message =~ s/Recipient address rejected: User unknown in (local|virtual) (recipient|mailbox) table//i	# should normally bounce, hence broken server
 				or $message =~ s/Server configuration problem//i
 				) )
 				or $line =~ s/^.* Connection refused$//i
@@ -401,7 +407,7 @@ sub analyse {
 				or $message =~ s/too much mail from //i
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
 				or $message =~ s/visit http:\/\/support\.google\.com\/mail\/bin\/answer\.py\?answer=6592//
-				or $message =~ s/(try again|please retry|retry later|try later)//i ) ) {	# TODO - many other possible reasons to add
+				or $message =~ s/(try again|please retry|retry later|try later|deferring connection)//i ) ) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
 			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
@@ -499,6 +505,8 @@ sub analyse {
 		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/qmgr\[\d+\]:\s*// ) {
 		# ignore
+	} elsif ( $line =~ s/^.+ postfix\/scache\[\d+\]:\s*// ) {
+		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/cleanup\[\d+\]:\s*// ) {
 		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/error\[\d+\]:\s*// ) {
@@ -560,10 +568,12 @@ sub smtpd_ip {
 	if ( defined $dec and $dec ) { $direction = -1; }
 	# get ipv4/ipv6 stats
 	if ( $origline =~ /\[[\d\.]+\]:25/
-		or $origline =~ /\[[\d\.]+\] said:/ ) {
+		or $origline =~ /\[[\d\.]+\] said:/
+		or $origline =~ /\[[\d\.]+\] refused to talk to me:/ ) {
 		$$stats{'postfix:smtp:connect:ipv4'} += $direction;
 	} elsif ( $origline =~ /\[[\da-f:]+\]:25/
-		or $origline =~ /\[[\da-f:]+\] said:/ ) {
+		or $origline =~ /\[[\da-f:]+\] said:/
+		or $origline =~ /\[[\da-f:]+\] refused to talk to me:/ ) {
 		$$stats{'postfix:smtp:connect:ipv6'} += $direction;
 	} elsif ( $origline =~ /Host or domain name not found/
 		or $origline =~ /warning: network_biopair_interop: error writing/

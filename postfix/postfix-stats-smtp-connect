@@ -29,3 +29,4 @@ printf "%d\n" `grep ^postfix:smtp:noroute= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:timeout= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:unreachable= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:connrefused= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtp:lostconnection= $STATS | cut -d '=' -f2`

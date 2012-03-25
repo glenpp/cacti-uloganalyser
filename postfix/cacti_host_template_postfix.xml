@@ -673,12 +673,12 @@
 			</hash_100021e46aa93f783eec52e627f3a70c15747b>
 		</items>
 		<inputs>
-			<hash_090021685ce3ac779b0ab86848fd6655f9d87b>
+			<hash_0900215bc36d6af861131343886142a9ae34be>
 				<name>Data Source [postfix_smtp_sent]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_0000218a22acbece9e6ddddb48a45cfd8202cb</items>
-			</hash_090021685ce3ac779b0ab86848fd6655f9d87b>
+			</hash_0900215bc36d6af861131343886142a9ae34be>
 			<hash_090021760fdd099683ee72b024c1e6479f0db7>
 				<name>Data Source [postfix_smtp_dfroth]</name>
 				<description></description>
@@ -1434,12 +1434,12 @@
 			</hash_100021242c2f893dc27dd085fe2af86bfcb7e4>
 		</items>
 		<inputs>
-			<hash_0900210dd07bc147e4bc84bc050952d94df5cd>
+			<hash_090021c74663326235b28f82945d2c66ef3017>
 				<name>Data Source [postfix_smtpd_conn]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_000021050c7e451bacde8d90835e48e83d31e2</items>
-			</hash_0900210dd07bc147e4bc84bc050952d94df5cd>
+			</hash_090021c74663326235b28f82945d2c66ef3017>
 			<hash_09002195b073469c3e9929e26d05656b6fec8e>
 				<name>Data Source [postfix_smtpd_warn]</name>
 				<description></description>
@@ -1637,6 +1637,19 @@
 				<hard_return></hard_return>
 				<sequence>5</sequence>
 			</hash_100021887d619268041a24af852b4615823790>
+			<hash_100021cc7c5cd61426ae15ffe84ab4ae57b859>
+				<task_item_id>hash_08002124a7367ec4bf1bd3b92bb7a262f26fc3</task_item_id>
+				<color_id>FF7D00</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Lost Connection</text_format>
+				<hard_return></hard_return>
+				<sequence>6</sequence>
+			</hash_100021cc7c5cd61426ae15ffe84ab4ae57b859>
 			<hash_100021281a339e3b444fb0b1aec77d6f014586>
 				<task_item_id>hash_080021bab68f265576632a06585f654aacc429</task_item_id>
 				<color_id>FF00FF</color_id>
@@ -1648,7 +1661,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Other</text_format>
 				<hard_return></hard_return>
-				<sequence>6</sequence>
+				<sequence>7</sequence>
 			</hash_100021281a339e3b444fb0b1aec77d6f014586>
 		</items>
 		<inputs>
@@ -1688,6 +1701,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021281a339e3b444fb0b1aec77d6f014586</items>
 			</hash_090021f2eeeff448bb60b8527adcff7d19685c>
+			<hash_09002144261b9a685d0ed26c5aa2d11b8e9000>
+				<name>Data Source [postfix_smtp_conlos]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000021cc7c5cd61426ae15ffe84ab4ae57b859</items>
+			</hash_09002144261b9a685d0ed26c5aa2d11b8e9000>
 		</inputs>
 	</hash_0000215ee5f7acb8f664f86a425da50fac6349>
 	<hash_0000217fa1fe43c0e01fefde630750360606ea>
@@ -7849,6 +7868,93 @@
 			</item_010>
 		</data>
 	</hash_010021d31d3299fed39b46d53aa525c48b3f88>
+	<hash_0100214e8decb4dc43c6367047f230e7a9a34a>
+		<name>postfix/smtp Connection Lost</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - postfix/smtp Connection Lost</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e|hash_150021283ea2bf1634d92ce081ec82a634f513</rra_items>
+		</ds>
+		<items>
+			<hash_08002124a7367ec4bf1bd3b92bb7a262f26fc3>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>postfix_smtp_conlos</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>1000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_08002124a7367ec4bf1bd3b92bb7a262f26fc3>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtp&quot;.7</value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_0100214e8decb4dc43c6367047f230e7a9a34a>
 	<hash_010021bdcd48c6586b6eac19ecf5e8747d92fa>
 		<name>postfix/smtp TLS Certificate Verify Failure Self-Signed</name>
 		<ds>
