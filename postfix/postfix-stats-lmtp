@@ -23,8 +23,7 @@ PATH=/bin:/usr/bin
 STATS=/var/local/snmp/mail
 
 
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:other= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:RBL= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:HELO= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:toobig= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:lmtp:other= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:lmtp:sent= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:lmtp:deferred= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:lmtp:bounced= $STATS | cut -d '=' -f2`

@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120325;
+our $VERSION = 20120411;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -127,7 +127,7 @@ sub analyse {
 			# queued message
 			++$$stats{'postfix:smtpd:QUEUED'};
 		} elsif ( $line =~ s/^NOQUEUE:\s*//
-			or $line =~ /^[0-9A-F]+: reject:\s*/ ) {	# some versions/config seem to give reject after queueing
+			or $line =~ s/^[0-9A-F]+: (reject:\s*)/$1/ ) {	# some versions/config seem to give reject after queueing
 			# rejected for some reason
 			++$$stats{'postfix:smtpd:NOQUEUE'};
 			if ( $line =~ s/^reject: (RCPT|VRFY) from\s*// ) {
@@ -205,6 +205,8 @@ sub analyse {
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:other'};
 					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				}
+			} elsif ( $line =~ s/^reject: MAIL from\s*.+: 552 5\.3\.4 Message size exceeds fixed limit// ) {
+				++$$stats{'postfix:smtpd:NOQUEUE:toobig'};
 			} else {
 				# other
 				++$$stats{'postfix:smtpd:NOQUEUE:other'};
@@ -352,33 +354,59 @@ sub analyse {
 			# this line happens when a delivery attempt (multiple MXs) fails after optinos have been exhausted
 			# further analysis
 			my $message = $line;
-			if ( $message !~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|554)[ \-]// ) { $message = ''; }
-				else { $message =~ s/\d\.\d\.\d //; }
-			if ( ( $message ne '' and (
-				$message =~ s/Cannot process .+ GRD failure//i
-				or $message =~ s/Internal server error//i
-				or $message =~ s/inusfficient system storage//i
-				or $message =~ s/load too high//i
-				or $message =~ s/Mailbox disabled//i	# should normally bounce, hence broken server
-				or $message =~ s/No PTR record available in DNS//i
-				or $message =~ s/not accepting (messages|network messages)//i
-				or $message =~ s/over quota//i
-				or $message =~ s/queue file write error//i
-				or $message =~ s/rate that is limited//i
-				or $message =~ s/Requested action (aborted|not taken): local error in processing//i
-				or $message =~ s/Requested action not taken: mailbox unavailable//i
-				or $message =~ s/Requested action aborted: try again later//i
-				or $message =~ s/Resources unavailable temporarily//i
-				or $message =~ s/Service (not available|Unavailable|is unavailable)//i
-				or $message =~ s/system resources//i
-				or $message =~ s/Temporary (Resources unavailable|failure|lookup failure)//i
-				or $message =~ s/Too much load//i
-				or $message =~ s/Too many (concurrent|connections)//i
-				or $message =~ s/Unable to accept this email at the moment//i
-				or $message =~ s/undeliverable address: unknown user//i	# should normally bounce, hence broken server
-				or $message =~ s/Unexpected failure//i
-				or $message =~ s/Recipient address rejected: User unknown in (local|virtual) (recipient|mailbox) table//i	# should normally bounce, hence broken server
-				or $message =~ s/Server configuration problem//i
+			my $smtpcode;
+			my $esmtpcode;
+			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|554)[ \-]// ) {
+				$smtpcode = $2;
+				if ( $message =~ s/^(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
+					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format
+					$esmtpcode = $1;
+				} 
+			} else {
+				$message = '';
+			}
+			if ( ( defined $esmtpcode and
+					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
+					$esmtpcode eq '4.2.2'	# Mailbox full
+					or $esmtpcode eq '4.3.1'	# Mail system full
+					or $esmtpcode eq '4.3.2'	# System not accepting network messages
+					or $esmtpcode eq '4.3.5'	# System incorrectly configured
+					or $esmtpcode eq '4.4.1'	# No answer from host
+					or $esmtpcode eq '4.4.2'	# Bad connection
+					or $esmtpcode eq '4.4.3'	# Directory server failure
+					or $esmtpcode eq '4.4.4'	# Unable to route
+					or $esmtpcode eq '4.4.5'	# Mail system congestion
+					or $esmtpcode eq '4.4.6'	# Routing loop detected
+					or $esmtpcode eq '4.4.7'	# Delivery time expired
+					) )
+				or ( $message ne '' and (
+					$message =~ s/Cannot process .+ GRD failure//i
+					or $message =~ s/Domain size limit exceeded//i	# user has exceeded their limit with their hosting provider
+					or $message =~ s/Internal server error//i
+					or $message =~ s/inusfficient system storage//i
+					or $message =~ s/load too high//i
+					or $message =~ s/Mailbox disabled//i	# should normally bounce, hence broken server
+					or $message =~ s/mailbox unavailable//i
+					or $message =~ s/No PTR record available in DNS//i
+					or $message =~ s/not accepting (messages|network messages)//i
+					or $message =~ s/over quota//i
+					or $message =~ s/queue file write error//i
+					or $message =~ s/rate that is limited//i
+					or $message =~ s/Requested action (aborted|not taken): local error in processing//i
+					or $message =~ s/Requested action not taken: mailbox unavailable//i
+					or $message =~ s/Requested action aborted: try again later//i
+					or $message =~ s/Resources unavailable temporarily//i
+					or $message =~ s/Service (not available|Unavailable|is unavailable)//i
+					or $message =~ s/system resources//i
+					or $message =~ s/Temporary (Resources unavailable|failure|lookup failure|service error)//i
+					or $message =~ s/Too many (concurrent|connections|simultaneous connections)//i	# TODO this could actually be a form of greylisting too - ie. we don't know if it's overload or anti-spam
+					or $message =~ s/Too much load//i
+					or $message =~ s/trouble in home directory//i
+					or $message =~ s/Unable to accept this email at the moment//i
+					or $message =~ s/undeliverable address: unknown user//i	# should normally bounce, hence broken server
+					or $message =~ s/Unexpected failure//i
+					or $message =~ s/Recipient address rejected: User unknown in (local|virtual) (recipient|mailbox) table//i	# should normally bounce, hence broken server
+					or $message =~ s/Server configuration problem//i
 				) )
 				or $line =~ s/^.* Connection refused$//i
 				or $line =~ s/^.* Connection timed out$//i	# TODO should this be mixed up with in-conversation trimeouts below?
@@ -386,7 +414,11 @@ sub analyse {
 				or $line =~ s/mail for .+ loops back to myself//i ) {	# TODO - many other possible reasons to add
 				# other side is broken
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
-			} elsif ( $message ne '' and (
+			} elsif ( ( defined $esmtpcode and
+					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
+					$esmtpcode eq '4.7.1'	# Delivery not authorized, message refused
+				) )
+				or ( $message ne '' and (
 				$message =~ s/closing connection//
 				or $message =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:25: Connection timed out//i
 				or $message =~ s/Could not complete recipient verify callout//i
@@ -402,12 +434,16 @@ sub analyse {
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
 				or $message =~ s/Sender address deferred by rule//i
+				or $message =~ s/service temporarily unavailable//i
+				or $message =~ s/Sprobuj za pietnascie sekund//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
+				or $message =~ s/Temporarily blocked for \d+ seconds//i
 				or $message =~ s/Temporarily rejected//i
 				or $message =~ s/too much mail from //i
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
 				or $message =~ s/visit http:\/\/support\.google\.com\/mail\/bin\/answer\.py\?answer=6592//
-				or $message =~ s/(try again|please retry|retry later|try later|deferring connection)//i ) ) {	# TODO - many other possible reasons to add
+				or $message =~ s/(try again|please retry|retry later|try later|deferring connection)//i ) )
+				) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
 			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
@@ -477,6 +513,9 @@ sub analyse {
 			} elsif ( $line =~ s/^\(delivered via dovecot service\)// ) {
 				# delivery to dovecot
 				++$$stats{'postfix:local:sent:dovecot'};
+			} elsif ( $line =~ s/^\(delivered via zarafa service\)// ) {
+				# delivery to zarafa
+				++$$stats{'postfix:local:sent:zarafa'};
 			} else {
 				# some other
 				++$$stats{'postfix:local:sent:other'};
@@ -491,6 +530,21 @@ sub analyse {
 		} else {
 			# some other
 			++$$stats{'postfix:local:other'};
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+		}
+	} elsif ( $line =~ s/^.+ postfix\/lmtp\[\d+\]:\s*// ) {	# TODO
+		if ( $line =~ s/^[0-9A-F]+: to=.* status=sent\s*// ) {
+			# delivered
+			++$$stats{'postfix:lmtp:sent'};
+		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=deferred\s*// ) {
+			# something went wrong
+			++$$stats{'postfix:lmtp:deferred'};
+		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=bounced\s*// ) {
+			# something went very wrong
+			++$$stats{'postfix:lmtp:bounced'};
+		} else {
+			# some other
+			++$$stats{'postfix:lmtp:other'};
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/postdrop\[\d+\]:\s*// ) {
@@ -511,6 +565,16 @@ sub analyse {
 		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/error\[\d+\]:\s*// ) {
 		# ignore
+	} elsif ( $line =~ s/^.+ postfix\/script\[\d+\]:\s*// ) {
+		# ignore - the likes of:
+		# postfix/postfix-script[\d+]: starting the Postfix mail system
+	} elsif ( $line =~ s/^.+ postfix\/trivial-rewrite\[\d+\]:\s*// ) {
+		if ( $line =~ s/^table hash:.+ has changed -- restarting// ) {
+			# ignore
+		} else {
+			# useful to know of others
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+		}
 	} elsif ( $line =~ s/^.+ postfix\/master\[\d+\]:\s*// ) {
 		if ( $line =~ s/^terminating on signal 15$// ) {
 			# ignore stops

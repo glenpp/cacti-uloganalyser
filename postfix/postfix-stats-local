@@ -31,3 +31,4 @@ printf "%d\n" `grep ^postfix:local:sent:forwarded= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:local:sent:dovecot= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:local:deferred= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:local:bounced= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:local:sent:zarafa= $STATS | cut -d '=' -f2`
