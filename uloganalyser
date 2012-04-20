@@ -23,7 +23,7 @@ use warnings;
 #
 # See: http://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
 #
-my $VERSION = 20120321;
+my $VERSION = 20120420;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -38,7 +38,7 @@ my @lines;
 my @ends;
 foreach (@modules) {
 	my $register = require "$_.pm";
-	&$register ( \@lines, \@ends );
+	&$register ( \@lines, \@ends, $VERSION );
 }
 
 
@@ -60,7 +60,7 @@ if ( -f $statsfile ) {
 	open ST, $statsfile or die "FATAL - can't read previous statistics: $!\n";
 	while ( defined ( my $line = <ST> ) ) {
 		chomp $line;
-		if ( $line =~ /^([\w\-_:]+)=(\d+)$/ ) {
+		if ( $line =~ /^([\w\-_:]+)=([\d\.]+)$/ ) {
 			$stats{$1} = $2;
 		} elsif ( $line =~ /^repeatline=(.*)$/ ) {
 			$repeatline = $1;

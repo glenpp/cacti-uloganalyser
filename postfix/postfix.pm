@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120413;
+our $VERSION = 20120420;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -32,6 +32,7 @@ our $VERSION = 20120413;
 # Przemek Przechowski
 # "Denho"
 # Horst Simon
+# "oneloveamaru"
 
 
 
@@ -563,7 +564,14 @@ sub analyse {
 	} elsif ( $line =~ s/^.+ postfix\/scache\[\d+\]:\s*// ) {
 		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/cleanup\[\d+\]:\s*// ) {
-		# ignore
+		if ( $line =~ s/^[0-9A-F]+: milter-reject: END-OF-MESSAGE from [\w\.\-]+\[[\w\.:]+\]: 5\.7\.1 Blocked by SpamAssassin;\s*// ) {
+			# de-queued by cleanup
+			--$$stats{'postfix:smtpd:QUEUED'};
+			# mark as caught by spamassassin
+			++$$stats{'postfix:cleanup:spamassassin'};
+		} else {
+			# ignore
+		}
 	} elsif ( $line =~ s/^.+ postfix\/error\[\d+\]:\s*// ) {
 		# ignore
 	} elsif ( $line =~ s/^.+ postfix\/script\[\d+\]:\s*// ) {
