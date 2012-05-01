@@ -23,7 +23,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951%2B0000%20Postfix%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package spamd;
-our $VERSION = 20120420;
+our $VERSION = 20120421;
 our $REQULOGANALYSER = 20120420;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -49,7 +49,7 @@ sub analyse {
 	if ( $line !~ s/^.+ spamd\[\d+\]:\s+spamd:\s+// ) { return; }
 	# spamd making this noise so let's look closer
 	# ignore server, connection, setuid, creating, processing
-	if ( $line =~ /^(server|connection from|setuid to|creating default_prefs:|failed to create readable default_prefs:|processing message|handle_user|still running as root:)\s+/ ) { return; }
+	if ( $line =~ /^(server|connection from|setuid to|creating default_prefs:|failed to create readable default_prefs:|processing message|handle_user|still running as root:|handled cleanup of child pid)\s+/ ) { return; }
 	# it's something we are interested in
 	if ( $line =~ s/([\w\s]+) \(([\-\d\.]+)\/([\d\.]+)\) for .+:\d+ in ([\d\.]+) seconds, \d+ bytes\.$// ) {
 		++$$stats{'spamd:total'};

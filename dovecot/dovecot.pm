@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120322;
+our $VERSION = 20120501;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -120,6 +120,8 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authfailed"} += $multiply;
+			} elsif ( $line =~ s/^\(disconnected while authenticating\):// ) {
+				$$stats{"dovecot:$protocol:login:disconnected:authenticating"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
