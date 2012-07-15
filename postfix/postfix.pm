@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120420;
+our $VERSION = 20120715;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -33,6 +33,7 @@ our $VERSION = 20120420;
 # "Denho"
 # Horst Simon
 # "oneloveamaru"
+# Grzegorz Dajuk
 
 
 
@@ -654,6 +655,11 @@ sub smtpd_ip {
 		or $origline =~ /warning: no MX host for [^\s]+ has a valid address record/
 		or $origline =~ /mail for [^\s]+ loops back to myself/ ) {
 		# ignore - there is no address
+	} elsif ( $origline =~ /\[[\d\.]+\]:\d+,/ ) {
+		# handle deliveries to custom ports, do this last to avoid false hits
+		$$stats{'postfix:smtp:connect:ipv4'} += $direction;
+	} elsif ( $origline =~ /\[[\da-f:]+\]\d+,/ ) {
+		$$stats{'postfix:smtp:connect:ipv6'} += $direction;
 	} else {
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 	}
