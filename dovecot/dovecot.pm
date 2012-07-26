@@ -22,12 +22,13 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120501;
+our $VERSION = 20120726;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
 # Daniele Palumbo
 # Przemek Orzechowski
+# "Alex"
 
 
 sub register {
@@ -182,6 +183,8 @@ sub analyse {
 			$$stats{'dovecot:deliver:elsewhere'} += $multiply;
 		}
 	} elsif ( $line =~ s/ssl-build-param: SSL parameters regeneration completed// ) {
+		# ignore
+	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)// ) {
 		# ignore
 	} elsif ( $line =~ s/dovecot: Killed with signal 15 //
 		or $line =~ s/Dovecot v.+ starting up// ) {
