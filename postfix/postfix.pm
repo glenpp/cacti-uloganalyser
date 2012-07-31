@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120715;
+our $VERSION = 20120731;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -34,6 +34,7 @@ our $VERSION = 20120715;
 # Horst Simon
 # "oneloveamaru"
 # Grzegorz Dajuk
+# Voytek Eymont
 
 
 
@@ -192,12 +193,15 @@ sub analyse {
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:other'};
 						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
-				} elsif ( $line =~ s/^.*: Client (address|host) rejected:\s*// ) {
+				} elsif ( $line =~ s/^.* Client (address|host) rejected:\s*// ) {
 					# don't like client
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:Client'};
 					if ( $line =~ s/^Access denied;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:denied'};
+					} elsif ( $line =~ s/^Access denied;//i ) {
+						# DNS failure
+						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:ReverseDNS'};
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:other'};

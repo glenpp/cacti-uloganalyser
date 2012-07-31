@@ -22,13 +22,14 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120726;
+our $VERSION = 20120731;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
 # Daniele Palumbo
 # Przemek Orzechowski
 # "Alex"
+# Voytek Eymont
 
 
 sub register {
@@ -101,11 +102,11 @@ sub analyse {
 					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 				}
 			}
-			if ( $line =~ /lip=[\da-f\.:]+$/ ) {
+			if ( $line =~ /lip=[\da-f\.:]+$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+$/ ) {
 				$$stats{"dovecot:$protocol:crypto:none"} += $multiply;
-			} elsif ( $line =~ /lip=[\da-f\.:]+, TLS$/ ) {
+			} elsif ( $line =~ /lip=[\da-f\.:]+, TLS$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, TLS$/ ) {
 				$$stats{"dovecot:$protocol:crypto:tls"} += $multiply;
-			} elsif ( $line =~ /lip=[\da-f\.:]+, secured$/ ) {
+			} elsif ( $line =~ /lip=[\da-f\.:]+, secured$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, secured$/ ) {
 				$$stats{"dovecot:$protocol:crypto:ssl"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
@@ -129,7 +130,7 @@ sub analyse {
 			}
 		} elsif ( $line =~ s/^Aborted login[:\s]*// ) {
 			$$stats{"dovecot:$protocol:login:aborted"} += $multiply;
-			if ( $line =~ s/^\(no auth attempts\):// ) {
+			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:authfailed"} += $multiply;
@@ -143,7 +144,7 @@ sub analyse {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/(IMAP|POP3|MANAGESIEVE)\([^\)]+\): // ) {
+	} elsif ( $line =~ s/(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)\([^\)]+\): // ) {
 		my $protocol = lc $1;
 		# harvest data stats if available
 		if ( $line =~ s/\s* top=\d+\/(\d+), retr=\d+\/(\d+), del=\d+\/\d+, size=\d+$// ) {
@@ -182,9 +183,18 @@ sub analyse {
 		} else {
 			$$stats{'dovecot:deliver:elsewhere'} += $multiply;
 		}
+	} elsif ( $line =~ s/^lmtp\([^\)]+\): *// ) {
+		# TODO lmtp - not graphed TODO
+		if ( $line =~ s/Connect from local// ) {
+		} elsif ( $line =~ s/\w+: msgid=<.+>: saved mail to INBOX// ) {
+		} elsif ( $line =~ s/Disconnect from local: Client quit \(in reset\)// ) {
+		} else {
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+		}
 	} elsif ( $line =~ s/ssl-build-param: SSL parameters regeneration completed// ) {
 		# ignore
-	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)// ) {
+	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
+			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
 	} elsif ( $line =~ s/dovecot: Killed with signal 15 //
 		or $line =~ s/Dovecot v.+ starting up// ) {
