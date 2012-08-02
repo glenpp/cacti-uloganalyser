@@ -36,3 +36,4 @@ printf "%d\n" `grep ^dovecot:managesieve:login:aborted:noauthattempt= $STATS | c
 printf "%d\n" `grep ^dovecot:managesieve:login:aborted:authfailed= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:maxconnections= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:authenticating= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:imap:login:aborted:disabledauthmethod= $STATS | cut -d '=' -f2`

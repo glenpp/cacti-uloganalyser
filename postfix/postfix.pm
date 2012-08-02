@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120731;
+our $VERSION = 20120902;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -199,7 +199,7 @@ sub analyse {
 					if ( $line =~ s/^Access denied;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:denied'};
-					} elsif ( $line =~ s/^Access denied;//i ) {
+					} elsif ( $line =~ s/cannot find your reverse hostname//i ) {
 						# DNS failure
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:ReverseDNS'};
 					} else {
@@ -492,9 +492,13 @@ sub analyse {
 			# connection
 			++$$stats{'postfix:smtp:connect'};
 			smtpd_ip ( $line, $origline, $number, $log, $stats );
+		} elsif ( $line =~ s/^[\w\.\-]+\[[\w\.:]+\]:\d+: re-using session with untrusted
+certificate, look for details earlier in the log// ) {
+			# ignore
 		} elsif ( $line =~ s/^[0-9A-F]+: enabling PIX .*// ) {
 			# ignore
 		} elsif ( $line =~ s/^[0-9A-F]+: sender non-delivery notification// ) {
+			# ignore
 		} else {
 			# some other
 			++$$stats{'postfix:smtp:other'};

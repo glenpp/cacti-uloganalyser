@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120731;
+our $VERSION = 20120802;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -134,6 +134,8 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:aborted:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:authfailed"} += $multiply;
+			} elsif ( $line =~ s/^\(tried to use disabled plaintext auth\):// ) {
+				$$stats{"dovecot:$protocol:login:aborted:disabledauthmethod"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -152,9 +154,13 @@ sub analyse {
 		} elsif ( $line =~ s/\s* bytes=(\d+)\/(\d+)$// ) {
 			$$stats{"dovecot:$protocol:bytes:in"} += $1 * $multiply;
 			$$stats{"dovecot:$protocol:bytes:out"} += $2 * $multiply;
+		} elsif ( $line =~ s/\s* in=(\d+) out=(\d+)$// ) {
+			$$stats{"dovecot:$protocol:bytes:in"} += $1 * $multiply;
+			$$stats{"dovecot:$protocol:bytes:out"} += $2 * $multiply;
 		}
 		# event types
 		if ( $line =~ s/Disconnected[:\s]*// ) {
+			$line =~ s/Disconnected[:\s]*//;	# some versions repeat
 			$$stats{"dovecot:$protocol:disconnect"} += $multiply;
 			if ( $line =~ /^for inactivity/ ) {
 				$$stats{"dovecot:$protocol:disconnect:inactivity"} += $multiply;
@@ -177,6 +183,7 @@ sub analyse {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/deliver\([^\)]+\):\s*.*: saved mail to\s*// ) {
+		# also see lmtp below - some versions use that instead
 		$$stats{'dovecot:deliver'} += $multiply;
 		if ( $line eq 'INBOX' ) {
 			$$stats{'dovecot:deliver:inbox'} += $multiply;
@@ -184,10 +191,17 @@ sub analyse {
 			$$stats{'dovecot:deliver:elsewhere'} += $multiply;
 		}
 	} elsif ( $line =~ s/^lmtp\([^\)]+\): *// ) {
-		# TODO lmtp - not graphed TODO
+		# also see deliver above - some versions use that instead
 		if ( $line =~ s/Connect from local// ) {
-		} elsif ( $line =~ s/\w+: msgid=<.+>: saved mail to INBOX// ) {
+			# ignore
+		} elsif ( $line =~ s/\w+: msgid=<.+>: saved mail to\s*// ) {
+			if ( $line eq 'INBOX' ) {
+				$$stats{'dovecot:deliver:inbox'} += $multiply;
+			} else {
+				$$stats{'dovecot:deliver:elsewhere'} += $multiply;
+			}
 		} elsif ( $line =~ s/Disconnect from local: Client quit \(in reset\)// ) {
+			# ignore
 		} else {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
