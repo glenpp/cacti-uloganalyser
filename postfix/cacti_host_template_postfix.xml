@@ -692,12 +692,12 @@
 			</hash_100021e46aa93f783eec52e627f3a70c15747b>
 		</items>
 		<inputs>
-			<hash_0900210a478b93473839b0b0b75b7c0373281d>
+			<hash_090021907d2079ddc94a5d94714605b89982a4>
 				<name>Data Source [postfix_smtp_sent]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_0000218a22acbece9e6ddddb48a45cfd8202cb</items>
-			</hash_0900210a478b93473839b0b0b75b7c0373281d>
+			</hash_090021907d2079ddc94a5d94714605b89982a4>
 			<hash_090021760fdd099683ee72b024c1e6479f0db7>
 				<name>Data Source [postfix_smtp_dfroth]</name>
 				<description></description>
@@ -1141,7 +1141,7 @@
 				<cdef_id>0</cdef_id>
 				<value></value>
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
-				<text_format>Reject Client Reverse DNS</text_format>
+				<text_format>Reject Client DNS</text_format>
 				<hard_return>on</hard_return>
 				<sequence>20</sequence>
 			</hash_10002191481bda3d25b9257ba8c02c403ae7ce>
@@ -1510,12 +1510,12 @@
 			</hash_100021242c2f893dc27dd085fe2af86bfcb7e4>
 		</items>
 		<inputs>
-			<hash_0900217ac63b076efe476517857d952b176364>
+			<hash_090021c4b04bec28567190e8b3cd01eca62469>
 				<name>Data Source [postfix_smtpd_conn]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_000021050c7e451bacde8d90835e48e83d31e2</items>
-			</hash_0900217ac63b076efe476517857d952b176364>
+			</hash_090021c4b04bec28567190e8b3cd01eca62469>
 			<hash_09002195b073469c3e9929e26d05656b6fec8e>
 				<name>Data Source [postfix_smtpd_warn]</name>
 				<description></description>

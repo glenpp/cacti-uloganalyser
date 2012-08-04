@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120902;
+our $VERSION = 20120904;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -142,7 +142,7 @@ sub analyse {
 				} elsif ( $line =~ s/^.*: Helo command rejected:\s+// ) {
 					# bad HELO sent
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:HELO'};
-				} elsif ( $line =~ s/^.*: .+ Service unavailable; Client host \[[\w\.:]+\] blocked using\s+// ) {
+				} elsif ( $line =~ s/^.*: .+ Service unavailable; (Client host|Sender address) \[[\w\.:]+\] blocked using\s+// ) {
 					# RBL stopped it
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:RBL'};
 				} elsif ( $line =~ s/^.*: Recipient address rejected:\s*// ) {
@@ -199,9 +199,9 @@ sub analyse {
 					if ( $line =~ s/^Access denied;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:denied'};
-					} elsif ( $line =~ s/cannot find your reverse hostname//i ) {
+					} elsif ( $line =~ s/cannot find your (reverse )?hostname//i ) {
 						# DNS failure
-						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:ReverseDNS'};
+						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:DNS'};
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:other'};
@@ -492,8 +492,7 @@ sub analyse {
 			# connection
 			++$$stats{'postfix:smtp:connect'};
 			smtpd_ip ( $line, $origline, $number, $log, $stats );
-		} elsif ( $line =~ s/^[\w\.\-]+\[[\w\.:]+\]:\d+: re-using session with untrusted
-certificate, look for details earlier in the log// ) {
+		} elsif ( $line =~ s/^[\w\.\-]+\[[\w\.:]+\]:\d+: re-using session with untrusted certificate, look for details earlier in the log// ) {
 			# ignore
 		} elsif ( $line =~ s/^[0-9A-F]+: enabling PIX .*// ) {
 			# ignore
@@ -583,7 +582,7 @@ certificate, look for details earlier in the log// ) {
 		}
 	} elsif ( $line =~ s/^.+ postfix\/error\[\d+\]:\s*// ) {
 		# ignore
-	} elsif ( $line =~ s/^.+ postfix\/script\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^.+ postfix\/(postfix-)?script\[\d+\]:\s*// ) {
 		# ignore - the likes of:
 		# postfix/postfix-script[\d+]: starting the Postfix mail system
 	} elsif ( $line =~ s/^.+ postfix\/trivial-rewrite\[\d+\]:\s*// ) {
@@ -634,6 +633,8 @@ certificate, look for details earlier in the log// ) {
 			++$$stats{'postfix:policy:policy-spf:other'};
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
+	} elsif ( $line =~ s/^.+ postfix\/postsuper\[\d+\]:\s*// ) {
+		# ignore
 	} else {
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 	}

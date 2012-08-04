@@ -26,3 +26,4 @@ STATS=/var/local/snmp/mail
 printf "%d\n" `grep ^dovecot:deliver= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:deliver:inbox= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:deliver:elsewhere= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:deliver:fail= $STATS | cut -d '=' -f2`

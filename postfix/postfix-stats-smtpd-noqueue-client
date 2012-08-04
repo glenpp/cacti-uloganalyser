@@ -25,4 +25,4 @@ STATS=/var/local/snmp/mail
 
 printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:denied= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:ReverseDNS= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:DNS= $STATS | cut -d '=' -f2`
