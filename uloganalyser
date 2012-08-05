@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-BEGIN { unshift @INC, '/etc/snmp/uloganalyser-plugin'; }
+BEGIN { unshift @INC, '/etc/snmp/uloganalyser-plugin', '.'; }
 use strict;
 use warnings;
 # process a log with plugins and place the results in a file
@@ -37,6 +37,7 @@ my ( $logold, $lognew, $statsfile, @modules ) = @ARGV;
 my @lines;
 my @ends;
 foreach (@modules) {
+	s/\.pm$//;
 	my $register = require "$_.pm";
 	&$register ( \@lines, \@ends, $VERSION );
 }

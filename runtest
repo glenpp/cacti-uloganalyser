@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# make up dummy logs
+./testdata2tmp >/tmp/testlog
+touch /tmp/testlog.0
+
+# run uloganalyser against them
+rm /tmp/ustat
+./uloganalyser /tmp/testlog.0 /tmp/testlog \
+	/tmp/ustat */*.pm
+
+# launch tkdiff if we got files
+[ -f /tmp/ustat -a -f ustat.last ] && tkdiff /tmp/ustat ustat.last
+

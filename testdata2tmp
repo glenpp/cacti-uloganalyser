@@ -30,7 +30,14 @@ sub processline {
 	if ( $line =~ s/^\/[^\s]+postfix\.pm \d{8}:\d+ \/[^:]+:\d+ unknown:\s+// ) {
 		print "$line\n\n";
 	} elsif ( $line =~ s/^\/[^\s]+postfix\.pm:\d+ version \d{8}\s+/Mon 00 00:00:00 hostname / ) {
-		print "$line\n\n";
+		if ( $line =~ /^\w+ \d+ \d+:\d+:\d+ \w+ \$message:\s/ ) {
+			# ignore $message lines
+		} else {
+			$line =~ s/\[\\w\\\.\\-\]\+\\\[\[\\w\\\.:\]\+\\\]/host.domain.tld[254.254.254.254]/g;
+			$line =~ s/<\.\+>/<user\@domain.tld>/g;
+			$line =~ s/smtp\\\[\\d\+\\\]:\\s\*/smtp[9999]: /;
+			print "$line\n\n";
+		}
 	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \/[^:]+:\d+ unknown dovecot:\s+// ) {
 		print "$line\n\n";
 	} elsif ( $line eq '' ) {

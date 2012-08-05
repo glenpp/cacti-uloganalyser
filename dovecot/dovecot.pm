@@ -220,10 +220,10 @@ sub analyse {
 	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
 			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
-	} elsif ( $line =~ s/dovecot: Killed with signal 15 //
-		or $line =~ s/dovecot: master: Warning: Killed with signal 15 //
+	} elsif ( $line =~ s/Killed with signal 15 //
+		or $line =~ s/master: Warning: Killed with signal 15 //
 		or $line =~ s/Dovecot v.+ starting up//
-		or $line =~ s/dovecot: master: Warning: SIGHUP received - reloading configuration// ) {
+		or $line =~ s/master: Warning: SIGHUP received - reloading configuration// ) {
 		# ignore
 	} else {
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";

@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120904;
+our $VERSION = 20120804;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -142,7 +142,7 @@ sub analyse {
 				} elsif ( $line =~ s/^.*: Helo command rejected:\s+// ) {
 					# bad HELO sent
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:HELO'};
-				} elsif ( $line =~ s/^.*: .+ Service unavailable; (Client host|Sender address) \[[\w\.:]+\] blocked using\s+// ) {
+				} elsif ( $line =~ s/^.*: .+ Service unavailable; (Client host|Sender address) \[[^\]]+\] blocked using\s+// ) {
 					# RBL stopped it
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:RBL'};
 				} elsif ( $line =~ s/^.*: Recipient address rejected:\s*// ) {
