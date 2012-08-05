@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+
+foreach my $file (glob "testdata/*") {
+	open TD, '<', $file or die "FATAL - can't open \"$file\": $!\n";
+	my $tmpline = '';
+	while ( defined ( my $line = <TD> ) ) {
+		chomp $line;
+		if ( $line =~ /^\/[^\s]+\.pm \d{8}:\d+/
+			or $line =~ /^\/[^\s]+\.pm:\d+ version \d{8}/ ) {
+			# new line - output old
+			processline ( $tmpline );
+			$tmpline = $line;
+		} else {
+			$tmpline =~ s/\s$//;
+			$tmpline .= " $line";
+		}
+	}
+	close TD;
+	processline ( $tmpline );
+}
+
+
+
+sub processline {
+	my ( $line ) = @_;
+	$line =~ s/\s+$//;
+	if ( $line =~ s/^\/[^\s]+postfix\.pm \d{8}:\d+ \/[^:]+:\d+ unknown:\s+// ) {
+		print "$line\n\n";
+	} elsif ( $line =~ s/^\/[^\s]+postfix\.pm:\d+ version \d{8}\s+/Mon 00 00:00:00 hostname / ) {
+		print "$line\n\n";
+	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \/[^:]+:\d+ unknown dovecot:\s+// ) {
+		print "$line\n\n";
+	} elsif ( $line eq '' ) {
+		# ignore
+	} else {
+		warn "UNKNOWN $line\n\n";
+	}
+
+
+
+}
+
+
+
