@@ -10,5 +10,5 @@ rm /tmp/ustat
 	/tmp/ustat */*.pm
 
 # launch tkdiff if we got files
-[ -f /tmp/ustat -a -f ustat.last ] && tkdiff /tmp/ustat ustat.last
+#[ -f /tmp/ustat -a -f ustat.last ] && tkdiff /tmp/ustat ustat.last
 

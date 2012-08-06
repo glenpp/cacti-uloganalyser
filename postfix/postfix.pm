@@ -202,6 +202,9 @@ sub analyse {
 					} elsif ( $line =~ s/cannot find your (reverse )?hostname//i ) {
 						# DNS failure
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:DNS'};
+					} elsif ( $line =~ s/sender address does not match client hostname//i ) {
+						# freemail checks - custom message
+						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:freemailmismatch'};
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:other'};

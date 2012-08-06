@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120804;
+our $VERSION = 20120806;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -134,7 +134,7 @@ sub analyse {
 			$$stats{"dovecot:$protocol:login:aborted"} += $multiply;
 			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:noauthattempt"} += $multiply;
-			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
+			} elsif ( $line =~ s/^\(auth failed, \d+ attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:authfailed"} += $multiply;
 			} elsif ( $line =~ s/^\(tried to use disabled plaintext auth\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:disabledauthmethod"} += $multiply;
@@ -225,6 +225,8 @@ sub analyse {
 		or $line =~ s/Dovecot v.+ starting up//
 		or $line =~ s/master: Warning: SIGHUP received - reloading configuration// ) {
 		# ignore
+	} elsif ( $line =~ s/auth: Warning: auth client \d+ disconnected with \d+ pending requests:\s*// ) {
+		# ignore - don't think this merits graphing and is more informational/debug
 	} else {
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 	}

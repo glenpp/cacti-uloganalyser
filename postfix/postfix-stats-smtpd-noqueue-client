@@ -23,6 +23,7 @@ PATH=/bin:/usr/bin
 STATS=/var/local/snmp/mail
 
 
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:other= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:denied= $STATS | cut -d '=' -f2`
-printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Recipient:DNS= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Client:other= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Client:denied= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Client:DNS= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:Client:freemailmismatch= $STATS | cut -d '=' -f2`
