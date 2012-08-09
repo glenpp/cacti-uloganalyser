@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120804;
+our $VERSION = 20120809;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -461,6 +461,7 @@ sub analyse {
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( $line =~ s/^Host or domain not found//i
 				or $line =~ s/^Host or domain name not found//i
+				or $message =~ s/^<.+>: Sender address rejected: Domain not found//i
 				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};

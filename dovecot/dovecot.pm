@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120806;
+our $VERSION = 20120809;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -120,7 +120,7 @@ sub analyse {
 			}
 			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
-			} elsif ( $line =~ s/^\(auth failed, \d+ attempts\):// ) {
+			} elsif ( $line =~ s/^\(auth failed, \d+ attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authfailed"} += $multiply;
 			} elsif ( $line =~ s/^\(disconnected while authenticating\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authenticating"} += $multiply;
