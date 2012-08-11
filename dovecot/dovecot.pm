@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120809;
+our $VERSION = 20120811;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -117,12 +117,15 @@ sub analyse {
 			# some dovecot versions give extra info TODO
 			if ( $line =~ s/^Inactivity // ) {
 				# TODO not currently used
+			} elsif ( $line =~ s/^Too many invalid commands // ) {
+				# TODO not currently used
 			}
 			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authfailed"} += $multiply;
-			} elsif ( $line =~ s/^\(disconnected while authenticating\):// ) {
+			} elsif ( $line =~ s/^\(disconnected while authenticating\)://
+				or $line =~ s/^\(client didn't finish SASL auth, waited \d+ secs\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authenticating"} += $multiply;
 			} elsif ( $line =~ s/^\(tried to use disabled plaintext auth\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:disabledauthmethod"} += $multiply;
