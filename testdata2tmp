@@ -7,6 +7,7 @@ foreach my $file (glob "testdata/*") {
 	open TD, '<', $file or die "FATAL - can't open \"$file\": $!\n";
 	my $tmpline = '';
 	while ( defined ( my $line = <TD> ) ) {
+		if ( $line =~ /^##/ ) { next; }
 		chomp $line;
 		if ( $line =~ /^\/[^\s]+\.pm \d{8}:\d+/
 			or $line =~ /^\/[^\s]+\.pm:\d+ version \d{8}/ ) {

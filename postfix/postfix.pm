@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120811;
+our $VERSION = 20120814;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -366,7 +366,7 @@ sub analyse {
 			my $message = $line;
 			my $smtpcode;
 			my $esmtpcode;
-			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|554)[ \-]// ) {
+			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|554|459)[ \-]// ) {
 				$smtpcode = $2;
 				if ( $message =~ s/^(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
 					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format

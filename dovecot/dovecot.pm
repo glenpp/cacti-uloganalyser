@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120811;
+our $VERSION = 20120814;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -118,6 +118,8 @@ sub analyse {
 			if ( $line =~ s/^Inactivity // ) {
 				# TODO not currently used
 			} elsif ( $line =~ s/^Too many invalid commands // ) {
+				# TODO not currently used
+			} elsif ( $line =~ s/^Connection queue full // ) {
 				# TODO not currently used
 			}
 			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
@@ -218,16 +220,49 @@ sub analyse {
 		} else {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
+	} elsif ( $line =~ s/master:\s*// ) {
+		# TODO graph TODO TODO TODO TODO TODO
+		if ( $line =~ s/Warning:\s*// ) {
+			$$stats{"dovecot:master:warning"} += $multiply;
+			if ( $line =~ s/service\(([^\)]+)\): process_limit \(\d+\) reached, client connections are being dropped// ) {
+				my $service = $1;
+				$$stats{"dovecot:master:warning:proclimit"} += $multiply;
+#				if ( $service eq 'imap-login'
+#					or $service eq 'managesieve-login'
+#					or $service eq 'pop3-login' ) {
+#					$$stats{"dovecot:master:warning:proclimit:$service"} += $multiply;
+#				} else {
+#					$$stats{"dovecot:master:warning:proclimit:other"} += $multiply;
+#					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+#				}
+			} elsif ( $line =~ s/Killed with signal 15 // ) {
+				# ignore - normal shutdown behaviour
+			} elsif ( $line =~ s/SIGHUP received - reloading configuration// ) {
+				# ignore - normal reload behaviour
+			} else {
+				$$stats{"dovecot:master:warning:other"} += $multiply;
+				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			}
+		} elsif ( $line =~ s/Error:\s*// ) {
+			$$stats{"dovecot:master:error"} += $multiply;
+			if ( $line =~ s/service\(([^\)]+)\): command startup failed, throttling for \d+ secs// ) {
+				$$stats{"dovecot:master:error:commandstartup"} += $multiply;
+				# TODO possibly use service block above TODO
+			} else {
+				$$stats{"dovecot:master:error:other"} += $multiply;
+				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			}
+		} else {
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+		}
 	} elsif ( $line =~ s/ssl-build-param: SSL parameters regeneration completed// ) {
 		# ignore
 	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
 			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
 	} elsif ( $line =~ s/Killed with signal 15 //
-		or $line =~ s/master: Warning: Killed with signal 15 //
-		or $line =~ s/Dovecot v.+ starting up//
-		or $line =~ s/master: Warning: SIGHUP received - reloading configuration// ) {
-		# ignore
+		or $line =~ s/Dovecot v.+ starting up// ) {
+		# ignore - normal stop / start behaviour
 	} elsif ( $line =~ s/auth: Warning: auth client \d+ disconnected with \d+ pending requests:\s*// ) {
 		# ignore - don't think this merits graphing and is more informational/debug
 	} else {
