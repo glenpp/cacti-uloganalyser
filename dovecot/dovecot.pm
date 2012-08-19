@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120814;
+our $VERSION = 20120819;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -193,13 +193,19 @@ sub analyse {
 		} else {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/deliver\([^\)]+\):\s*.*: saved mail to\s*// ) {
+	} elsif ( $line =~ s/deliver\([^\)]+\):\s*// ) {
 		# also see lmtp below - some versions use that instead
-		$$stats{'dovecot:deliver'} += $multiply;
-		if ( $line eq 'INBOX' ) {
-			$$stats{'dovecot:deliver:inbox'} += $multiply;
+		if ( $line =~ s/.*: saved mail to\s*// ) {
+			$$stats{'dovecot:deliver'} += $multiply;
+			if ( $line eq 'INBOX' ) {
+				$$stats{'dovecot:deliver:inbox'} += $multiply;
+			} else {
+				$$stats{'dovecot:deliver:elsewhere'} += $multiply;
+			}
+		} elsif ( $line =~ s/.*: save failed to\s*// ) {
+				$$stats{'dovecot:deliver:fail'} += $multiply;
 		} else {
-			$$stats{'dovecot:deliver:elsewhere'} += $multiply;
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/^lmtp\([^\)]+\): *// ) {
 		# also see deliver above - some versions use that instead
@@ -211,7 +217,7 @@ sub analyse {
 			} else {
 				$$stats{'dovecot:deliver:elsewhere'} += $multiply;
 			}
-		} elsif ( $line =~ s/\w+: msgid=.+: save failed // ) {
+		} elsif ( $line =~ s/\w+: msgid=.+: save failed to\s*// ) {
 				$$stats{'dovecot:deliver:fail'} += $multiply;
 		} elsif ( $line =~ s/Disconnect from local: Client quit \(in reset\)// ) {
 			# ignore
@@ -252,6 +258,8 @@ sub analyse {
 				$$stats{"dovecot:master:error:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
+		} elsif ( $line =~ s/Dovecot v.+ starting up// ) {
+			# ignore - normal shutdown behaviour
 		} else {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
@@ -260,9 +268,16 @@ sub analyse {
 	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
 			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
-	} elsif ( $line =~ s/Killed with signal 15 //
-		or $line =~ s/Dovecot v.+ starting up// ) {
-		# ignore - normal stop / start behaviour
+	} elsif ( $line =~ s/Killed with signal 15 // ) {
+		# ignore - normal stop behaviour
+	} elsif ( $line =~ s/^ssl-params:\s*// ) {
+		if ( $line =~ s/^Generating SSL parameters// ) {
+			# ignore
+		} elsif ( $line =~ s/^SSL parameters regeneration completed// ) {
+			# ignore
+		} else {
+			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+		}
 	} elsif ( $line =~ s/auth: Warning: auth client \d+ disconnected with \d+ pending requests:\s*// ) {
 		# ignore - don't think this merits graphing and is more informational/debug
 	} else {

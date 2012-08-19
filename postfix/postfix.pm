@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120814;
+our $VERSION = 20120819;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -449,9 +449,11 @@ sub analyse {
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
 				or $message =~ s/Temporarily blocked for \d+ seconds//i
 				or $message =~ s/Temporarily rejected//i
+				or $message =~ s/The user you are trying to contact is receiving mail too quickly//i
 				or $message =~ s/too much mail from //i
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
 				or $message =~ s/visit http:\/\/support\.google\.com\/mail\/bin\/answer\.py\?answer=6592//
+				or $message =~ s/^.*will not accept any messages to this user within\s*//
 				or $message =~ s/(try again|please retry|retry later|try later|deferring connection)//i ) )
 				) {	# TODO - many other possible reasons to add
 				# we got greylisted

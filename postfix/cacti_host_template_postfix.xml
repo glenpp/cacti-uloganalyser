@@ -73,7 +73,7 @@
 			</hash_1000211d4ba92586aa604852323771a927d1c9>
 			<hash_10002153f6cb7c279d07aa379b12de1731f151>
 				<task_item_id>hash_080021367b366d13b22c84a6bfb92ecb370944</task_item_id>
-				<color_id>FF3932</color_id>
+				<color_id>4444FF</color_id>
 				<alpha>FF</alpha>
 				<graph_type_id>8</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
@@ -151,7 +151,7 @@
 			</hash_10002110d560706435344c6459977b17fc04b0>
 			<hash_100021dd9ab43395846559df967342bc8e97f9>
 				<task_item_id>hash_0800213d3c5b12a8121135baff7ff5e4c6a9cc</task_item_id>
-				<color_id>4444FF</color_id>
+				<color_id>000000</color_id>
 				<alpha>FF</alpha>
 				<graph_type_id>8</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
@@ -692,12 +692,12 @@
 			</hash_100021e46aa93f783eec52e627f3a70c15747b>
 		</items>
 		<inputs>
-			<hash_090021b510f0e7bee849a9f958b7f00a67988b>
+			<hash_090021d558b6f7cebe82fb85a5a0c919358f28>
 				<name>Data Source [postfix_smtp_sent]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_0000218a22acbece9e6ddddb48a45cfd8202cb</items>
-			</hash_090021b510f0e7bee849a9f958b7f00a67988b>
+			</hash_090021d558b6f7cebe82fb85a5a0c919358f28>
 			<hash_090021760fdd099683ee72b024c1e6479f0db7>
 				<name>Data Source [postfix_smtp_dfroth]</name>
 				<description></description>
@@ -1529,12 +1529,12 @@
 			</hash_100021242c2f893dc27dd085fe2af86bfcb7e4>
 		</items>
 		<inputs>
-			<hash_09002137caeb91ed0bd83198e91ee67ddc2bdc>
+			<hash_090021ab7b2bbafff6b9ef142bfd1b76d977e2>
 				<name>Data Source [postfix_smtpd_conn]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_000021050c7e451bacde8d90835e48e83d31e2</items>
-			</hash_09002137caeb91ed0bd83198e91ee67ddc2bdc>
+			</hash_090021ab7b2bbafff6b9ef142bfd1b76d977e2>
 			<hash_09002195b073469c3e9929e26d05656b6fec8e>
 				<name>Data Source [postfix_smtpd_warn]</name>
 				<description></description>
