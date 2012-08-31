@@ -399,6 +399,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_100021d581526838e207955f78983846597c5b>
+			<hash_1000213f3249b13f36234641feccc80e9e8117>
+				<task_item_id>hash_080021ecebc0c29aefdffbac645670b934d230</task_item_id>
+				<color_id>DA4725</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Internal Error</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_1000213f3249b13f36234641feccc80e9e8117>
 		</items>
 		<inputs>
 			<hash_09002148ab96a6e6ecbe79ad28572631a01f7c>
@@ -443,6 +456,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021d581526838e207955f78983846597c5b</items>
 			</hash_090021de8664e188aa8320a9695a76fa2208c0>
+			<hash_090021d4ca3ae3148543ec5135b1b882acbedb>
+				<name>Data Source [dvcot_idisconinterr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_0000213f3249b13f36234641feccc80e9e8117</items>
+			</hash_090021d4ca3ae3148543ec5135b1b882acbedb>
 		</inputs>
 	</hash_000021813d55c90829d1e2974f7c5c33e4232a>
 	<hash_000021e95bae7f343d76589613e5b266ca1b5d>
@@ -577,6 +596,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_100021f8bd3a57649f9d416859840ee0f8222b>
+			<hash_10002177b6433048214822a90104c5a969e62f>
+				<task_item_id>hash_080021b9bc516d1cdda279a642fbc5b273e90e</task_item_id>
+				<color_id>8D85F3</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Disconnected before greeting</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_10002177b6433048214822a90104c5a969e62f>
 			<hash_100021d4ea23ee66ad0103037eb1efcf45c419>
 				<task_item_id>hash_0800217ecbc217ad87fdea80ecfb0189645f85</task_item_id>
 				<color_id>FFF200</color_id>
@@ -588,7 +620,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Disconnected Other</text_format>
 				<hard_return></hard_return>
-				<sequence>8</sequence>
+				<sequence>9</sequence>
 			</hash_100021d4ea23ee66ad0103037eb1efcf45c419>
 		</items>
 		<inputs>
@@ -640,6 +672,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021f8bd3a57649f9d416859840ee0f8222b</items>
 			</hash_090021bf4a5087d512c4a24322db4eec819bb0>
+			<hash_09002172b6dbb5e38634521fb7be3906f8fe72>
+				<name>Data Source [dvcot_iloginbefgr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_00002177b6433048214822a90104c5a969e62f</items>
+			</hash_09002172b6dbb5e38634521fb7be3906f8fe72>
 		</inputs>
 	</hash_000021e95bae7f343d76589613e5b266ca1b5d>
 	<hash_000021ce17f4e34e9cca545d1cbcde3acba09c>
@@ -1488,6 +1526,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_100021f5f337eeb67bc274e611f6726d545d24>
+			<hash_100021f25701e1fcb712f50eca51abbaca2ef5>
+				<task_item_id>hash_0800211a283660a7a667e7ec87407670bc6a41</task_item_id>
+				<color_id>DA4725</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Internal Error</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_100021f25701e1fcb712f50eca51abbaca2ef5>
 		</items>
 		<inputs>
 			<hash_0900216d157b942ad8ef8ba16477323daaa2bb>
@@ -1532,6 +1583,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021f5f337eeb67bc274e611f6726d545d24</items>
 			</hash_09002174ee2e0e21c6a428a02c4bb94eaa195d>
+			<hash_090021f7f0a92a712898387084754229c87bc0>
+				<name>Data Source [dvcot_pdisconinterr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000021f25701e1fcb712f50eca51abbaca2ef5</items>
+			</hash_090021f7f0a92a712898387084754229c87bc0>
 		</inputs>
 	</hash_000021d836d80b52044d75497b472541a9a129>
 	<hash_0000217a442d4dbc4cf2c3c8b5e5f1cceeb9bd>
@@ -1666,6 +1723,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_100021decbe0f142e80a7d3922727b0027a16f>
+			<hash_10002184e892a83fd9ee35bdd0a03cca72ec5a>
+				<task_item_id>hash_080021979c9e79ba934d0eef4fe3d457e395f4</task_item_id>
+				<color_id>8D85F3</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Disconnected before greeting</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_10002184e892a83fd9ee35bdd0a03cca72ec5a>
 			<hash_100021d74165e8700bca8c1fc9d6b978f94ca2>
 				<task_item_id>hash_080021615f182fe2ec8d9b015bb6a58307178e</task_item_id>
 				<color_id>FFF200</color_id>
@@ -1677,7 +1747,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Disconnected Other</text_format>
 				<hard_return></hard_return>
-				<sequence>8</sequence>
+				<sequence>9</sequence>
 			</hash_100021d74165e8700bca8c1fc9d6b978f94ca2>
 		</items>
 		<inputs>
@@ -1729,6 +1799,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021decbe0f142e80a7d3922727b0027a16f</items>
 			</hash_090021b664ac5d79a1a91eba8c5ac00a87878b>
+			<hash_090021e21fe5f52dc1f5f7b4f34ff0096d78c1>
+				<name>Data Source [dvcot_ploginbefgr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_00002184e892a83fd9ee35bdd0a03cca72ec5a</items>
+			</hash_090021e21fe5f52dc1f5f7b4f34ff0096d78c1>
 		</inputs>
 	</hash_0000217a442d4dbc4cf2c3c8b5e5f1cceeb9bd>
 	<hash_000021163b759b37b314eac0320cd65e100cb0>
@@ -2316,6 +2392,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_100021758e882a9fbad8682a4b34ceffc3fe8d>
+			<hash_100021aefabd9b1b3d0ea8353a102ff7ce65fd>
+				<task_item_id>hash_0800213dab96f3d67bf783383ffbaf6d1a4446</task_item_id>
+				<color_id>DA4725</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Internal Error</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_100021aefabd9b1b3d0ea8353a102ff7ce65fd>
 		</items>
 		<inputs>
 			<hash_090021b274461bb4b244fbc778cd2c9d4ed252>
@@ -2360,6 +2449,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000021758e882a9fbad8682a4b34ceffc3fe8d</items>
 			</hash_090021a7d73473366f3fa81b629f583916c646>
+			<hash_090021e1f6c1c131b57683dd8588d39aee9bea>
+				<name>Data Source [dvcot_mdisconinterr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000021aefabd9b1b3d0ea8353a102ff7ce65fd</items>
+			</hash_090021e1f6c1c131b57683dd8588d39aee9bea>
 		</inputs>
 	</hash_000021cb5685225218f0bf59bea596f4fb5733>
 	<hash_000021f508c36b6b820f0eb0252375aebbc133>
@@ -2494,6 +2589,19 @@
 				<hard_return></hard_return>
 				<sequence>7</sequence>
 			</hash_10002192b4764107c803fc598674f1d8b1b29f>
+			<hash_100021182d88b051272e696febc8ebde5c5aa6>
+				<task_item_id>hash_0800210c0c977b9422de5732da2f79cf9c1db8</task_item_id>
+				<color_id>8D85F3</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>Disconnected before greeting</text_format>
+				<hard_return></hard_return>
+				<sequence>8</sequence>
+			</hash_100021182d88b051272e696febc8ebde5c5aa6>
 			<hash_10002161054c8cac83a02e286a6341ec700c16>
 				<task_item_id>hash_0800217c820dcc2a0b25455cb3a364b0cf3a10</task_item_id>
 				<color_id>FFF200</color_id>
@@ -2505,7 +2613,7 @@
 				<gprint_id>hash_060021e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Disconnected Other</text_format>
 				<hard_return></hard_return>
-				<sequence>8</sequence>
+				<sequence>9</sequence>
 			</hash_10002161054c8cac83a02e286a6341ec700c16>
 		</items>
 		<inputs>
@@ -2557,6 +2665,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_00002192b4764107c803fc598674f1d8b1b29f</items>
 			</hash_090021083f5f05bcb0d57f98d8cb464b0d8ae5>
+			<hash_090021421f2d59c238037dcfa76fe43a1fbea2>
+				<name>Data Source [dvcot_mloginbefgr]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000021182d88b051272e696febc8ebde5c5aa6</items>
+			</hash_090021421f2d59c238037dcfa76fe43a1fbea2>
 		</inputs>
 	</hash_000021f508c36b6b820f0eb0252375aebbc133>
 	<hash_0000215e38f915ccfa2902d6cf7e4c39ecabe5>
@@ -4500,6 +4614,93 @@
 			</item_010>
 		</data>
 	</hash_010021c9945671b2aa80406235f4a05efe4535>
+	<hash_010021fa64982acd406c22d4e2bb01d77153ee>
+		<name>dovecot imap disconnect internal error</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot imap disconnect internal error</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080021ecebc0c29aefdffbac645670b934d230>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_idisconinterr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080021ecebc0c29aefdffbac645670b934d230>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotimapdisconnect&quot;.9</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021fa64982acd406c22d4e2bb01d77153ee>
 	<hash_0100217caa6f013ae5c389c7f831f94cf071bc>
 		<name>dovecot imap login disconnected other</name>
 		<ds>
@@ -5196,6 +5397,93 @@
 			</item_010>
 		</data>
 	</hash_01002169a04a61867d62a05ece67847af33572>
+	<hash_01002142d9deb5d817eefc60c1c57e9b972382>
+		<name>dovecot imap login disconnected before greeting</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot imap login disconnected before greeting</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080021b9bc516d1cdda279a642fbc5b273e90e>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_iloginbefgr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080021b9bc516d1cdda279a642fbc5b273e90e>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotimaplogin&quot;.16</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_01002142d9deb5d817eefc60c1c57e9b972382>
 	<hash_01002118ea15c541b7dd66c282b2f4f30b21be>
 		<name>dovecot auth other</name>
 		<ds>
@@ -7893,6 +8181,93 @@
 			</item_010>
 		</data>
 	</hash_010021daa61e66e31580834ca104f1aa12ee81>
+	<hash_010021403d447b3e490278f9d14dcafdb93769>
+		<name>dovecot pop3 disconnect internal error</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot pop3 disconnect internal error</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_0800211a283660a7a667e7ec87407670bc6a41>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_pdisconinterr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800211a283660a7a667e7ec87407670bc6a41>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotpop3disconnect&quot;.9</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010021403d447b3e490278f9d14dcafdb93769>
 	<hash_0100219bdf2016cd08112ba7070cca1d15121a>
 		<name>dovecot pop3 login disconnected auth failed</name>
 		<ds>
@@ -8502,6 +8877,93 @@
 			</item_010>
 		</data>
 	</hash_01002129c3567440f3055a60c3e752d6738646>
+	<hash_0100218b2b814d290a3d4111e9883da2c8c93c>
+		<name>dovecot pop3 login disconnected before greeting</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot pop3 login disconnected before greeting</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080021979c9e79ba934d0eef4fe3d457e395f4>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_ploginbefgr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080021979c9e79ba934d0eef4fe3d457e395f4>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotpop3login&quot;.16</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_0100218b2b814d290a3d4111e9883da2c8c93c>
 	<hash_010021f7b4e0d8c112958e9e2b9db778c1d296>
 		<name>dovecot pop3 loginmethod ANONYMOUS</name>
 		<ds>
@@ -10416,6 +10878,93 @@
 			</item_010>
 		</data>
 	</hash_010021569954bf6ca3862f6ec5c5f8802471ce>
+	<hash_0100211b544f3655d068ef95966488ce432ef6>
+		<name>dovecot managesieve disconnect internal error</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot managesieve disconnect internal error</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_0800213dab96f3d67bf783383ffbaf6d1a4446>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_mdisconinterr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800213dab96f3d67bf783383ffbaf6d1a4446>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotmanagesievedisconnect&quot;.9</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_0100211b544f3655d068ef95966488ce432ef6>
 	<hash_010021d4e2b09f0cd432464fb3aeb9474101e9>
 		<name>dovecot managesieve login disconnected auth failed</name>
 		<ds>
@@ -11112,6 +11661,93 @@
 			</item_010>
 		</data>
 	</hash_0100211aa9d6c70956bc0d4ebcbfc6ee09df1c>
+	<hash_01002158bad320904d05dbe47dd40ee05b3434>
+		<name>dovecot managesieve login disconnected before greeting</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot managesieve login disconnected before greeting</name>
+			<data_input_id>hash_0300213eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150021c21df5178e5c955013591239eb0afd46|hash_1500210d9c0af8b8acdc7807943937b3208e29|hash_1500216fc2d038fb42950138b0ce3e9874cc60|hash_150021e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_0800210c0c977b9422de5732da2f79cf9c1db8>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_mloginbefgr</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>2</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800210c0c977b9422de5732da2f79cf9c1db8>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070021d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070021feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070021c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002120832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070021fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700214276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotmanagesievelogin&quot;.16</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070021012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700219c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070021ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002132285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002192f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_01002158bad320904d05dbe47dd40ee05b3434>
 	<hash_010021ab6674a5aa0a4d57d9450d00f8d6d914>
 		<name>dovecot managesieve loginmethod ANONYMOUS</name>
 		<ds>

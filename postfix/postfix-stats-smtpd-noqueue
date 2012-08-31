@@ -28,3 +28,4 @@ printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:other= $STATS | cut -d '=' -f2
 printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:RBL= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:HELO= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:toobig= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtpd:NOQUEUE:reject:pipelining= $STATS | cut -d '=' -f2`

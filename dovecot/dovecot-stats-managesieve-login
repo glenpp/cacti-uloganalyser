@@ -38,3 +38,4 @@ printf "%d\n" `grep ^dovecot:managesieve:login:maxconnections= $STATS | cut -d '
 printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:authenticating= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:aborted:disabledauthmethod= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:disabledauthmethod= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:beforegreeting= $STATS | cut -d '=' -f2`

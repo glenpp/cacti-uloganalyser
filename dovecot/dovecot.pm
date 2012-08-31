@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120819;
+our $VERSION = 20120825;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -65,6 +65,8 @@ sub analyse {
 			$$stats{'dovecot:auth:other'} += $multiply;
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
+	} elsif ( $line =~ s/auth: Debug: // ) {
+		# ignore debug stuff
 	} elsif ( $line =~ s/^(imap|pop3|managesieve)-login: // ) {
 		my $protocol = $1;
 		$$stats{"dovecot:$protocol:login"} += $multiply;
@@ -126,11 +128,13 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authfailed"} += $multiply;
-			} elsif ( $line =~ s/^\(disconnected while authenticating\)://
+			} elsif ( $line =~ s/^\(disconnected while authenticating(, waited \d+ secs)?\)://
 				or $line =~ s/^\(client didn't finish SASL auth, waited \d+ secs\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authenticating"} += $multiply;
 			} elsif ( $line =~ s/^\(tried to use disabled plaintext auth\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:disabledauthmethod"} += $multiply;
+			} elsif ( $line =~ s/^\(disconnected before greeting(, waited \d+ secs)?\):// ) {
+				$$stats{"dovecot:$protocol:login:disconnected:beforegreeting"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -143,6 +147,8 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:aborted:authfailed"} += $multiply;
 			} elsif ( $line =~ s/^\(tried to use disabled plaintext auth\):// ) {
 				$$stats{"dovecot:$protocol:login:aborted:disabledauthmethod"} += $multiply;
+			} elsif ( $line =~ s/^\(disconnected before greeting(, waited \d+ secs)?\):// ) {
+				$$stats{"dovecot:$protocol:login:disconnected:beforegreeting"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
 				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -175,8 +181,11 @@ sub analyse {
 				$$stats{"dovecot:$protocol:disconnect:loggedout"} += $multiply;
 			} elsif ( $line =~ /^in IDLE/ ) {
 				$$stats{"dovecot:$protocol:disconnect:idle"} += $multiply;
-			} elsif ( $line =~ /^in APPEND/ ) {
+			} elsif ( $line =~ /^in APPEND/
+				or $line =~ /^EOF while appending/ ) {	# assuming same thing but in debug
 				$$stats{"dovecot:$protocol:disconnect:append"} += $multiply;
+			} elsif ( $line =~ /Internal error occurred\. Refer to server log for more information\./ ) {
+				$$stats{"dovecot:$protocol:disconnect:internalerror"} += $multiply;
 			} elsif ( $line eq ''
 				or $line eq 'Disconnected' ) {
 				$$stats{"dovecot:$protocol:disconnect:none"} += $multiply;
@@ -190,6 +199,12 @@ sub analyse {
 			# ignore
 		} elsif ( $line =~ s/Error: write\(.+\) failed: Broken pipe// ) {
 			# ignore - probably relates to above shutdown
+		} elsif ( $line =~ s/Error: Corrupted index cache file \/.*\/dovecot\.index\.cache: Broken physical size for mail UID \d+//
+			or $line =~ s/Error: read\([^\)]+\) failed: Input\/output error \(FETCH for mailbox INBOX UID \d+\)//
+			or $line =~ s/Error: Cached message size smaller than expected \(\d+ < \d+\)//
+			or $line =~ s/Error: Maildir filename has wrong S value, renamed the file from \/.*, to \/.*,//
+			or $line =~ s/Error: Corrupted index cache file// ) {
+				# ignore - debug info?
 		} else {
 			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
@@ -268,6 +283,8 @@ sub analyse {
 	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
 			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
+	} elsif ( $line =~ s/auth-worker\(\d+\): Debug:\s*// ) {
+		# ignore debug messages
 	} elsif ( $line =~ s/Killed with signal 15 // ) {
 		# ignore - normal stop behaviour
 	} elsif ( $line =~ s/^ssl-params:\s*// ) {
@@ -280,6 +297,12 @@ sub analyse {
 		}
 	} elsif ( $line =~ s/auth: Warning: auth client \d+ disconnected with \d+ pending requests:\s*// ) {
 		# ignore - don't think this merits graphing and is more informational/debug
+	} elsif ( $line =~ s/doveadm: Debug: This is Dovecot's debug log\s*//
+		or $line =~ s/doveadm: This is Dovecot's info log\s*//
+		or $line =~ s/doveadm: Warning: This is Dovecot's warning log\s*//
+		or $line =~ s/doveadm: Error: This is Dovecot's error log\s*//
+		or $line =~ s/doveadm: Fatal: This is Dovecot's fatal log\s*// ) {
+		# ignore debug messages
 	} else {
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 	}

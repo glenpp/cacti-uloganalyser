@@ -31,3 +31,4 @@ printf "%d\n" `grep ^dovecot:managesieve:disconnect:loggedout= $STATS | cut -d '
 printf "%d\n" `grep ^dovecot:managesieve:disconnect:idle= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:disconnect:append= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:disconnect:none= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:managesieve:disconnect:internalerror= $STATS | cut -d '=' -f2`

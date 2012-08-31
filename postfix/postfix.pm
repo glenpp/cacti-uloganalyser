@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120819;
+our $VERSION = 20120830;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -217,6 +217,8 @@ sub analyse {
 				}
 			} elsif ( $line =~ s/^reject: MAIL from\s*.+: 552 5\.3\.4 Message size exceeds fixed limit// ) {
 				++$$stats{'postfix:smtpd:NOQUEUE:toobig'};
+			} elsif ( $line =~ s/^reject: DATA from [\w\.\-]+\[[\w\.:]+\]: 503 5\.5\.0 <DATA>: Data command rejected: Improper use of SMTP command pipelining;// ) {
+				++$$stats{'postfix:smtpd:NOQUEUE:pipelining'};
 			} else {
 				# other
 				++$$stats{'postfix:smtpd:NOQUEUE:other'};
@@ -368,7 +370,7 @@ sub analyse {
 			my $esmtpcode;
 			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|554|459)[ \-]// ) {
 				$smtpcode = $2;
-				if ( $message =~ s/^(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
+				if ( $message =~ s/^#?(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
 					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format
 					$esmtpcode = $1;
 				} 
@@ -433,7 +435,7 @@ sub analyse {
 				or $message =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:25: Connection timed out//i
 				or $message =~ s/Could not complete recipient verify callout//i
 				or $message =~ s/Could not complete sender verify callout//i
-				or $message =~ s/\(DYN:T1\) http:\/\/postmaster\.info\.aol\.com\/errors\/421dynt1\.html//i
+				or $message =~ s/\(DYN:T1\) +http:\/\/postmaster\.info\.aol\.com\/errors\/421dynt1\.html//i
 				or $message =~ s/^.*gr[ea]ylist.*$//i
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
 				or $message =~ s/Maybe later is better//i
