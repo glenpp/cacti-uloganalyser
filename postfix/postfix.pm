@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120830;
+our $VERSION = 20120901;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -35,6 +35,7 @@ our $VERSION = 20120830;
 # "oneloveamaru"
 # Grzegorz Dajuk
 # Voytek Eymont
+# "byrdhuntr"
 
 
 
@@ -119,7 +120,7 @@ sub analyse {
 			} elsif ( $line =~ s/^.*\[unknown\]// ) {
 				# ignore - it was so brief we didn't get the address
 			} else {
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
 		} elsif ( $line =~ s/lost connection after\s*// ) {
 			# lost snmp connection
@@ -165,7 +166,7 @@ sub analyse {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Recipient:other'};
 						# don't report customised rejections
-						#print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+						#warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
 				} elsif ( $line =~ s/^.*: Sender address rejected:\s*// ) {
 					# don't like sender
@@ -191,7 +192,7 @@ sub analyse {
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:other'};
-						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+						warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
 				} elsif ( $line =~ s/^.* Client (address|host) rejected:\s*// ) {
 					# don't like client
@@ -208,12 +209,12 @@ sub analyse {
 					} else {
 						# some other reason
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Client:other'};
-						print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+						warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 					}
 				} else {
 					# other rejection
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:other'};
-					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				}
 			} elsif ( $line =~ s/^reject: MAIL from\s*.+: 552 5\.3\.4 Message size exceeds fixed limit// ) {
 				++$$stats{'postfix:smtpd:NOQUEUE:toobig'};
@@ -222,7 +223,7 @@ sub analyse {
 			} else {
 				# other
 				++$$stats{'postfix:smtpd:NOQUEUE:other'};
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
 		} elsif ( $line =~ s/^setting up TLS connection from\s*// ) {
 			# we are at least trying - TODO currently not used
@@ -254,7 +255,7 @@ sub analyse {
 				++$$stats{'postfix:smtpd:TLS:certverifyfail:notclient'};
 			} else {
 				# some other unknown reason
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				++$$stats{'postfix:smtpd:TLS:certverifyfail:other'};
 			}
 #		} elsif ( $line =~ s/^[^\s]+: Untrusted: subject_CN=, issuer=[^,]+, fingerprint=[\dA-F:]+$// ) {
@@ -282,7 +283,7 @@ sub analyse {
 		} else {
 			# some other type
 			++$$stats{'postfix:smtpd:other'};
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 ############################### smtp ###############################
 	} elsif ( $line =~ s/^.+ postfix\/smtp\[\d+\]:\s*// ) {
@@ -306,7 +307,7 @@ sub analyse {
 			} else {
 				# some other type
 				++$$stats{'postfix:smtp:connother'};
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
 		} elsif ( $line =~ s/^[0-9A-F]+: lost connection with .+ while //i ) {	# TODO
 			# failed connection - lost
@@ -338,7 +339,7 @@ sub analyse {
 				++$$stats{'postfix:smtp:TLS:certverifyfail:expired'};
 			} else {
 				# some other unknown reason
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				++$$stats{'postfix:smtp:TLS:certverifyfail:other'};
 			}
 		} elsif ( $line =~ s/^warning:\s*// ) {
@@ -510,7 +511,7 @@ sub analyse {
 		} else {
 			# some other
 			++$$stats{'postfix:smtp:other'};
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 ########################## local delivery ##########################
 	} elsif ( $line =~ s/^.+ postfix\/(local|virtual|pipe)\[\d+\]:\s*// ) {
@@ -538,7 +539,7 @@ sub analyse {
 			} else {
 				# some other
 				++$$stats{'postfix:local:sent:other'};
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
 		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=deferred\s*// ) {
 			# something went wrong
@@ -549,7 +550,7 @@ sub analyse {
 		} else {
 			# some other
 			++$$stats{'postfix:local:other'};
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/lmtp\[\d+\]:\s*// ) {	# TODO
 		if ( $line =~ s/^[0-9A-F]+: to=.* status=sent\s*// ) {
@@ -564,7 +565,7 @@ sub analyse {
 		} else {
 			# some other
 			++$$stats{'postfix:lmtp:other'};
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/postdrop\[\d+\]:\s*// ) {
 		# possible things to monitor: TODO
@@ -599,7 +600,7 @@ sub analyse {
 			# ignore
 		} else {
 			# useful to know of others
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/master\[\d+\]:\s*// ) {
 		if ( $line =~ s/^terminating on signal 15$// ) {
@@ -640,12 +641,12 @@ sub analyse {
 			# ignore
 		} else {
 			++$$stats{'postfix:policy:policy-spf:other'};
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/postsuper\[\d+\]:\s*// ) {
 		# ignore
 	} else {
-		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 	}
 }
 
@@ -679,7 +680,7 @@ sub smtpd_ip {
 	} elsif ( $origline =~ /\[[\da-f:]+\]\d+,/ ) {
 		$$stats{'postfix:smtp:connect:ipv6'} += $direction;
 	} else {
-		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 	}
 }
 

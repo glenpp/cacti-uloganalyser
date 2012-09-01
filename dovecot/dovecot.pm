@@ -22,7 +22,13 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120825;
+our $VERSION = 20120901;
+
+# places we should look for this
+our @DOVEADM = (
+	'/usr/sbin/doveadm',
+	'/usr/bin/doveadm',
+);
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -35,11 +41,33 @@ our $VERSION = 20120825;
 sub register {
 	my ( $lines, $ends ) = @_;
 	push @$lines, \&analyse;
+	push @$ends, \&wrapup;
 }
 
 
-
-
+sub wrapup {
+	my $stats = shift;
+	# see if we can run "doveadm"
+	foreach my $doveadm (@DOVEADM) {
+		if ( -x $doveadm and open my $da. '-|', "$doveadm who" ) {
+			while ( defined ( my $line = <$da> ) ) {
+				chomp $line;
+				if ( $line =~ /^[^\s]+\s+(\d+)\s+(\w+)\s+\([^\)]+\)\s+\([^\)]+\)$/ ) {
+					if ( $2 ne 'imap' and $2 ne 'managesieve' and $2 ne 'pop3' ) {
+						warn __FILE__." $VERSION:".__LINE__." \"doveadm who\" unknown dovecot: $line\n";
+						next;
+					}
+					# store this number
+					$$stats{'dovecot:sessions:'.$2} += $1;
+				} elsif ( $line !~ /username\s+#\s+proto\s+\(pids\)\s+\(ips\)$/ ) {
+					warn __FILE__." $VERSION:".__LINE__." \"doveadm who\" unknown dovecot: $line\n";
+				}
+			}
+			close $da;
+			last;
+		}
+	}
+}
 
 
 sub analyse {
@@ -63,7 +91,7 @@ sub analyse {
 			$$stats{'dovecot:auth:emptyusername'} += $multiply;
 		} else {
 			$$stats{'dovecot:auth:other'} += $multiply;
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/auth: Debug: // ) {
 		# ignore debug stuff
@@ -101,18 +129,18 @@ sub analyse {
 					$$stats{"dovecot:$protocol:loginmethod:external"} += $multiply;
 				} else {
 					$$stats{"dovecot:$protocol:loginmethod:other"} += $multiply;
-					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 				}
 			}
 			if ( $line =~ /lip=[\da-f\.:]+$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+$/ ) {
 				$$stats{"dovecot:$protocol:crypto:none"} += $multiply;
-			} elsif ( $line =~ /lip=[\da-f\.:]+, TLS$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, TLS$/ ) {
+			} elsif ( $line =~ /lip=[\da-f\.:]+, TLS$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, TLS(: Disconnected)?$/ ) {
 				$$stats{"dovecot:$protocol:crypto:tls"} += $multiply;
 			} elsif ( $line =~ /lip=[\da-f\.:]+, secured$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, secured$/ ) {
 				$$stats{"dovecot:$protocol:crypto:ssl"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/^Disconnected[:\s]*// ) {
 			$$stats{"dovecot:$protocol:login:disconnected"} += $multiply;
@@ -137,7 +165,7 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:beforegreeting"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/^Aborted login[:\s]*// ) {
 			$$stats{"dovecot:$protocol:login:aborted"} += $multiply;
@@ -151,13 +179,13 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:beforegreeting"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:aborted:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/^Maximum number of connections from user\+IP exceeded // ) {
 			$$stats{"dovecot:$protocol:login:maxconnections"} += $multiply;
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?: // ) {
 		my $protocol = lc $1;
@@ -191,7 +219,7 @@ sub analyse {
 				$$stats{"dovecot:$protocol:disconnect:none"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:disconnect:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/Connection closed// ) {
 			$$stats{"dovecot:$protocol:connclosed"} += $multiply;
@@ -202,11 +230,11 @@ sub analyse {
 		} elsif ( $line =~ s/Error: Corrupted index cache file \/.*\/dovecot\.index\.cache: Broken physical size for mail UID \d+//
 			or $line =~ s/Error: read\([^\)]+\) failed: Input\/output error \(FETCH for mailbox INBOX UID \d+\)//
 			or $line =~ s/Error: Cached message size smaller than expected \(\d+ < \d+\)//
-			or $line =~ s/Error: Maildir filename has wrong S value, renamed the file from \/.*, to \/.*,//
+			or $line =~ s/Error: Maildir filename has wrong S value, renamed the file from \/.* to \/.*//
 			or $line =~ s/Error: Corrupted index cache file// ) {
 				# ignore - debug info?
 		} else {
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/deliver\([^\)]+\):\s*// ) {
 		# also see lmtp below - some versions use that instead
@@ -220,7 +248,7 @@ sub analyse {
 		} elsif ( $line =~ s/.*: save failed to\s*// ) {
 				$$stats{'dovecot:deliver:fail'} += $multiply;
 		} else {
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/^lmtp\([^\)]+\): *// ) {
 		# also see deliver above - some versions use that instead
@@ -239,7 +267,7 @@ sub analyse {
 		} elsif ( $line =~ s/Disconnect from local: Connection closed \(in reset\)// ) {
 			# ignore
 		} else {
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/master:\s*// ) {
 		# TODO graph TODO TODO TODO TODO TODO
@@ -254,7 +282,7 @@ sub analyse {
 #					$$stats{"dovecot:master:warning:proclimit:$service"} += $multiply;
 #				} else {
 #					$$stats{"dovecot:master:warning:proclimit:other"} += $multiply;
-#					print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+#					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 #				}
 			} elsif ( $line =~ s/Killed with signal 15 // ) {
 				# ignore - normal shutdown behaviour
@@ -262,7 +290,7 @@ sub analyse {
 				# ignore - normal reload behaviour
 			} else {
 				$$stats{"dovecot:master:warning:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/Error:\s*// ) {
 			$$stats{"dovecot:master:error"} += $multiply;
@@ -271,12 +299,12 @@ sub analyse {
 				# TODO possibly use service block above TODO
 			} else {
 				$$stats{"dovecot:master:error:other"} += $multiply;
-				print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/Dovecot v.+ starting up// ) {
 			# ignore - normal shutdown behaviour
 		} else {
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/ssl-build-param: SSL parameters regeneration completed// ) {
 		# ignore
@@ -293,7 +321,7 @@ sub analyse {
 		} elsif ( $line =~ s/^SSL parameters regeneration completed// ) {
 			# ignore
 		} else {
-			print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/auth: Warning: auth client \d+ disconnected with \d+ pending requests:\s*// ) {
 		# ignore - don't think this merits graphing and is more informational/debug
@@ -304,7 +332,7 @@ sub analyse {
 		or $line =~ s/doveadm: Fatal: This is Dovecot's fatal log\s*// ) {
 		# ignore debug messages
 	} else {
-		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 	}
 	return 1;
 }

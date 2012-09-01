@@ -41,6 +41,8 @@ sub processline {
 		}
 	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \/[^:]+:\d+ unknown dovecot:\s+// ) {
 		print "$line\n\n";
+	} elsif ( $line =~ s/^\/[^\s]+fail2ban\.pm \d{8}:\d+ \/[^:]+:\d+ unknown fail2ban:\s+// ) {
+		print "$line\n\n";
 	} elsif ( $line eq '' ) {
 		# ignore
 	} else {
