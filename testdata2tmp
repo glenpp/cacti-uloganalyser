@@ -3,8 +3,19 @@ use strict;
 use warnings;
 
 
-foreach my $file (glob "testdata/*") {
+my $glob = "testdata/*";
+if ( defined $ARGV[0] ) {
+	$glob = $ARGV[0];
+}
+
+
+foreach my $file (glob $glob) {
 	open TD, '<', $file or die "FATAL - can't open \"$file\": $!\n";
+	if ( $file =~ /\.raw$/ ) {
+		print <TD>;
+		close TD;
+		next;
+	}
 	my $tmpline = '';
 	while ( defined ( my $line = <TD> ) ) {
 		if ( $line =~ /^##/ ) { next; }
@@ -41,12 +52,14 @@ sub processline {
 		}
 	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \/[^:]+:\d+ unknown dovecot:\s+// ) {
 		print "$line\n\n";
+	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \"doveadm who\" unknown dovecot:\s+// ) {
+		print "$line\n";
 	} elsif ( $line =~ s/^\/[^\s]+fail2ban\.pm \d{8}:\d+ \/[^:]+:\d+ unknown fail2ban:\s+// ) {
 		print "$line\n\n";
 	} elsif ( $line eq '' ) {
 		# ignore
 	} else {
-		warn "UNKNOWN $line\n\n";
+		warn __FILE__." UNKNOWN $line\n\n";
 	}
 
 

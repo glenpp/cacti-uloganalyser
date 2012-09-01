@@ -22,7 +22,8 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120901;
+#our $VERSION = 20120901;
+our $VERSION = "20120901b";
 
 # places we should look for this
 our @DOVEADM = (
@@ -48,18 +49,26 @@ sub register {
 sub wrapup {
 	my $stats = shift;
 	# see if we can run "doveadm"
+	foreach ('imap', 'managesieve', 'pop3' ) { $$stats{"dovecot:users:$_"} = 0; }
+	my %users;
 	foreach my $doveadm (@DOVEADM) {
-		if ( -x $doveadm and open my $da. '-|', "$doveadm who" ) {
+#		if ( -f '/tmp/testdoveadm' and open my $da, '<', '/tmp/testdoveadm' ) { print "WARNING - non production\n";	# for testing
+		if ( -x $doveadm and open my $da, '-|', "$doveadm who 2>&1" ) {
 			while ( defined ( my $line = <$da> ) ) {
 				chomp $line;
-				if ( $line =~ /^[^\s]+\s+(\d+)\s+(\w+)\s+\([^\)]+\)\s+\([^\)]+\)$/ ) {
-					if ( $2 ne 'imap' and $2 ne 'managesieve' and $2 ne 'pop3' ) {
+				$line =~ s/\s+$//;
+				if ( $line =~ /^([^\s]+)\s+(\d+)\s+(\w+)\s+\([^\)]+\)\s+\([^\)]+\)$/ ) {
+					if ( $3 ne 'imap' and $3 ne 'managesieve' and $3 ne 'pop3' ) {
 						warn __FILE__." $VERSION:".__LINE__." \"doveadm who\" unknown dovecot: $line\n";
 						next;
 					}
 					# store this number
-					$$stats{'dovecot:sessions:'.$2} += $1;
-				} elsif ( $line !~ /username\s+#\s+proto\s+\(pids\)\s+\(ips\)$/ ) {
+					$$stats{"dovecot:sessions:$3"} += $2;
+					if ( ! exists $users{$3}{$1} ) {
+						$users{$3}{$1} = 1;
+						++$$stats{"dovecot:users:$3"};
+					}
+				} elsif ( $line !~ /^username\s+#\s+proto\s+\(pids\)\s+\(ips\)$/ ) {
 					warn __FILE__." $VERSION:".__LINE__." \"doveadm who\" unknown dovecot: $line\n";
 				}
 			}

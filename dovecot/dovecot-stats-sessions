@@ -24,5 +24,8 @@ STATS=/var/local/snmp/mail
 
 
 printf "%d\n" `grep ^dovecot:sessions:imap= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:users:imap= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:sessions:managesieve= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:users:managesieve= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:sessions:pop3= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:users:pop3= $STATS | cut -d '=' -f2`

@@ -3,6 +3,7 @@
 # make up dummy logs
 ./testdata2tmp >/tmp/testlog
 touch /tmp/testlog.0
+./testdata2tmp testdoveadm/\* >/tmp/testdoveadm
 
 # run uloganalyser against them
 rm /tmp/ustat
