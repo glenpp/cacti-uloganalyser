@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120901;
+our $VERSION = 20120908;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -36,6 +36,7 @@ our $VERSION = 20120901;
 # Grzegorz Dajuk
 # Voytek Eymont
 # "byrdhuntr"
+# "bluemm"
 
 
 
@@ -419,6 +420,7 @@ sub analyse {
 					or $message =~ s/undeliverable address: unknown user//i	# should normally bounce, hence broken server
 					or $message =~ s/Unexpected failure//i
 					or $message =~ s/Recipient address rejected: User unknown in (local|virtual) (recipient|mailbox) table//i	# should normally bounce, hence broken server
+					or $message =~ s/^Requested action aborted\s*//i
 					or $message =~ s/Server configuration problem//i
 				) )
 				or $line =~ s/^.* Connection refused$//i

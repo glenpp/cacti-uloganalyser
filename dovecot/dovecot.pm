@@ -22,8 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-#our $VERSION = 20120901;
-our $VERSION = "20120901b";
+our $VERSION = 20120908;
 
 # places we should look for this
 our @DOVEADM = (
@@ -49,7 +48,10 @@ sub register {
 sub wrapup {
 	my $stats = shift;
 	# see if we can run "doveadm"
-	foreach ('imap', 'managesieve', 'pop3' ) { $$stats{"dovecot:users:$_"} = 0; }
+	foreach ('imap', 'managesieve', 'pop3' ) {
+		$$stats{"dovecot:sessions:$_"} = 0;
+		$$stats{"dovecot:users:$_"} = 0;
+	}
 	my %users;
 	foreach my $doveadm (@DOVEADM) {
 #		if ( -f '/tmp/testdoveadm' and open my $da, '<', '/tmp/testdoveadm' ) { print "WARNING - non production\n";	# for testing
