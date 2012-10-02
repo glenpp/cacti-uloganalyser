@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_
 #
 package fail2ban;
-our $VERSION = 20120901;
+our $VERSION = 20121001;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -39,7 +39,14 @@ our %CLASSES = (
 	'postfix' => 'mail',
 	'sasl' => 'mail',
 	'postfix-local' => 'mail',
+	'postfix-local2' => 'mail',
 	'ssh' => 'ssh',
+	'apache' => 'www',
+	'apache-badbots' => 'www',
+	'apache-nohome' => 'www',
+	'apache-noscript' => 'www',
+	'apache-overflows' => 'www',
+	'apache-local' => 'www',
 #	'' => '',
 );
 
@@ -80,10 +87,10 @@ sub analyse {
 				if ( ! exists $$stats{"fail2ban:banned:$CLASSES{$1}"} ) {
 					$$stats{"fail2ban:banned:$CLASSES{$1}"} = 0;
 				}
-print "ban : fail2ban:banned:$CLASSES{$1}\n";
-print $$stats{"fail2ban:banned:$CLASSES{$1}"}." => ";
+#print "ban : fail2ban:banned:$CLASSES{$1}\n";
+#print $$stats{"fail2ban:banned:$CLASSES{$1}"}." => ";
 				$$stats{"fail2ban:banned:$CLASSES{$1}"} += $multiply;
-print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n";
+#print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n";
 			} else {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\n";
 				$$stats{"fail2ban:banned:other"} += $multiply;
@@ -93,11 +100,11 @@ print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n";
 				if ( ! exists $$stats{"fail2ban:banned:$CLASSES{$1}"} ) {
 					$$stats{"fail2ban:banned:$CLASSES{$1}"} = 0;
 				}
-print "unban : fail2ban:banned:$CLASSES{$1}\n";
-print $$stats{"fail2ban:banned:$CLASSES{$1}"}." => ";
+#print "unban : fail2ban:banned:$CLASSES{$1}\n";
+#print $$stats{"fail2ban:banned:$CLASSES{$1}"}." => ";
 				$$stats{"fail2ban:banned:$CLASSES{$1}"} -= $multiply;
 				if ( $$stats{"fail2ban:banned:$CLASSES{$1}"} < 0 ) { $$stats{"fail2ban:banned:$CLASSES{$1}"} = 0; }
-print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n";
+#print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n";
 			} else {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\n";
 				$$stats{"fail2ban:banned:other"} -= $multiply;

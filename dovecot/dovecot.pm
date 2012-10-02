@@ -22,7 +22,9 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20120908;
+our $VERSION = 20121002;
+
+our $IGNOREERRORS = 1;
 
 # places we should look for this
 our @DOVEADM = (
@@ -194,6 +196,12 @@ sub analyse {
 			}
 		} elsif ( $line =~ s/^Maximum number of connections from user\+IP exceeded // ) {
 			$$stats{"dovecot:$protocol:login:maxconnections"} += $multiply;
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/Fatal: Error reading configuration: Timeout reading config from //
+			or $line =~ s/Fatal: master: service\([\w+\-]+\): child \d+ killed with signal 9//
+			or $line =~ s/Warning: Auth process not responding, delayed sending greeting: //
+			) ) {
+			# ignore errors
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -228,6 +236,9 @@ sub analyse {
 			} elsif ( $line eq ''
 				or $line eq 'Disconnected' ) {
 				$$stats{"dovecot:$protocol:disconnect:none"} += $multiply;
+			} elsif ( $IGNOREERRORS and
+				( $line =~ s/\w+ session state is inconsistent, please relogin\.// ) ) {
+				# ignore error
 			} else {
 				$$stats{"dovecot:$protocol:disconnect:other"} += $multiply;
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -238,12 +249,21 @@ sub analyse {
 			# ignore
 		} elsif ( $line =~ s/Error: write\(.+\) failed: Broken pipe// ) {
 			# ignore - probably relates to above shutdown
-		} elsif ( $line =~ s/Error: Corrupted index cache file \/.*\/dovecot\.index\.cache: Broken physical size for mail UID \d+//
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/Error: Corrupted index cache file \/.*\/dovecot\.index\.cache: Broken physical size for mail UID \d+//
 			or $line =~ s/Error: read\([^\)]+\) failed: Input\/output error \(FETCH for mailbox INBOX UID \d+\)//
 			or $line =~ s/Error: Cached message size smaller than expected \(\d+ < \d+\)//
 			or $line =~ s/Error: Maildir filename has wrong S value, renamed the file from \/.* to \/.*//
-			or $line =~ s/Error: Corrupted index cache file// ) {
-				# ignore - debug info?
+			or $line =~ s/Error: Corrupted index cache file//
+			or $line =~ s/Error: Internal error occurred\. Refer to server log for more information\.//
+			or $line =~ s/Error: user [^:]+: Error reading configuration: Timeout reading config from//
+			or $line =~ s/Fatal: master: service\([\w+\-]+\): child \d+ killed with signal 9//
+			or $line =~ s/Warning: Auth server restarted \(pid \d+ -> \d+\), aborting auth//
+			or $line =~ s/Error: Corrupted transaction log file //
+			or $line =~ s/Warning: Maildir [^:]+: UIDVALIDITY changed//
+			or $line =~ s/Error: [^\s]+ reset, view is now inconsistent//
+			) ) {
+				# ignore errors
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
@@ -304,12 +324,11 @@ sub analyse {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/Error:\s*// ) {
-			$$stats{"dovecot:master:error"} += $multiply;
-			if ( $line =~ s/service\(([^\)]+)\): command startup failed, throttling for \d+ secs// ) {
-				$$stats{"dovecot:master:error:commandstartup"} += $multiply;
-				# TODO possibly use service block above TODO
+			if ( $IGNOREERRORS and
+				( $line =~ s/service\(([^\)]+)\): command startup failed, throttling for \d+ secs//
+				or $line =~ s/service\(([\w\-]+)\): Initial status notification not received in 30 seconds, killing the process// ) ) {
+				# ignore error
 			} else {
-				$$stats{"dovecot:master:error:other"} += $multiply;
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/Dovecot v.+ starting up// ) {
@@ -342,6 +361,11 @@ sub analyse {
 		or $line =~ s/doveadm: Error: This is Dovecot's error log\s*//
 		or $line =~ s/doveadm: Fatal: This is Dovecot's fatal log\s*// ) {
 		# ignore debug messages
+	} elsif ( $IGNOREERRORS and
+		( $line =~ s/auth: Error: Master requested auth for nonexistent client \d+// ) ) {
+		# ignore error
+	} elsif ( $line =~ s/^Dovecot v\d+\.\d+\.\d+ starting up \(core dumps disabled\)$// ) {
+		# ignore startup
 	} else {
 		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 	}

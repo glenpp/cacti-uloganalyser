@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20120908;
+our $VERSION = 20121002;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -116,7 +116,7 @@ sub analyse {
 			# get ipv4/ipv6 stats
 			if ( $line =~ s/^.*\[[\d+.]+\]// ) {
 				++$$stats{'postfix:smtpd:connect:ipv4'};
-			} elsif ( $line =~ s/^.*\[[\da-f:]+\]// ) {
+			} elsif ( $line =~ s/^.*\[[\da-f:]+(%eth\d)?\]// ) {
 				++$$stats{'postfix:smtpd:connect:ipv6'};
 			} elsif ( $line =~ s/^.*\[unknown\]// ) {
 				# ignore - it was so brief we didn't get the address
@@ -449,6 +449,7 @@ sub analyse {
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
 				or $message =~ s/Sender address deferred by rule//i
+				or $message =~ s/Sender address verification in progress//i
 				or $message =~ s/service temporarily unavailable//i
 				or $message =~ s/Sprobuj za pietnascie sekund//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
@@ -564,6 +565,8 @@ sub analyse {
 		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=bounced\s*// ) {
 			# something went very wrong
 			++$$stats{'postfix:lmtp:bounced'};
+		} elsif ( $line =~ s/^connect to [\w\.\-]+\[[\w\.:]+\]:\d+: Connection refused// ) {
+			# service not there - this should result in deferred line so no need to record
 		} else {
 			# some other
 			++$$stats{'postfix:lmtp:other'};

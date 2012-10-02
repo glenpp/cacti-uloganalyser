@@ -26,3 +26,4 @@ STATS=/var/local/snmp/fail2ban
 printf "%d\n" `grep ^fail2ban:banned:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^fail2ban:banned:mail= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^fail2ban:banned:ssh= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^fail2ban:banned:www= $STATS | cut -d '=' -f2`

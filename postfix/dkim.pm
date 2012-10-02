@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951%2B0000%20Postfix%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dkim;
-our $VERSION = 20110731;
+our $VERSION = 20121002;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -59,6 +59,7 @@ sub analyse {
 		or $line =~ /[0-9A-F]+ failed to parse Authentication-Results: header/
 		or $line =~ /[0-9A-F]+\sADSP query: ar_addquery\(\) for `_adsp\._domainkey\.[^\s]+' failed/
 		or $line =~ /[0-9A-F]+\sADSP query: missing parameter\(s\) in policy data/
+		or $line =~ /Sendmail DKIM Filter: connect\[0\]: mi_inet_pton failed/
 		or $line =~ /message has signatures from/ ) {
 		# ignore
 	} elsif ( $line =~ s/Sendmail DKIM Filter v.+ starting// ) {
