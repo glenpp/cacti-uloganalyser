@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20121002;
+our $VERSION = 20121006;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -405,6 +405,8 @@ sub analyse {
 					or $message =~ s/not accepting (messages|network messages)//i
 					or $message =~ s/over quota//i
 					or $message =~ s/queue file write error//i
+					or $message =~ s/qq read error//i
+					or $message =~ s/qqt failure//i
 					or $message =~ s/rate that is limited//i
 					or $message =~ s/Requested action (aborted|not taken): local error in processing//i
 					or $message =~ s/Requested action not taken: mailbox unavailable//i
