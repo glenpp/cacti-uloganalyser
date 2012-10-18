@@ -39,3 +39,5 @@ printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:authenticating= $STA
 printf "%d\n" `grep ^dovecot:managesieve:login:aborted:disabledauthmethod= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:disabledauthmethod= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:beforegreeting= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:proxybyserver= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:managesieve:login:disconnected:proxybyclient= $STATS | cut -d '=' -f2`

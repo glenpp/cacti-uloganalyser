@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009-2012  Glen Pitt-Pladdy
+# Copyright (C) 2012  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

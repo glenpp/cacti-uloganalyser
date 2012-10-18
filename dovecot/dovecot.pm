@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20121002;
+our $VERSION = 20121018;
 
 our $IGNOREERRORS = 1;
 
@@ -38,6 +38,7 @@ our @DOVEADM = (
 # Przemek Orzechowski
 # "Alex"
 # Voytek Eymont
+# Jean Deram
 
 
 sub register {
@@ -111,7 +112,7 @@ sub analyse {
 	} elsif ( $line =~ s/^(imap|pop3|managesieve)-login: // ) {
 		my $protocol = $1;
 		$$stats{"dovecot:$protocol:login"} += $multiply;
-		if ( $line =~ s/^Login: // ) {
+		if ( $line =~ s/^Login: // or $line =~ s/^proxy\([^\)]+\): started proxying to [\da-f\.:]+ // ) {
 			$$stats{"dovecot:$protocol:login:success"} += $multiply;
 			if ( $line =~ / method=(\w+),/ ) {
 				if ( $1 eq 'PLAIN' ) {
@@ -155,7 +156,9 @@ sub analyse {
 				$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
-		} elsif ( $line =~ s/^Disconnected[:\s]*// ) {
+		} elsif ( $line =~ s/^(Disconnected)[:\s]*// or $line =~ s/^(proxy)\([^\)]+\): disconnecting [\da-f\.:]+ // ) {
+			my $type = lc $1;
+			if ( $type eq 'disconnected' ) { $type = 'login'; }
 			$$stats{"dovecot:$protocol:login:disconnected"} += $multiply;
 			# some dovecot versions give extra info TODO
 			if ( $line =~ s/^Inactivity // ) {
@@ -164,6 +167,8 @@ sub analyse {
 				# TODO not currently used
 			} elsif ( $line =~ s/^Connection queue full // ) {
 				# TODO not currently used
+			} elsif ( $line !~ /^\(/ ) {
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
@@ -176,6 +181,10 @@ sub analyse {
 				$$stats{"dovecot:$protocol:login:disconnected:disabledauthmethod"} += $multiply;
 			} elsif ( $line =~ s/^\(disconnected before greeting(, waited \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:beforegreeting"} += $multiply;
+			} elsif ( $type eq 'proxy' and $line =~ s/^\(Disconnected by server\)// ) {
+				$$stats{"dovecot:$protocol:login:disconnected:proxybyserver"} += $multiply;
+			} elsif ( $type eq 'proxy' and $line =~ s/^\(Disconnected by client\)// ) {
+				$$stats{"dovecot:$protocol:login:disconnected:proxybyclient"} += $multiply;
 			} else {
 				$$stats{"dovecot:$protocol:login:disconnected:other"} += $multiply;
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
@@ -270,6 +279,7 @@ sub analyse {
 	} elsif ( $line =~ s/deliver\([^\)]+\):\s*// ) {
 		# also see lmtp below - some versions use that instead
 		if ( $line =~ s/.*: saved mail to\s*// ) {
+			$line =~ s/^'(.+)'$/$1/;	# strips quotes seen in some versions/configurations
 			$$stats{'dovecot:deliver'} += $multiply;
 			if ( $line eq 'INBOX' ) {
 				$$stats{'dovecot:deliver:inbox'} += $multiply;
@@ -285,7 +295,9 @@ sub analyse {
 		# also see deliver above - some versions use that instead
 		if ( $line =~ s/Connect from local// ) {
 			# ignore
-		} elsif ( $line =~ s/\w+: msgid=.+: saved mail to\s*// ) {
+		} elsif ( $line =~ s/^[^\s]+:( sieve:)? msgid=.+:\s+(saved mail to|stored mail into mailbox)\s*// ) {
+			$line =~ s/^'(.+)'$/$1/;	# strips quotes seen in some versions/configurations
+			$$stats{'dovecot:deliver'} += $multiply;
 			if ( $line eq 'INBOX' ) {
 				$$stats{'dovecot:deliver:inbox'} += $multiply;
 			} else {
@@ -299,6 +311,7 @@ sub analyse {
 			# ignore
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $line\n";
 		}
 	} elsif ( $line =~ s/master:\s*// ) {
 		# TODO graph TODO TODO TODO TODO TODO

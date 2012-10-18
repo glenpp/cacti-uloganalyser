@@ -39,3 +39,5 @@ printf "%d\n" `grep ^dovecot:pop3:login:disconnected:authenticating= $STATS | cu
 printf "%d\n" `grep ^dovecot:pop3:login:aborted:disabledauthmethod= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:pop3:login:disconnected:disabledauthmethod= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:pop3:login:disconnected:beforegreeting= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:pop3:login:disconnected:proxybyserver= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:pop3:login:disconnected:proxybyclient= $STATS | cut -d '=' -f2`
