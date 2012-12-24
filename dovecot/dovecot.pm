@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20121018;
+our $VERSION = 20121115;
 
 our $IGNOREERRORS = 1;
 
@@ -377,8 +377,9 @@ sub analyse {
 	} elsif ( $IGNOREERRORS and
 		( $line =~ s/auth: Error: Master requested auth for nonexistent client \d+// ) ) {
 		# ignore error
-	} elsif ( $line =~ s/^Dovecot v\d+\.\d+\.\d+ starting up \(core dumps disabled\)$// ) {
-		# ignore startup
+	} elsif ( $line =~ s/^Dovecot v\d+\.\d+\.\d+ starting up \(core dumps disabled\)$//
+		or $line =~ s/^dovecot: SIGHUP received - reloading configuration// ) {
+		# ignore startup / restart / reload
 	} else {
 		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 	}

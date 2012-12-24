@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_
 #
 package fail2ban;
-our $VERSION = 20121001;
+our $VERSION = 20121224;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -40,6 +40,7 @@ our %CLASSES = (
 	'sasl' => 'mail',
 	'postfix-local' => 'mail',
 	'postfix-local2' => 'mail',
+	'dovecot-local' => 'mail',
 	'ssh' => 'ssh',
 	'apache' => 'www',
 	'apache-badbots' => 'www',

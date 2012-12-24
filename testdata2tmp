@@ -54,7 +54,7 @@ sub processline {
 		print "$line\n\n";
 	} elsif ( $line =~ s/^\/[^\s]+dovecot\.pm \d{8}:\d+ \"doveadm who\" unknown dovecot:\s+// ) {
 		print "$line\n";
-	} elsif ( $line =~ s/^\/[^\s]+fail2ban\.pm \d{8}:\d+ \/[^:]+:\d+ unknown fail2ban:\s+// ) {
+	} elsif ( $line =~ s/^\/[^\s]+fail2ban\.pm \d{8}:\d+ \/[^:]+:\d+ unknown (class "[^"]+" )?fail2ban:\s+// ) {
 		print "$line\n\n";
 	} elsif ( $line =~ s/^\/[^\s]+dkim\.pm \d{8}:\d+ \/[^:]+:\d+ unknown:\s+// ) {
 		print "$line\n\n";
