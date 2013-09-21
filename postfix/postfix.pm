@@ -22,7 +22,7 @@ use warnings;
 # See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20121115;
+our $VERSION = 20130705;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -371,7 +371,7 @@ sub analyse {
 			my $message = $line;
 			my $smtpcode;
 			my $esmtpcode;
-			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][0124]|433|554|459)[ \-]// ) {
+			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][01234]|433|554|459)[ \-]// ) {
 				$smtpcode = $2;
 				if ( $message =~ s/^#?(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
 					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format
@@ -444,6 +444,7 @@ sub analyse {
 				or $message =~ s/\(DYN:T1\) +http:\/\/postmaster\.info\.aol\.com\/errors\/421dynt1\.html//i
 				or $message =~ s/^.*gr[ea]ylist.*$//i
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
+				or $message =~ s/Internal resource temporarily unavailable - http:\/\/www\.mimecast\.com\/knowledgebase\/KBID10473\.htm//
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
 				or $message =~ s/message is probably spam//i
@@ -459,6 +460,7 @@ sub analyse {
 				or $message =~ s/Temporarily blocked for \d+ seconds//i
 				or $message =~ s/Temporarily rejected//i
 				or $message =~ s/The user you are trying to contact is receiving mail too quickly//i
+				or $message =~ s/Too many messages for this recipient at the moment //i
 				or $message =~ s/too much mail from //i
 				or $message =~ s/Unable to validate [^\s]+ with the MX mailserver for 451 [^\s]+ \(tested with a fake bounce back\)//
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
@@ -618,36 +620,44 @@ sub analyse {
 			# ignore starts
 		}
 	} elsif ( $line =~ s/^.+ postfix\/policy-spf\[\d+\]:\s*// ) {
-		if ( $line =~ s/: SPF None \(No applicable sender policy available\): \s*//i ) {
+		if ( $line =~ s/: SPF None \(No applicable sender policy available\): \s*//i
+			or $line =~ s/^Policy action=PREPEND Received-SPF: none //i ) {
 			++$$stats{'postfix:policy:policy-spf:none'};
-		} elsif ( $line =~ s/: Policy action=PREPEND X-Comment: SPF skipped for whitelisted relay// ) {
+		} elsif ( $line =~ s/: Policy action=PREPEND X-Comment: SPF skipped for whitelisted relay//
+			or $line =~ s/^Policy action=PREPEND Authentication-Results: .+; none \(SPF not checked for whitelisted relay\)$// ) {
 			++$$stats{'postfix:policy:policy-spf:whitelisted'};
-		} elsif ( $line =~ s/: SPF Pass //i ) {
+		} elsif ( $line =~ s/: SPF Pass //i
+			or $line =~ s/^Policy action=PREPEND Received-SPF: pass //i ) {
 			++$$stats{'postfix:policy:policy-spf:pass'};
 		} elsif ( $line =~ s/: SPF Neutral //i
+			or $line =~ s/^Policy action=PREPEND Received-SPF: neutral //i
 			or $line =~ s/: SPF NeutralByDefault //i
 			or $line =~ s/: SPF neutral-by-default //i ) {
 			++$$stats{'postfix:policy:policy-spf:neutral'};
-		} elsif ( $line =~ s/: SPF SoftFail //i ) {
+		} elsif ( $line =~ s/: SPF SoftFail //i
+			or $line =~ s/^Policy action=PREPEND Received-SPF: softfail //i ) {
 			++$$stats{'postfix:policy:policy-spf:softfail'};
-		} elsif ( $line =~ s/: SPF Fail //i ) {
+		} elsif ( $line =~ s/: SPF Fail //i
+			or $line =~ s/^Policy action=550 Please see http:\/\/www\.openspf\.(net|org)\/Why\?// ) {
 			++$$stats{'postfix:policy:policy-spf:fail'};
-		} elsif ( $line =~ s/: SPF TempError //i ) {
+		} elsif ( $line =~ s/: SPF TempError //i
+			or $line =~ s/^Policy action=DEFER_IF_PERMIT SPF-Result=[^:]+: 'SERVFAIL' // ) {	# presuming DNS was previously classed as temp
 			++$$stats{'postfix:policy:policy-spf:temperror'};
-		} elsif ( $line =~ s/: SPF PermError //i ) {
+		} elsif ( $line =~ s/: SPF PermError //i
+			or $line =~ s/^Policy action=PREPEND Received-SPF: permerror //i ) {
 			++$$stats{'postfix:policy:policy-spf:permerror'};
-		} elsif ( $line =~ s/: Policy action=PREPEND X-Comment: SPF skipped for whitelisted relay//
-			or $line =~ s/: Policy action=PREPEND Received-SPF: none //
-			or $line =~ s/: Policy action=PREPEND Received-SPF: neutral //
-			or $line =~ s/: Policy action=PREPEND Received-SPF: pass //
-			or $line =~ s/: Policy action=PREPEND Received-SPF: softfail //
-			or $line =~ s/: Policy action=PREPEND Received-SPF: permerror //
-			or $line =~ s/: Policy action=DEFER_IF_PERMIT //
-			or $line =~ s/: Policy action=DUNNO//
-			or $line =~ s/: Policy action=550 Please see http:\/\/www\.openspf\.org\/Why?//
-			or $line =~ s/handler sender_policy_framework: is decisive\.//
-			or $line =~ s/handler exempt_relay: is decisive\.// ) {
-			# ignore
+
+
+#		} elsif ( $line =~ s/: Policy action=PREPEND X-Comment: SPF skipped for whitelisted relay//
+#			or $line =~ s/: Policy action=PREPEND Received-SPF: none //
+#			or $line =~ s/: Policy action=PREPEND Received-SPF: neutral //
+#			or $line =~ s/: Policy action=PREPEND Received-SPF: pass //
+#			or $line =~ s/: Policy action=PREPEND Received-SPF: permerror //
+#			or $line =~ s/: Policy action=DEFER_IF_PERMIT //
+#			or $line =~ s/: Policy action=DUNNO//
+#			or $line =~ s/handler sender_policy_framework: is decisive\.//
+#			or $line =~ s/handler exempt_relay: is decisive\.// ) {
+#			# ignore
 		} else {
 			++$$stats{'postfix:policy:policy-spf:other'};
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";

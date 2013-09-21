@@ -19,10 +19,10 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
+# See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20121115;
+our $VERSION = 20130920;
 
 our $IGNOREERRORS = 1;
 
@@ -94,7 +94,7 @@ sub analyse {
 		$multiply = $1;
 	}
 	# on with the lines...
-	if ( $line =~ s/auth\(\w+\): [\w\-]+\(.+\): // ) {
+	if ( $line =~ s/auth(\(\w+\))?: [\w\-]+\(.+\): // ) {
 		if ( $line =~ s/^unknown user$// ) {
 			$$stats{'dovecot:auth:unknownuser'} += $multiply;
 		} elsif ( $line =~ s/^Password mismatch// ) {
@@ -114,47 +114,73 @@ sub analyse {
 		$$stats{"dovecot:$protocol:login"} += $multiply;
 		if ( $line =~ s/^Login: // or $line =~ s/^proxy\([^\)]+\): started proxying to [\da-f\.:]+ // ) {
 			$$stats{"dovecot:$protocol:login:success"} += $multiply;
-			if ( $line =~ / method=(\w+),/ ) {
-				if ( $1 eq 'PLAIN' ) {
-					$$stats{"dovecot:$protocol:loginmethod:plain"} += $multiply;
-				} elsif ( $1 eq 'LOGIN' ) {
-					$$stats{"dovecot:$protocol:loginmethod:login"} += $multiply;
-				} elsif ( $1 eq 'CRAM-MD5' ) {
-					$$stats{"dovecot:$protocol:loginmethod:crammd5"} += $multiply;
-				} elsif ( $1 eq 'DIGEST-MD5' ) {
-					$$stats{"dovecot:$protocol:loginmethod:digestmd5"} += $multiply;
-				} elsif ( $1 eq 'APOP' ) {	# POP3 only
-					$$stats{"dovecot:$protocol:loginmethod:apop"} += $multiply;
-				} elsif ( $1 eq 'NTLM' ) {
-					$$stats{"dovecot:$protocol:loginmethod:ntlm"} += $multiply;
-				} elsif ( $1 eq 'GSS-SPNEGO' ) {
-					$$stats{"dovecot:$protocol:loginmethod:gssspnego"} += $multiply;
-				} elsif ( $1 eq 'GSSAPI' ) {
-					$$stats{"dovecot:$protocol:loginmethod:gssapi"} += $multiply;
-				} elsif ( $1 eq 'RPA' ) {
-					$$stats{"dovecot:$protocol:loginmethod:rpa"} += $multiply;
-				} elsif ( $1 eq 'ANONYMOUS' ) {
-					$$stats{"dovecot:$protocol:loginmethod:anonymous"} += $multiply;
-				} elsif ( $1 eq 'OTP' ) {
-					$$stats{"dovecot:$protocol:loginmethod:otp"} += $multiply;
-				} elsif ( $1 eq 'SKEY' ) {
-					$$stats{"dovecot:$protocol:loginmethod:skey"} += $multiply;
-				} elsif ( $1 eq 'EXTERNAL' ) {
-					$$stats{"dovecot:$protocol:loginmethod:external"} += $multiply;
+# TODO may be Disconnected, in which case not success TODO
+			my $crypto = 'none';
+			my $local;
+			my $remote;
+			while ( $line ) {
+				if ( $line =~ s/user=<[^>]*>, // or $line =~ s/user=<[^>]*>$// ) {
+					# not used
+				} elsif ( $line =~ s/method=(\w+), // or $line =~ s/method=(\w+)$// ) {
+					if ( $1 eq 'PLAIN' ) {
+						$$stats{"dovecot:$protocol:loginmethod:plain"} += $multiply;
+					} elsif ( $1 eq 'LOGIN' ) {
+						$$stats{"dovecot:$protocol:loginmethod:login"} += $multiply;
+					} elsif ( $1 eq 'CRAM-MD5' ) {
+						$$stats{"dovecot:$protocol:loginmethod:crammd5"} += $multiply;
+					} elsif ( $1 eq 'DIGEST-MD5' ) {
+						$$stats{"dovecot:$protocol:loginmethod:digestmd5"} += $multiply;
+					} elsif ( $1 eq 'APOP' ) {	# POP3 only
+						$$stats{"dovecot:$protocol:loginmethod:apop"} += $multiply;
+					} elsif ( $1 eq 'NTLM' ) {
+						$$stats{"dovecot:$protocol:loginmethod:ntlm"} += $multiply;
+					} elsif ( $1 eq 'GSS-SPNEGO' ) {
+						$$stats{"dovecot:$protocol:loginmethod:gssspnego"} += $multiply;
+					} elsif ( $1 eq 'GSSAPI' ) {
+						$$stats{"dovecot:$protocol:loginmethod:gssapi"} += $multiply;
+					} elsif ( $1 eq 'RPA' ) {
+						$$stats{"dovecot:$protocol:loginmethod:rpa"} += $multiply;
+					} elsif ( $1 eq 'ANONYMOUS' ) {
+						$$stats{"dovecot:$protocol:loginmethod:anonymous"} += $multiply;
+					} elsif ( $1 eq 'OTP' ) {
+						$$stats{"dovecot:$protocol:loginmethod:otp"} += $multiply;
+					} elsif ( $1 eq 'SKEY' ) {
+						$$stats{"dovecot:$protocol:loginmethod:skey"} += $multiply;
+					} elsif ( $1 eq 'EXTERNAL' ) {
+						$$stats{"dovecot:$protocol:loginmethod:external"} += $multiply;
+					} else {
+						$$stats{"dovecot:$protocol:loginmethod:other"} += $multiply;
+						warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+					}
+				} elsif ( $line =~ s/rip=([\da-f\.:]+), // or $line =~ s/rip=([\da-f\.:]+)$// ) {
+					$remote = $1;
+				} elsif ( $line =~ s/lip=([\da-f\.:]+), // or $line =~ s/lip=([\da-f\.:]+)$// ) {
+					$local = $1;
+				} elsif ( $line =~ s/mpid=\d+, // or $line =~ s/mpid=\d+$// ) {
+				} elsif ( $line =~ s/secured, // or $line =~ s/secured$// ) {
+					if ( defined ( $local ) and defined ( $remote )
+						and ( $local eq '127.0.0.1' or $local eq '::1' )
+						and ( $remote eq '127.0.0.1' or $remote eq '::1' ) ) {
+						# this will happen when no crypto is in use and the conenction is local
+					} else {
+						$$stats{"dovecot:$protocol:crypto:ssl"} += $multiply;
+						$crypto = 'ssl';
+					}
+				} elsif ( $line =~ s/TLS, // or $line =~ s/TLS$// or $line =~ s/TLS: Disconnected// ) {
+					$$stats{"dovecot:$protocol:crypto:tls"} += $multiply;
+					$crypto = 'tls';
+				} elsif ( $line =~ s/session=<[^>]*>, // or $line =~ s/session=<[^>]*>$// ) {
+					# not used for now
 				} else {
-					$$stats{"dovecot:$protocol:loginmethod:other"} += $multiply;
+					$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
 					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot SEGMENT: $line\n";
+					last;
 				}
+				$line =~ s/^, //;
 			}
-			if ( $line =~ /lip=[\da-f\.:]+$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+$/ ) {
+			if ( $crypto eq 'none' ) {
 				$$stats{"dovecot:$protocol:crypto:none"} += $multiply;
-			} elsif ( $line =~ /lip=[\da-f\.:]+, TLS$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, TLS(: Disconnected)?$/ ) {
-				$$stats{"dovecot:$protocol:crypto:tls"} += $multiply;
-			} elsif ( $line =~ /lip=[\da-f\.:]+, secured$/ or $line =~ /lip=[\da-f\.:]+, mpid=\d+, secured$/ ) {
-				$$stats{"dovecot:$protocol:crypto:ssl"} += $multiply;
-			} else {
-				$$stats{"dovecot:$protocol:crypto:other"} += $multiply;
-				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
 		} elsif ( $line =~ s/^(Disconnected)[:\s]*// or $line =~ s/^(proxy)\([^\)]+\): disconnecting [\da-f\.:]+ // ) {
 			my $type = lc $1;
@@ -276,9 +302,9 @@ sub analyse {
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/deliver\([^\)]+\):\s*// ) {
+	} elsif ( $line =~ s/(deliver|lda)\([^\)]+\):\s*// ) {
 		# also see lmtp below - some versions use that instead
-		if ( $line =~ s/.*: saved mail to\s*// ) {
+		if ( $line =~ s/.* saved mail to\s*// ) {
 			$line =~ s/^'(.+)'$/$1/;	# strips quotes seen in some versions/configurations
 			$$stats{'dovecot:deliver'} += $multiply;
 			if ( $line eq 'INBOX' ) {
@@ -288,8 +314,11 @@ sub analyse {
 			}
 		} elsif ( $line =~ s/.*: save failed to\s*// ) {
 				$$stats{'dovecot:deliver:fail'} += $multiply;
+		} elsif ( $line =~ s/sieve:\s*msgid=[^:]+:\s*// ) {
+				$$stats{'dovecot:deliver:sieve'} += $multiply;
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
+print ">$line\n";
 		}
 	} elsif ( $line =~ s/^lmtp\([^\)]+\): *// ) {
 		# also see deliver above - some versions use that instead

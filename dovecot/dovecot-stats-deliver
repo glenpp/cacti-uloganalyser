@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
+# See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 
 
 PATH=/bin:/usr/bin
@@ -27,3 +27,4 @@ printf "%d\n" `grep ^dovecot:deliver= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:deliver:inbox= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:deliver:elsewhere= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:deliver:fail= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:deliver:sieve= $STATS | cut -d '=' -f2`

@@ -116,7 +116,7 @@ rename "$statsfile.TMP.$$", $statsfile
 
 
 sub readlogfile {
-	my $log = shift;
+	my ( $log ) = @_;
 	open LOG, $log or die "FATAL - can't read \"$log\": $!\n";
 	# skip to where we left off
 	seek LOG, $stats{'lastposition'}, 0;
