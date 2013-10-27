@@ -22,7 +22,8 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20130920;
+our $VERSION = 20131027;
+our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
 
@@ -42,9 +43,12 @@ our @DOVEADM = (
 
 
 sub register {
-	my ( $lines, $ends ) = @_;
+	my ( $lines, $ends, $uloganalyserver ) = @_;
 	push @$lines, \&analyse;
 	push @$ends, \&wrapup;
+	if ( ! defined $uloganalyserver or $uloganalyserver < $REQULOGANALYSER ) {
+		die __FILE__.": FATAL - Requeire uloganalyser version $REQULOGANALYSER or higher\n";
+	}
 }
 
 
@@ -103,6 +107,8 @@ sub analyse {
 			$$stats{'dovecot:auth:disallowedchar'} += $multiply;
 		} elsif ( $line =~ s/^Empty username$// ) {
 			$$stats{'dovecot:auth:emptyusername'} += $multiply;
+		} elsif ( $line =~ s/^Request \d+\.\d timeouted after \d+ secs, state=\d+$// ) {
+			$$stats{'dovecot:auth:timeouted'} += $multiply;
 		} else {
 			$$stats{'dovecot:auth:other'} += $multiply;
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";

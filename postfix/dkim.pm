@@ -19,10 +19,10 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20091122-164951%2B0000%20Postfix%20stats%20on%20Cacti%20%28via%20SNMP%29/
+# See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package dkim;
-our $VERSION = 20121002;
+our $VERSION = 20131006;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -59,6 +59,7 @@ sub analyse {
 		or $line =~ /[0-9A-F]+ failed to parse Authentication-Results: header/
 		or $line =~ /[0-9A-F]+\sADSP query: ar_addquery\(\) for `_adsp\._domainkey\.[^\s]+' failed/
 		or $line =~ /[0-9A-F]+\sADSP query: missing parameter\(s\) in policy data/
+		or $line =~ /[0-9A-F]+: syntax error: missing parameter\(s\) in signature data/
 		or $line =~ /Sendmail DKIM Filter: connect\[0\]: mi_inet_pton failed/
 		or $line =~ /message has signatures from/ ) {
 		# ignore

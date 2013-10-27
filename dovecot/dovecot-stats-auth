@@ -28,3 +28,4 @@ printf "%d\n" `grep ^dovecot:auth:unknownuser= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:passwordmismatch= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:disallowedchar= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:emptyusername= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:auth:timeouted= $STATS | cut -d '=' -f2`

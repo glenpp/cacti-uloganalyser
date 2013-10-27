@@ -19,10 +19,11 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
+# See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20130705;
+our $VERSION = 20131027;
+our $REQULOGANALYSER = 20131006;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -46,9 +47,12 @@ our @deferreasons;
 
 
 sub register {
-	my ( $lines, $ends ) = @_;
+	my ( $lines, $ends, $uloganalyserver ) = @_;
 	push @$lines, \&analyse;
 	push @$ends, \&wrapup;
+	if ( ! defined $uloganalyserver or $uloganalyserver < $REQULOGANALYSER ) {
+		die __FILE__.": FATAL - Requeire uloganalyser version $REQULOGANALYSER or higher\n";
+	}
 }
 
 
@@ -270,6 +274,7 @@ sub analyse {
 			# warnings
 			++$$stats{'postfix:smtpd:warning'};
 			# TODO expand on this
+			# warning: unknown[89.248.172.122]: SASL LOGIN authentication failed: Invalid authentication mechanism
 		} elsif ( $line =~ s/^[\w\.\-]+\[[\w\.:]+\]: (Tr|Untr)usted: subject_CN=.+, issuer=.+, fingerprint=.+$// ) {
 			# ignore - alredy should be caught before
 		} elsif ( $line =~ s/^TLSv1 with cipher // ) {
@@ -371,8 +376,8 @@ sub analyse {
 			my $message = $line;
 			my $smtpcode;
 			my $esmtpcode;
-			if ( $message =~ s/^(delivery temporarily suspended: ){0,1}host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][01234]|433|554|459)[ \-]// ) {
-				$smtpcode = $2;
+			if ( $message =~ s/^(delivery temporarily suspended: )?host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][01234]|433|554|459)[ \-]// ) {
+				$smtpcode = $3;
 				if ( $message =~ s/^#?(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
 					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format
 					$esmtpcode = $1;
@@ -451,6 +456,7 @@ sub analyse {
 				or $message =~ s/Message temporarily deferred//i
 				or $message =~ s/not yet authorized//i
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
+				or $message =~ s/Please visit http:\/\/www\.google\.com\/mail\/help\/bulk_mail\.html//
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
 				or $message =~ s/Sender address deferred by rule//i
 				or $message =~ s/Sender address verification in progress//i
@@ -491,10 +497,15 @@ sub analyse {
 				# ignore - alredy should be caught before
 				--$$stats{'postfix:smtp:connect'};	# don't want to increment twice
 				smtpd_ip ( $line, $origline, $number, $log, $stats );
+			} elsif ( $smtpcode == 554 and $message =~ s/^[\w\-\.]+\.[\w\-\.]+$//i	# returning a fqdn as a message
+				) {
+				# we can't tell why - insufficient / ambigous info
+				++$$stats{'postfix:smtp:deferred:indeterminate'};
 			} else {
 				# some other
 				++$$stats{'postfix:smtp:deferred:other'};
 				# don't squark directly about this - add to the lists of new stuff
+print "*>$smtpcode\n->$message\n";
 				push @deferreasons, __LINE__.":$origline\n";
 				push @deferreasons, __LINE__.":\$message: $message\n";
 			}
