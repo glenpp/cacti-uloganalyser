@@ -21,9 +21,9 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: http://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
+# See: https://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
 #
-my $VERSION = 20120420;
+my $VERSION = 20131006;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -128,6 +128,14 @@ sub readlogfile {
 		# check for repeats & expand if needed
 		if ( $line =~ / message repeated (\d+) times?$/ ) {
 			my $repeat = $1;
+			while ( $repeat-- > 0 ) {
+				for (@lines) {
+					&$_( $repeatline, $i, $log, \%stats ) and last;
+				}
+			}
+		} elsif ( $line =~ / message repeated (\d+) times: \[\s*([^\s].*)\s?\]$/ ) {
+			my $repeat = $1;
+			$repeatline = $2;
 			while ( $repeat-- > 0 ) {
 				for (@lines) {
 					&$_( $repeatline, $i, $log, \%stats ) and last;
