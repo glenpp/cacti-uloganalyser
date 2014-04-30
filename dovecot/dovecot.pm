@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20131027;
+our $VERSION = 20131103;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -303,6 +303,9 @@ sub analyse {
 			or $line =~ s/Error: Corrupted transaction log file //
 			or $line =~ s/Warning: Maildir [^:]+: UIDVALIDITY changed//
 			or $line =~ s/Error: [^\s]+ reset, view is now inconsistent//
+			or $line =~ s/Warning: Maildir: Scanning \/.+\/(new|cur) took \d+ seconds \(\d+ readdir\(\)s, 0 rename\(\)s to cur\/, why=0x24\)$//
+			or $line =~ s/Warning: Maildir \/.+: Synchronization took \d+ seconds \(0 new msgs, 0 flag change attempts, 0 expunge attempts\)$//
+			or $line =~ s/Warning: Transaction log file \/.+\.log was locked for \d+ seconds$//
 			) ) {
 				# ignore errors
 		} else {
@@ -344,6 +347,10 @@ print ">$line\n";
 			# ignore
 		} elsif ( $line =~ s/Disconnect from local: Connection closed \(in reset\)// ) {
 			# ignore
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/^Warning: Transaction log file \/.+\.log was locked for \d+ seconds$//
+			or $line =~ s/^Warning: Maildir \/.+: Synchronization took \d+ seconds \(\d+ new msgs, 0 flag change attempts, 0 expunge attempts\)// ) ) {
+			# ignore error
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $line\n";
@@ -381,6 +388,9 @@ print ">$line\n";
 			}
 		} elsif ( $line =~ s/Dovecot v.+ starting up// ) {
 			# ignore - normal shutdown behaviour
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/^auth-worker: Fatal: service\(auth-worker\): child \d+ killed with signal 9$// ) ) {
+			# ignore
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
@@ -410,7 +420,20 @@ print ">$line\n";
 		or $line =~ s/doveadm: Fatal: This is Dovecot's fatal log\s*// ) {
 		# ignore debug messages
 	} elsif ( $IGNOREERRORS and
-		( $line =~ s/auth: Error: Master requested auth for nonexistent client \d+// ) ) {
+		( $line =~ s/auth: Error: Master requested auth for nonexistent client \d+//
+		or $line =~ s/^auth-worker\(\d+\): Error: sql\(.+\): Password query failed: Not connected to database$//
+		or $line =~ s/^auth-worker\(\d+\): Error: mysql: Query failed, retrying: Lost connection to MySQL server during query$//
+		or $line =~ s/^auth-worker\(\d+\): Error: mysql\(.+\): Connect failed to database \(\w+\): Can't connect to MySQL server on '.+' \(111\) - waiting for \d+ seconds before retry$//
+		or $line =~ s/^auth-worker\(\d+\): Error: mysql: Query timed out \(no free connections for \d+ secs\): SELECT username as user, password, '.+' as .+, '.+' as userdb_mail, \d+ as .+, .+ as .+ FROM mailbox WHERE username = '.+' AND active = '1'$//
+		or $line =~ s/^auth-worker\(\d+\): Error: mysql\(.+\): Connect failed to database \(\w+\): Lost connection to MySQL server at 'reading initial communication packet', system error: 0 - waiting for \d+ seconds before retry$//
+		or $line =~ s/^auth-worker: Error: sql\(.+\): Password query failed: Not connected to database$//
+		or $line =~ s/^auth: Error: auth worker: Aborted request: Lookup timed out$//
+		or $line =~ s/^auth: Error: auth worker: Aborted request: Internal auth worker failure$//
+		or $line =~ s/^auth: Error: (PLAIN|LOGIN)\(.+\): Request \d+\.1 timeouted after \d+ secs, state=1$//
+		or $line =~ s/^auth: Warning: auth workers: Auth request was queued for \d+ seconds, \d+ left in queue \(see auth_worker_max_count\)$//
+		or $line =~ s/^stats: Warning: Session \w+ \(user .+\) appears to have crashed, disconnecting it$//
+		or $line =~ s/^stats: Warning: Couldn't find session GUID: bfb8f031c7507652981f0000c8b6dbb1$//
+		) ) {
 		# ignore error
 	} elsif ( $line =~ s/^Dovecot v\d+\.\d+\.\d+ starting up \(core dumps disabled\)$//
 		or $line =~ s/^dovecot: SIGHUP received - reloading configuration// ) {
