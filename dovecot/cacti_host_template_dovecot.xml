@@ -789,7 +789,7 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Other</text_format>
 				<hard_return></hard_return>
-				<sequence>2</sequence>
+				<sequence>1</sequence>
 			</hash_10002409f03dacd896004c0576ea77990b987d>
 			<hash_1000241d2f8e039024c088c0679aa2a69b32aa>
 				<task_item_id>hash_080024e877543230ee6c06843b78ed14b029ef</task_item_id>
@@ -802,7 +802,7 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Password mismatch</text_format>
 				<hard_return></hard_return>
-				<sequence>4</sequence>
+				<sequence>2</sequence>
 			</hash_1000241d2f8e039024c088c0679aa2a69b32aa>
 			<hash_100024774e10ca2f15f256c4a3d87fd517b9af>
 				<task_item_id>hash_0800244a1b4b89d7ec8fc300f67ab23e3aa3bb</task_item_id>
@@ -815,7 +815,7 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Unknown User</text_format>
 				<hard_return></hard_return>
-				<sequence>5</sequence>
+				<sequence>3</sequence>
 			</hash_100024774e10ca2f15f256c4a3d87fd517b9af>
 			<hash_1000242370ed9beae086c476ec74af0bdb2e94>
 				<task_item_id>hash_080024574266ae5c17b02a992d5991a0823978</task_item_id>
@@ -828,7 +828,7 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Disallowed Character</text_format>
 				<hard_return></hard_return>
-				<sequence>6</sequence>
+				<sequence>4</sequence>
 			</hash_1000242370ed9beae086c476ec74af0bdb2e94>
 			<hash_1000246b94cdf3d728a6764aba438c928e96e2>
 				<task_item_id>hash_08002455242febe7d45509e584a5afc5619237</task_item_id>
@@ -841,8 +841,21 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Empty Username</text_format>
 				<hard_return></hard_return>
-				<sequence>7</sequence>
+				<sequence>5</sequence>
 			</hash_1000246b94cdf3d728a6764aba438c928e96e2>
+			<hash_1000249ba4a4852eba3452849487a36c3ed4d3>
+				<task_item_id>hash_080024d4644a58ad19be6d97fd735b2d9022fb</task_item_id>
+				<color_id>B1441E</color_id>
+				<alpha>FF</alpha>
+				<graph_type_id>8</graph_type_id>
+				<consolidation_function_id>1</consolidation_function_id>
+				<cdef_id>0</cdef_id>
+				<value></value>
+				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
+				<text_format>invalid input</text_format>
+				<hard_return></hard_return>
+				<sequence>6</sequence>
+			</hash_1000249ba4a4852eba3452849487a36c3ed4d3>
 			<hash_10002496babf89ee47a57dd725657e25518c37>
 				<task_item_id>hash_080024e7aa86dd6de4b92ed0f08bb3e0839d00</task_item_id>
 				<color_id>A150AA</color_id>
@@ -854,7 +867,7 @@
 				<gprint_id>hash_060024e9c43831e54eca8069317a2ce8c6f751</gprint_id>
 				<text_format>Timeouted</text_format>
 				<hard_return></hard_return>
-				<sequence>8</sequence>
+				<sequence>7</sequence>
 			</hash_10002496babf89ee47a57dd725657e25518c37>
 		</items>
 		<inputs>
@@ -888,6 +901,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_0000246b94cdf3d728a6764aba438c928e96e2</items>
 			</hash_09002446d6907af6f76d07345824734a3f8e46>
+			<hash_090024e4b5f97971ac4876b5bf2d5c3698a075>
+				<name>Data Source [dvcot_authinvalidin]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_0000249ba4a4852eba3452849487a36c3ed4d3</items>
+			</hash_090024e4b5f97971ac4876b5bf2d5c3698a075>
 			<hash_090024dbc50b42f0d66a5fddb795c01665be80>
 				<name>Data Source [dvcot_authtimeouted]</name>
 				<description></description>
@@ -6168,7 +6187,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6177,27 +6196,27 @@
 		</items>
 		<data>
 			<item_000>
-				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_000>
 			<item_001>
-				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_001>
 			<item_002>
-				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_002>
 			<item_003>
-				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_003>
 			<item_004>
-				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_004>
@@ -6207,27 +6226,27 @@
 				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.1</value>
 			</item_005>
 			<item_006>
-				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_006>
 			<item_007>
-				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_007>
 			<item_008>
-				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_008>
 			<item_009>
-				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_009>
 			<item_010>
-				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_010>
@@ -6255,7 +6274,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6264,27 +6283,27 @@
 		</items>
 		<data>
 			<item_000>
-				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_000>
 			<item_001>
-				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_001>
 			<item_002>
-				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_002>
 			<item_003>
-				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_003>
 			<item_004>
-				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_004>
@@ -6294,27 +6313,27 @@
 				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.2</value>
 			</item_005>
 			<item_006>
-				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_006>
 			<item_007>
-				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_007>
 			<item_008>
-				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_008>
 			<item_009>
-				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_009>
 			<item_010>
-				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_010>
@@ -6342,7 +6361,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6351,27 +6370,27 @@
 		</items>
 		<data>
 			<item_000>
-				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_000>
 			<item_001>
-				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_001>
 			<item_002>
-				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_002>
 			<item_003>
-				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_003>
 			<item_004>
-				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_004>
@@ -6381,27 +6400,27 @@
 				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.3</value>
 			</item_005>
 			<item_006>
-				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_006>
 			<item_007>
-				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_007>
 			<item_008>
-				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_008>
 			<item_009>
-				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_009>
 			<item_010>
-				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_010>
@@ -6429,7 +6448,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6438,27 +6457,27 @@
 		</items>
 		<data>
 			<item_000>
-				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_000>
 			<item_001>
-				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_001>
 			<item_002>
-				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_002>
 			<item_003>
-				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_003>
 			<item_004>
-				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_004>
@@ -6468,27 +6487,27 @@
 				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.4</value>
 			</item_005>
 			<item_006>
-				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_006>
 			<item_007>
-				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_007>
 			<item_008>
-				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_008>
 			<item_009>
-				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_009>
 			<item_010>
-				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_010>
@@ -6516,7 +6535,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6525,27 +6544,27 @@
 		</items>
 		<data>
 			<item_000>
-				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_000>
 			<item_001>
-				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_001>
 			<item_002>
-				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_002>
 			<item_003>
-				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_003>
 			<item_004>
-				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_004>
@@ -6555,27 +6574,27 @@
 				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.5</value>
 			</item_005>
 			<item_006>
-				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_006>
 			<item_007>
-				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_007>
 			<item_008>
-				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_008>
 			<item_009>
-				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_009>
 			<item_010>
-				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
 				<t_value></t_value>
 				<value></value>
 			</item_010>
@@ -6603,7 +6622,7 @@
 				<t_rrd_maximum></t_rrd_maximum>
 				<rrd_maximum>10000</rrd_maximum>
 				<t_data_source_type_id></t_data_source_type_id>
-				<data_source_type_id>2</data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
 				<t_rrd_heartbeat></t_rrd_heartbeat>
 				<rrd_heartbeat>600</rrd_heartbeat>
 				<t_data_input_field_id></t_data_input_field_id>
@@ -6668,6 +6687,93 @@
 			</item_010>
 		</data>
 	</hash_010024bbfebea110594fc0a75dc2ff29a231a2>
+	<hash_0100246274c714fcc274076df0aaff554fa45e>
+		<name>dovecot auth invalid input</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - dovecot auth invalid input</name>
+			<data_input_id>hash_0300243eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150024c21df5178e5c955013591239eb0afd46|hash_1500240d9c0af8b8acdc7807943937b3208e29|hash_1500246fc2d038fb42950138b0ce3e9874cc60|hash_150024e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080024d4644a58ad19be6d97fd735b2d9022fb>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>dvcot_authinvalidin</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080024d4644a58ad19be6d97fd735b2d9022fb>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;dovecotauth&quot;.7</value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_0100246274c714fcc274076df0aaff554fa45e>
 	<hash_010024c0140e1bb077e9d787861d471f68cb11>
 		<name>dovecot imap Crypto None</name>
 		<ds>

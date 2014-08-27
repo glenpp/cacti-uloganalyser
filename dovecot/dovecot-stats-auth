@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2011  Glen Pitt-Pladdy
+# Copyright (C) 2011-2014  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -29,3 +29,4 @@ printf "%d\n" `grep ^dovecot:auth:passwordmismatch= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:disallowedchar= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:emptyusername= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^dovecot:auth:timeouted= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^dovecot:auth:invalidinput= $STATS | cut -d '=' -f2`

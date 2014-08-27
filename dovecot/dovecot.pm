@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009-2012  Glen Pitt-Pladdy
+# Copyright (C) 2009-2014  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20131103;
+our $VERSION = 20140826;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -40,6 +40,7 @@ our @DOVEADM = (
 # "Alex"
 # Voytek Eymont
 # Jean Deram
+# Alessio
 
 
 sub register {
@@ -103,10 +104,13 @@ sub analyse {
 			$$stats{'dovecot:auth:unknownuser'} += $multiply;
 		} elsif ( $line =~ s/^Password mismatch// ) {
 			$$stats{'dovecot:auth:passwordmismatch'} += $multiply;
-		} elsif ( $line =~ s/^Username contains disallowed character.*$// ) {
+		} elsif ( $line =~ s/^Username contains disallowed character.*$//
+				or $line =~ s/^Username character disallowed by auth_username_chars:.*$// ) {
 			$$stats{'dovecot:auth:disallowedchar'} += $multiply;
 		} elsif ( $line =~ s/^Empty username$// ) {
 			$$stats{'dovecot:auth:emptyusername'} += $multiply;
+		} elsif ( $line =~ s/^invalid input// ) {
+			$$stats{'dovecot:auth:invalidinput'} += $multiply;
 		} elsif ( $line =~ s/^Request \d+\.\d timeouted after \d+ secs, state=\d+$// ) {
 			$$stats{'dovecot:auth:timeouted'} += $multiply;
 		} else {
@@ -247,7 +251,7 @@ sub analyse {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?: // ) {
+	} elsif ( $line =~ s/^(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?(, session=<\w+>)?: // ) {
 		my $protocol = lc $1;
 		# harvest data stats if available
 		if ( $line =~ s/\s* top=\d+\/(\d+), retr=\d+\/(\d+), del=\d+\/\d+, size=\d+$// ) {

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009-2012  Glen Pitt-Pladdy
+# Copyright (C) 2009-2014  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,8 +22,11 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20131027;
+our $VERSION = 20140826;
 our $REQULOGANALYSER = 20131006;
+
+our $IGNOREERRORS = 1;
+
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -177,7 +180,8 @@ sub analyse {
 				} elsif ( $line =~ s/^.*: Sender address rejected:\s*// ) {
 					# don't like sender
 					++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender'};
-					if ( $line =~ s/^Access denied;//i ) {
+					if ( $line =~ s/^Access denied;//i
+							or $line =~ s/^Your mail is not welcome here[^;]*;//i ) {
 						# explicitly denied
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:denied'};
 					} elsif ( $line =~ s/^Domain not found;//i ) {
@@ -449,6 +453,7 @@ sub analyse {
 				or $message =~ s/\(DYN:T1\) +http:\/\/postmaster\.info\.aol\.com\/errors\/421dynt1\.html//i
 				or $message =~ s/^.*gr[ea]ylist.*$//i
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
+				or $message =~ s/^.*g-r-[ea]-y-l-i-s-t.*$//i
 				or $message =~ s/Internal resource temporarily unavailable - http:\/\/www\.mimecast\.com\/knowledgebase\/KBID10473\.htm//
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
@@ -483,6 +488,7 @@ sub analyse {
 				or $line =~ s/^Host or domain name not found//i
 				or $message =~ s/^<.+>: Sender address rejected: Domain not found//i	# these are remote so may be treated separately later TODO
 				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i
+				or $message =~ s/^:  \(DNS:NR\)  http:\/\/postmaster\.info\.aol\.com\/errors\/421dnsnr.html \(in reply to end of DATA command\)$//
 				or $message =~ s/^Domain of sender address [^\s]+ does not resolve//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
@@ -505,9 +511,9 @@ sub analyse {
 				# some other
 				++$$stats{'postfix:smtp:deferred:other'};
 				# don't squark directly about this - add to the lists of new stuff
-print "*>$smtpcode\n->$message\n";
-				push @deferreasons, __LINE__.":$origline\n";
-				push @deferreasons, __LINE__.":\$message: $message\n";
+#print "*>$smtpcode\n->$message\n";
+				push @deferreasons, __LINE__.":\"$origline\"\n";
+				push @deferreasons, __LINE__.":\$message: \"$message\"\n";
 			}
 		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=bounced \((.*)\)$/$1/ ) {
 			# bounced - failed message
@@ -544,6 +550,9 @@ print "*>$smtpcode\n->$message\n";
 			} elsif ( $line =~ s/^\(delivered to file:\s*[^\)]*\)// ) {
 				# delivered to file
 				++$$stats{'postfix:local:sent:file'};
+			} elsif ( $line =~ s/^\(delivered to mailbox\)// ) {
+				# delivered to file
+				++$$stats{'postfix:local:sent:mailbox'};
 			} elsif ( $line =~ s/^\(delivered to command:\s*[^\)]*\)// ) {
 				# delivered to command
 				++$$stats{'postfix:local:sent:command'};
@@ -567,6 +576,9 @@ print "*>$smtpcode\n->$message\n";
 		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=bounced\s*// ) {
 			# something went very wrong
 			++$$stats{'postfix:local:bounced'};
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/^warning: database \/etc\/aliases.db is older than source file \/etc\/aliases$// ) ) {
+			# ignore error
 		} else {
 			# some other
 			++$$stats{'postfix:local:other'};
@@ -620,6 +632,9 @@ print "*>$smtpcode\n->$message\n";
 	} elsif ( $line =~ s/^.+ postfix\/trivial-rewrite\[\d+\]:\s*// ) {
 		if ( $line =~ s/^table hash:.+ has changed -- restarting// ) {
 			# ignore
+		} elsif ( $IGNOREERRORS and
+			( $line =~ s/^fatal: proxy:mysql:\/.+\(0,lock|fold_fix\): table lookup problem$// ) ) {
+			# ignore error
 		} else {
 			# useful to know of others
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
@@ -675,6 +690,9 @@ print "*>$smtpcode\n->$message\n";
 		}
 	} elsif ( $line =~ s/^.+ postfix\/postsuper\[\d+\]:\s*// ) {
 		# ignore
+	} elsif ( $IGNOREERRORS and
+		( $line =~ s/postfix\/proxymap\[\d+\]: warning: connect to mysql server .+: Can't connect to MySQL server on '.+' \(111\)$// ) ) {
+		# ignore error
 	} else {
 		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 	}
