@@ -1,0 +1,28 @@
+#!/bin/sh -e
+# releases a new tarball (still needs linking) to blog
+
+TARGET='/var/www/www.pitt-pladdy.com-blogdata/20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/'
+
+# get our workspace sorted
+workingdir=`mktemp --directory -t cacti-uloganalyser_release-dovecot.XXXXXXXXXX`
+
+# datestamp
+datestamp=`date +%Y%m%d`
+datedir="$workingdir/$datestamp"
+mkdir "$datedir"
+
+# populate
+cp dovecot/dovecot* dovecot/cacti_host_template_dovecot.xml "$datedir/"
+
+# tarball
+cd "$workingdir/"
+tar jcvf "dovecot_cacti-$datestamp.tar.bz2" "$datestamp/"
+mv -i "dovecot_cacti-$datestamp.tar.bz2" "$TARGET"
+
+# clean up
+rm -r "$workingdir"
+
+# announce
+echo "Don't forget to edit in new release: https://www.pitt-pladdy.com/seatofpower/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/"
+
+
