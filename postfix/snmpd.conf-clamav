@@ -1,0 +1,1 @@
+extend clamav /etc/snmp/clamav-stats

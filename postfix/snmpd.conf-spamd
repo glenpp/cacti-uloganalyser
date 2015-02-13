@@ -1,0 +1,1 @@
+extend spamd /etc/snmp/spamd-stats
