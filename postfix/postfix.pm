@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009-2014  Glen Pitt-Pladdy
+# Copyright (C) 2009-2015  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20140826;
+our $VERSION = 20150214;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -391,6 +391,7 @@ sub analyse {
 			}
 			if ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
+						# See http://tools.ietf.org/html/rfc1893
 					$esmtpcode eq '4.2.2'	# Mailbox full
 					or $esmtpcode eq '4.3.1'	# Mail system full
 					or $esmtpcode eq '4.3.2'	# System not accepting network messages
@@ -443,7 +444,8 @@ sub analyse {
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
-					$esmtpcode eq '4.7.1'	# Delivery not authorized, message refused
+					$esmtpcode eq '4.2.1'		# Mailbox diabled (temporary) eg. rate limiting
+					or $esmtpcode eq '4.7.1'	# Delivery not authorized, message refused
 				) )
 				or ( $message ne '' and (
 				$message =~ s/closing connection//
