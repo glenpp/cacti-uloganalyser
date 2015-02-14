@@ -22,7 +22,7 @@ use warnings;
 # See: TODO https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package opendkim;
-our $VERSION = 20140826;
+our $VERSION = 20141006;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -40,6 +40,8 @@ sub analyse {
 	if ( $line !~ s/^.+ opendkim\[\d+\]:\s*// ) { return; }
 	if ( $line =~ /^[0-9A-F]+: DKIM-Signature header added \([^\)]+\)/ ) {
 		++$$stats{'opendkim:addedsignature'};
+	} elsif ( $line =~ s/[0-9A-F]+.*\sSSL error:04091068:rsa routines:INT_RSA_VERIFY:bad signature$// ) {
+		++$$stats{'opendkim:badsignature'};
 	} elsif ( $line =~ s/[0-9A-F]+:\sbad signature data// ) {
 		++$$stats{'opendkim:badsignaturedata'};
 	} elsif ( $line =~ /^[0-9A-F]+: no signature data$/ ) {
@@ -56,6 +58,8 @@ sub analyse {
 		# ignore
 	} elsif ( $line =~ s/[0-9A-F]+:\ss=ED-DKIM-V3 d=.+ SSL error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block type is not 01; error:04067072:rsa routines:RSA_EAY_PUBLIC_DECRYPT:padding check failed// ) {
 		# ignore - associated with "bad signature data" above TODO
+	} elsif ( $line =~ s/message has signatures from // ) {
+		# ignore
 	} else {
 		++$$stats{'opendkim:other'};
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
@@ -71,8 +75,8 @@ sub analyse {
 #++$$stats{'opendkim:addedsignature'};
 # elsif ( $line =~ s/[0-9A-F]+:\sno signature data$// ) {
 #++$$stats{'opendkim:nosignature'};
-#	} elsif ( $line =~ s/[0-9A-F]+.*\sSSL error:04077068:rsa routines:RSA_verify:bad signature$// ) {
-#		++$$stats{'opendkim:badsignature'};
+#} elsif ( $line =~ s/[0-9A-F]+.*\sSSL error:04077068:rsa routines:RSA_verify:bad signature$// ) {
+#++$$stats{'opendkim:badsignature'};
 #} elsif ( $line =~ s/[0-9A-F]+:\sbad signature data// ) {
 #++$$stats{'opendkim:badsignaturedata'};
 #	} elsif ( $line =~ s/[0-9A-F]+:\skey retrieval failed$// ) {
@@ -82,7 +86,7 @@ sub analyse {
 #	} elsif ( $line =~ s/[0-9A-F]+\scan't parse From: header value //
 #		or $line =~ s/[0-9A-F]+\sno sender header found; accepting// ) {
 #		++$$stats{'opendkim:badheader'};
-#	} elsif ( $line =~ s/message has signatures from //
+#} elsif ( $line =~ s/message has signatures from //
 #		or $line =~ s/[0-9A-F]+:\sdkim_eoh\(\): internal error from libdkim: ar_addquery\(\) for `.+' failed//	# maybe we shouldn't ignore this, but it appears to be ignored by postfix
 #		or $line =~ /[0-9A-F]+ SSL error:[0-9A-F]+:rsa /
 #		or $line =~ /[0-9A-F]+ failed to parse Authentication-Results: header/
@@ -93,7 +97,7 @@ sub analyse {
 #		or $line =~ /message has signatures from/ ) {
 #		# ignore
 #	} elsif ( $line =~ s/Sendmail DKIM Filter v.+ starting// ) {
-#		# ignore
+## ignore
 #	} else {
 #		++$$stats{'opendkim:other'};
 #		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";

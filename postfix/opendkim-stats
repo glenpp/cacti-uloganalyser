@@ -27,9 +27,7 @@ printf "%d\n" `grep ^opendkim:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^opendkim:addedsignature= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^opendkim:nosignature= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^opendkim:verifysuccess= $STATS | cut -d '=' -f2`
-# TODO
 printf "%d\n" `grep ^opendkim:badsignature= $STATS | cut -d '=' -f2`
-# TODO
 printf "%d\n" `grep ^opendkim:keyretrievalfail= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^opendkim:badsignaturedata= $STATS | cut -d '=' -f2`
 # TODO printf "%d\n" `grep ^opendkim:badheader= $STATS | cut -d '=' -f2`
