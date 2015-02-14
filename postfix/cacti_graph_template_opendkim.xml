@@ -80,10 +80,10 @@
 				<sequence>3</sequence>
 			</hash_100024a97944b2dc2bcfffc86b5a7ec5c57e72>
 			<hash_100024a45507b3d29fa0091dfb13d284f71076>
-				<task_item_id>0</task_item_id>
+				<task_item_id>hash_080024ef487a47bb01fc8b55fc13b959319794</task_item_id>
 				<color_id>FF0000</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>7</graph_type_id>
+				<graph_type_id>8</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -96,7 +96,7 @@
 				<task_item_id>0</task_item_id>
 				<color_id>FF7D00</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>8</graph_type_id>
+				<graph_type_id>1</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -106,7 +106,7 @@
 				<sequence>5</sequence>
 			</hash_1000243fe312948578f78329e4106e70424775>
 			<hash_100024ea7b3d5b809a6d5c9bc4322531885375>
-				<task_item_id>0</task_item_id>
+				<task_item_id>hash_0800245ef88e6055ab750fb5cf5e11feac8202</task_item_id>
 				<color_id>B1441E</color_id>
 				<alpha>FF</alpha>
 				<graph_type_id>8</graph_type_id>
@@ -135,7 +135,7 @@
 				<task_item_id>0</task_item_id>
 				<color_id>6557D0</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>7</graph_type_id>
+				<graph_type_id>1</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -148,7 +148,7 @@
 				<task_item_id>0</task_item_id>
 				<color_id>750F7D</color_id>
 				<alpha>FF</alpha>
-				<graph_type_id>8</graph_type_id>
+				<graph_type_id>1</graph_type_id>
 				<consolidation_function_id>1</consolidation_function_id>
 				<cdef_id>0</cdef_id>
 				<value></value>
@@ -171,6 +171,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_0000244050859ec4f0f7834b50f7c1cdbb2e26</items>
 			</hash_090024f2928571cfffe74e23741a0ef2af2e58>
+			<hash_0900241675363f5bfb22e38216b1462c729e8c>
+				<name>Data Source [odkim_badsg]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000024a45507b3d29fa0091dfb13d284f71076</items>
+			</hash_0900241675363f5bfb22e38216b1462c729e8c>
 			<hash_090024aa9fee3601b426fcb4dc3c3f7f3e021a>
 				<name>Data Source [odkim_other]</name>
 				<description></description>
@@ -183,6 +189,12 @@
 				<column_name>task_item_id</column_name>
 				<items>hash_000024b320ed3c12b0c1179f7ea7f80faed32a</items>
 			</hash_09002473eb6fbe47d7ea2eef515c23daa656be>
+			<hash_0900242615d693e6f3fb5344a9654ecdc5e440>
+				<name>Data Source [odkim_badsd]</name>
+				<description></description>
+				<column_name>task_item_id</column_name>
+				<items>hash_000024ea7b3d5b809a6d5c9bc4322531885375</items>
+			</hash_0900242615d693e6f3fb5344a9654ecdc5e440>
 		</inputs>
 	</hash_000024d490ae7f1a935bdde8d32b96be2fd3a1>
 	<hash_010024ee437785fe80f8ebd71f8e95d352ab39>
@@ -272,6 +284,180 @@
 			</item_010>
 		</data>
 	</hash_010024ee437785fe80f8ebd71f8e95d352ab39>
+	<hash_010024ceb611a5532221ee997e41565e442699>
+		<name>opendkim Bad Signature</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - opendkim Bad Signature</name>
+			<data_input_id>hash_0300243eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150024c21df5178e5c955013591239eb0afd46|hash_1500240d9c0af8b8acdc7807943937b3208e29|hash_1500246fc2d038fb42950138b0ce3e9874cc60|hash_150024e36f3adb9f152adfa5dc50fd2b23337e</rra_items>
+		</ds>
+		<items>
+			<hash_080024ef487a47bb01fc8b55fc13b959319794>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>odkim_badsg</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_080024ef487a47bb01fc8b55fc13b959319794>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;opendkim&quot;.5</value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010024ceb611a5532221ee997e41565e442699>
+	<hash_010024233047f3370082c28830294a5da9ea4c>
+		<name>opendkim Bad Signature Data</name>
+		<ds>
+			<t_name></t_name>
+			<name>|host_description| - opendkim Bad Signature Data</name>
+			<data_input_id>hash_0300243eb92bb845b9660a7445cf9740726522</data_input_id>
+			<t_rra_id></t_rra_id>
+			<t_rrd_step></t_rrd_step>
+			<rrd_step>300</rrd_step>
+			<t_active></t_active>
+			<active>on</active>
+			<rra_items>hash_150024c21df5178e5c955013591239eb0afd46|hash_1500240d9c0af8b8acdc7807943937b3208e29|hash_1500246fc2d038fb42950138b0ce3e9874cc60|hash_150024e36f3adb9f152adfa5dc50fd2b23337e|hash_150024283ea2bf1634d92ce081ec82a634f513</rra_items>
+		</ds>
+		<items>
+			<hash_0800245ef88e6055ab750fb5cf5e11feac8202>
+				<t_data_source_name></t_data_source_name>
+				<data_source_name>odkim_badsd</data_source_name>
+				<t_rrd_minimum></t_rrd_minimum>
+				<rrd_minimum>0</rrd_minimum>
+				<t_rrd_maximum></t_rrd_maximum>
+				<rrd_maximum>10000</rrd_maximum>
+				<t_data_source_type_id></t_data_source_type_id>
+				<data_source_type_id>3</data_source_type_id>
+				<t_rrd_heartbeat></t_rrd_heartbeat>
+				<rrd_heartbeat>600</rrd_heartbeat>
+				<t_data_input_field_id></t_data_input_field_id>
+				<data_input_field_id>0</data_input_field_id>
+			</hash_0800245ef88e6055ab750fb5cf5e11feac8202>
+		</items>
+		<data>
+			<item_000>
+				<data_input_field_id>hash_070024feda162701240101bc74148415ef415a</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_000>
+			<item_001>
+				<data_input_field_id>hash_070024c60c9aac1e1b3555ea0620b8bbfd82cb</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_001>
+			<item_002>
+				<data_input_field_id>hash_07002420832ce12f099c8e54140793a091af90</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_002>
+			<item_003>
+				<data_input_field_id>hash_070024fc64b99742ec417cc424dbf8c7692d36</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_003>
+			<item_004>
+				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
+				<t_value></t_value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;opendkim&quot;.7</value>
+			</item_004>
+			<item_005>
+				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_005>
+			<item_006>
+				<data_input_field_id>hash_0700249c55a74bd571b4f00a96fd4b793278c6</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_006>
+			<item_007>
+				<data_input_field_id>hash_070024ad14ac90641aed388139f6ba86a2e48b</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_007>
+			<item_008>
+				<data_input_field_id>hash_07002432285d5bf16e56c478f5e83f32cda9ef</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_008>
+			<item_009>
+				<data_input_field_id>hash_07002492f5906c8dc0f964b41f4253df582c38</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_009>
+			<item_010>
+				<data_input_field_id>hash_070024d94caa7cc3733bd95ee00a3917fdcbb5</data_input_field_id>
+				<t_value></t_value>
+				<value></value>
+			</item_010>
+		</data>
+	</hash_010024233047f3370082c28830294a5da9ea4c>
 	<hash_010024870ad53c8b3fff1e3438748a368cb3a1>
 		<name>opendkim No Signature</name>
 		<ds>
@@ -671,6 +857,14 @@
 		<timespan>33053184</timespan>
 		<cf_items>1|2|3|4</cf_items>
 	</hash_150024e36f3adb9f152adfa5dc50fd2b23337e>
+	<hash_150024283ea2bf1634d92ce081ec82a634f513>
+		<name>Hourly (1 Minute Average)</name>
+		<x_files_factor>0.5</x_files_factor>
+		<steps>1</steps>
+		<rows>500</rows>
+		<timespan>14400</timespan>
+		<cf_items>1|2|3|4</cf_items>
+	</hash_150024283ea2bf1634d92ce081ec82a634f513>
 	<hash_060024e9c43831e54eca8069317a2ce8c6f751>
 		<name>Normal</name>
 		<gprint_text>%8.2lf %s</gprint_text>

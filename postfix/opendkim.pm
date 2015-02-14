@@ -19,10 +19,10 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: TODO https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
+# See: https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
 #
 package opendkim;
-our $VERSION = 20141006;
+our $VERSION = 20150214;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -46,12 +46,16 @@ sub analyse {
 		++$$stats{'opendkim:badsignaturedata'};
 	} elsif ( $line =~ /^[0-9A-F]+: no signature data$/ ) {
 		++$$stats{'opendkim:nosignature'};
-	} elsif ( $line =~ /^[0-9A-F]+: no signing table match for '.+'$/ ) { # new
-		++$$stats{'opendkim:nosigningtablematch'};
-	} elsif ( $line =~ /^[0-9A-F]+: .+ \[.+\] not internal$/ ) { # new
-		++$$stats{'opendkim:notinternal'};
-	} elsif ( $line =~ /^[0-9A-F]+: not authenticated$/ ) { # new
-		++$$stats{'opendkim:notauthenticated'};
+	} elsif ( $line =~ /^[0-9A-F]+: no signing table match for '.+'$/ ) {
+		# ignore - inconsequential: occurs when we get an internal sub-domain that isn't configured for signing
+	} elsif ( $line =~ /^[0-9A-F]+: failed to parse authentication-results: header$/ ) {
+		# ignore - inconsequential
+	} elsif ( $line =~ /^[0-9A-F]+: .+ \[.+\] not internal$/ ) {
+		# ignore - inconsequential
+	} elsif ( $line =~ /^[0-9A-F]+: not authenticated$/ ) {
+		# ignore - inconsequential
+	} elsif ( $line =~ /^[0-9A-F]+: ADSP query: '_adsp\._domainkey\.[^']+' reply was unresolved CNAME$/ ) {
+		# ignore - inconsequential: just couldn't lookup key
 	} elsif ( $line =~ /^[0-9A-F]+: DKIM verification successful$/ ) {
 		++$$stats{'opendkim:verifysuccess'};
 	} elsif ( $line =~ s/^ignoring header field 'X-CSA-Complaints;Require-Recipient-Valid-Since'// ) {
@@ -60,6 +64,11 @@ sub analyse {
 		# ignore - associated with "bad signature data" above TODO
 	} elsif ( $line =~ s/message has signatures from // ) {
 		# ignore
+	} elsif ( $line =~ s/OpenDKIM Filter: mi_stop=1//
+			or $line =~ s/OpenDKIM Filter v\d[\.\d]+ terminating with status 0, errno = 0//
+			or $line =~ s/OpenDKIM Filter: Opening listen socket on conn inet:\d+\@localhost//
+			or $line =~ s/OpenDKIM Filter v\d[\.\d]+ starting \(args: [^\)]*\)// ) {
+		# ignore start / stop stuff
 	} else {
 		++$$stats{'opendkim:other'};
 		print STDERR __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
