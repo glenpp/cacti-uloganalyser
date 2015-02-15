@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20140826;
+our $VERSION = 20141222;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -41,6 +41,7 @@ our @DOVEADM = (
 # Voytek Eymont
 # Jean Deram
 # Alessio
+# "skeletor"
 
 
 sub register {
@@ -131,7 +132,7 @@ sub analyse {
 			while ( $line ) {
 				if ( $line =~ s/user=<[^>]*>, // or $line =~ s/user=<[^>]*>$// ) {
 					# not used
-				} elsif ( $line =~ s/method=(\w+), // or $line =~ s/method=(\w+)$// ) {
+				} elsif ( $line =~ s/method=(\w+|\w+-\w+), // or $line =~ s/method=(\w+|\w+-\w+)$// ) {
 					if ( $1 eq 'PLAIN' ) {
 						$$stats{"dovecot:$protocol:loginmethod:plain"} += $multiply;
 					} elsif ( $1 eq 'LOGIN' ) {
