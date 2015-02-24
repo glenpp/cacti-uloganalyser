@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20150214;
+our $VERSION = 20150224;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -196,7 +196,8 @@ sub analyse {
 					} elsif ( $line =~ s/^not logged in;//i ) {
 						# login required to use this address
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:notloggedin'};
-					} elsif ( $line =~ s/^not owned by user [^\s]+;//i ) {
+					} elsif ( $line =~ s/^not owned by user [^\s]+;//i
+							or $line =~ s/^User unknown in virtual mailbox table;//i ) {	# technically a different thing, but the same type of problem - sending address not allowed
 						# using an address their login doesn't allow
 						++$$stats{'postfix:smtpd:NOQUEUE:reject:Sender:addrnotowned'};
 					} else {
@@ -320,15 +321,19 @@ sub analyse {
 				++$$stats{'postfix:smtp:connother'};
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 			}
-		} elsif ( $line =~ s/^[0-9A-F]+: lost connection with .+ while //i ) {	# TODO
+		} elsif ( $line =~ s/^[0-9A-F]+: lost connection with .+ while //i ) {
 			# failed connection - lost
 			++$$stats{'postfix:smtp:lostconnection'};
-		} elsif ( $line =~ s/^[0-9A-F]+: conversation with .+ timed out while //i ) {	# TODO
+		} elsif ( $line =~ s/^[0-9A-F]+: conversation with .+ timed out while //i ) {
 			# failed connection - time out (vanishing packets?)
 			++$$stats{'postfix:smtp:timeout'};
 		} elsif ( $line =~ s/^setting up TLS connection to\s*// ) {
 			# we are at least trying - currently not used
 			++$$stats{'postfix:smtp:TLS'};
+		} elsif ( $line =~ s/^SSL_connect error to .+:25: lost connection$// ) {
+			# lost connection in SSL connection setup
+			++$$stats{'postfix:smtp:TLS'};
+			++$$stats{'postfix:smtp:lostconnection'};
 		} elsif ( $line =~ s/^Trusted TLS connection established to\s*// ) {
 			# trusted TLS
 			++$$stats{'postfix:smtp:TLS:Trusted'};
@@ -353,6 +358,10 @@ sub analyse {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 				++$$stats{'postfix:smtp:TLS:certverifyfail:other'};
 			}
+		} elsif ( $line =~ s/^[0-9A-F]+: Cannot start TLS: handshake failure// ) {
+			++$$stats{'postfix:smtp:TLS:failtostart'};	# not used as TLS with lost connection above takes care of this
+		} elsif ( $line =~ s/^Host offered STARTTLS: // ) {
+			# ignore
 		} elsif ( $line =~ s/^warning:\s*// ) {
 			# warnings
 			++$$stats{'postfix:smtp:warning'};
@@ -369,7 +378,7 @@ sub analyse {
 			# connection
 			++$$stats{'postfix:smtp:connect'};
 			smtpd_ip ( $line, $origline, $number, $log, $stats );
-		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=deferred \((.*)\)$/$1/ ) {
+		} elsif ( $line =~ s/^[0-9A-F]+: to=.* status=deferred \((.*)\)"?$/$1/ ) {	# seem to be getting a stray quote from some people TODO
 			# deferred 
 			++$$stats{'postfix:smtp:deferred'};
 			# connection
@@ -456,6 +465,7 @@ sub analyse {
 				or $message =~ s/^.*gr[ea]ylist.*$//i
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
 				or $message =~ s/^.*g-r-[ea]-y-l-i-s-t.*$//i
+				or $message =~ s/ http:\/\/kb\.mimecast\.com\/Mimecast_Knowledge_Base\/Administration_Console\/Monitoring\/Mimecast_SMTP_Error_Codes#451 //
 				or $message =~ s/Internal resource temporarily unavailable - http:\/\/www\.mimecast\.com\/knowledgebase\/KBID10473\.htm//
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
@@ -470,6 +480,7 @@ sub analyse {
 				or $message =~ s/service temporarily unavailable//i
 				or $message =~ s/Sprobuj za pietnascie sekund//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
+				or $message =~ s/temporary envelope failure//i	# not completey certain if this is greylist or brokenserver
 				or $message =~ s/Temporarily blocked for \d+ seconds//i
 				or $message =~ s/Temporarily rejected//i
 				or $message =~ s/The user you are trying to contact is receiving mail too quickly//i
