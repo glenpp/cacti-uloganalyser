@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20150224;
+our $VERSION = 20150308;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -389,7 +389,7 @@ sub analyse {
 			my $message = $line;
 			my $smtpcode;
 			my $esmtpcode;
-			if ( $message =~ s/^(delivery temporarily suspended: )?host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][01234]|433|554|459)[ \-]// ) {
+			if ( $message =~ s/^(delivery temporarily suspended: )?host [\w\.\-]+\[[\w\.:]+\] (said|refused to talk to me): (4[25][01234]|433|55[04]|459)[ \-]// ) {
 				$smtpcode = $3;
 				if ( $message =~ s/^#?(\d\.\d\.\d)\s+//		# as per RFC2034 - "must preface the text part"
 					or $message =~ s/\s*\(#(\d\.\d\.\d)\)// ) {	# qmail puts esmtp codes at the end in this format
@@ -416,10 +416,12 @@ sub analyse {
 				or ( $message ne '' and (
 					$message =~ s/Cannot process .+ GRD failure//i
 					or $message =~ s/Domain size limit exceeded//i	# user has exceeded their limit with their hosting provider
+					or $message =~ s/Don't use the Backup MX '.+' while the Primary MX is available[ \-]+//i	# and how does it know if it's available to us or not?
 					or $message =~ s/Internal server error//i
 					or $message =~ s/inusfficient system storage//i
 					or $message =~ s/load too high//i
 					or $message =~ s/Mailbox disabled//i	# should normally bounce, hence broken server
+					or $message =~ s/Mailbox not found//i	# should normally bounce, hence broken server
 					or $message =~ s/mailbox unavailable//i
 					or $message =~ s/No PTR record available in DNS//i
 					or $message =~ s/not accepting (messages|network messages)//i
@@ -474,6 +476,7 @@ sub analyse {
 				or $message =~ s/not yet authorized//i
 				or $message =~ s/Please refer to http:\/\/help\.yahoo\.com\/help\/us\/mail\/defer\/defer-06\.html//
 				or $message =~ s/Please visit http:\/\/www\.google\.com\/mail\/help\/bulk_mail\.html//
+				or $message =~ s/http:\/\/www\.google\.com\/mail\/help\/bulk_mail\.html//
 				or $message =~ s/see http:\/\/postmaster\.yahoo\.com\/errors\/421-ts02\.html//
 				or $message =~ s/Sender address deferred by rule//i
 				or $message =~ s/Sender address verification in progress//i
@@ -481,6 +484,7 @@ sub analyse {
 				or $message =~ s/Sprobuj za pietnascie sekund//i
 				or $message =~ s/Recipient address rejected: Too many recent unknown recipients from //i
 				or $message =~ s/temporary envelope failure//i	# not completey certain if this is greylist or brokenserver
+				or $message =~ s/Temporary authentication failure//i	# not completey certain if this is greylist or brokenserver
 				or $message =~ s/Temporarily blocked for \d+ seconds//i
 				or $message =~ s/Temporarily rejected//i
 				or $message =~ s/The user you are trying to contact is receiving mail too quickly//i
@@ -494,15 +498,16 @@ sub analyse {
 				) {	# TODO - many other possible reasons to add
 				# we got greylisted
 				++$$stats{'postfix:smtp:deferred:greylist'};
-			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
-				# presumably a misconfigured server - other side is broken
-				++$$stats{'postfix:smtp:deferred:brokenserver'};
+#			} elsif ( $line =~ s/^host [\w\.\-]+\[[\w\.:]+\] refused to talk to me: 550 rejected because of not in approved list//i ) {
+#				# presumably a misconfigured server - other side is broken TODO or maybe greylisting TODO
+#				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( $line =~ s/^Host or domain not found//i
 				or $line =~ s/^Host or domain name not found//i
 				or $message =~ s/^<.+>: Sender address rejected: Domain not found//i	# these are remote so may be treated separately later TODO
 				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i
 				or $message =~ s/^:  \(DNS:NR\)  http:\/\/postmaster\.info\.aol\.com\/errors\/421dnsnr.html \(in reply to end of DATA command\)$//
-				or $message =~ s/^Domain of sender address [^\s]+ does not resolve//i ) {
+				or $message =~ s/^Domain of sender address [^\s]+ does not resolve//i
+				or $message =~ s/^This system is configured to reject mail from .+ ?\[.+\] \(DNS reverse lookup failed\)//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
 			} elsif ( $line =~ s/^lost connection with //i ) {
@@ -516,7 +521,10 @@ sub analyse {
 				# ignore - alredy should be caught before
 				--$$stats{'postfix:smtp:connect'};	# don't want to increment twice
 				smtpd_ip ( $line, $origline, $number, $log, $stats );
-			} elsif ( $smtpcode == 554 and $message =~ s/^[\w\-\.]+\.[\w\-\.]+$//i	# returning a fqdn as a message
+			} elsif ( $message =~ s/^Your host has been blacklisted//i ) {
+				# the other side is telling us we are blacklisted
+				++$$stats{'postfix:smtp:deferred:blacklisted'};
+			} elsif ( defined ( $smtpcode ) and $smtpcode == 554 and $message =~ s/^[\w\-\.]+\.[\w\-\.]+$//i	# returning a fqdn as a message
 				) {
 				# we can't tell why - insufficient / ambigous info
 				++$$stats{'postfix:smtp:deferred:indeterminate'};

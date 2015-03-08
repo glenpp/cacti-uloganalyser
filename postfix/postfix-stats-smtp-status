@@ -33,3 +33,4 @@ printf "%d\n" `grep ^postfix:smtp:deferred:brokenserver= $STATS | cut -d '=' -f2
 printf "%d\n" `grep ^postfix:smtp:deferred:dnserror= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:deferred:lostconnection= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:deferred:indeterminate= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtp:deferred:blacklisted= $STATS | cut -d '=' -f2`
