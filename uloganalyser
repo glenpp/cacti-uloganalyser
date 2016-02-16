@@ -23,7 +23,7 @@ use warnings;
 #
 # See: https://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
 #
-my $VERSION = 20131006;
+my $VERSION = 20150516;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -48,7 +48,7 @@ if ( ! $logold or  ! -f $logold ) {
 #	warn "WARNING - old mail log file not found\n";
 }
 if ( ! $lognew or ! -f $lognew ) {
-	die "FATAL - current mail log file not found\n";
+	die "FATAL - current log file not found: $lognew\n";
 }
 if ( ! $statsfile ) {
 	die "FATAL - stats file not specified\n";
