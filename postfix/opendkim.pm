@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log lines for opendkim
 
-# Copyright (C) 2014  Glen Pitt-Pladdy
+# Copyright (C) 2014-2015 Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
 #
 package opendkim;
-our $VERSION = 20150214;
+our $VERSION = 20160215;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -38,7 +38,7 @@ sub analyse {
 	my ( $line, $number, $log, $stats ) = @_;
 	my $origline = $line;
 	if ( $line !~ s/^.+ opendkim\[\d+\]:\s*// ) { return; }
-	if ( $line =~ /^[0-9A-F]+: DKIM-Signature header added \([^\)]+\)/ ) {
+	if ( $line =~ /^[0-9A-F]+: DKIM-Signature (header|field) added \([^\)]+\)/ ) {
 		++$$stats{'opendkim:addedsignature'};
 	} elsif ( $line =~ s/[0-9A-F]+.*\sSSL error:04091068:rsa routines:INT_RSA_VERIFY:bad signature$// ) {
 		++$$stats{'opendkim:badsignature'};
@@ -48,7 +48,7 @@ sub analyse {
 		++$$stats{'opendkim:nosignature'};
 	} elsif ( $line =~ /^[0-9A-F]+: no signing table match for '.+'$/ ) {
 		# ignore - inconsequential: occurs when we get an internal sub-domain that isn't configured for signing
-	} elsif ( $line =~ /^[0-9A-F]+: failed to parse authentication-results: header$/ ) {
+	} elsif ( $line =~ /^[0-9A-F]+: failed to parse [aA]uthentication-[rR]esults: header( field)?$/ ) {
 		# ignore - inconsequential
 	} elsif ( $line =~ /^[0-9A-F]+: .+ \[.+\] not internal$/ ) {
 		# ignore - inconsequential
@@ -58,11 +58,13 @@ sub analyse {
 		# ignore - inconsequential: just couldn't lookup key
 	} elsif ( $line =~ /^[0-9A-F]+: DKIM verification successful$/ ) {
 		++$$stats{'opendkim:verifysuccess'};
+	} elsif ( $line =~ s/^[0-9A-F]+: s=[^\s]+ d=[^\s]+ SSL// ) {
+		# ignore
 	} elsif ( $line =~ s/^ignoring header field 'X-CSA-Complaints;Require-Recipient-Valid-Since'// ) {
 		# ignore
 	} elsif ( $line =~ s/[0-9A-F]+:\ss=ED-DKIM-V3 d=.+ SSL error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block type is not 01; error:04067072:rsa routines:RSA_EAY_PUBLIC_DECRYPT:padding check failed// ) {
 		# ignore - associated with "bad signature data" above TODO
-	} elsif ( $line =~ s/message has signatures from // ) {
+	} elsif ( $line =~ s/^[0-9A-F]+: message has signatures from // ) {
 		# ignore
 	} elsif ( $line =~ s/OpenDKIM Filter: mi_stop=1//
 			or $line =~ s/OpenDKIM Filter v\d[\.\d]+ terminating with status 0, errno = 0//
