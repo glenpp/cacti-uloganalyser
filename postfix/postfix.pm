@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20150308;
+our $VERSION = 20160215;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -469,6 +469,7 @@ sub analyse {
 				or $message =~ s/^.*g-r-[ea]-y-l-i-s-t.*$//i
 				or $message =~ s/ http:\/\/kb\.mimecast\.com\/Mimecast_Knowledge_Base\/Administration_Console\/Monitoring\/Mimecast_SMTP_Error_Codes#451 //
 				or $message =~ s/Internal resource temporarily unavailable - http:\/\/www\.mimecast\.com\/knowledgebase\/KBID10473\.htm//
+				or $message =~ s/Internal resource temporarily unavailable - https:\/\/community\.mimecast\.com\/docs\/DOC-1369#451//
 				or $message =~ s/Maybe later is better//i
 				or $message =~ s/Message has been refused by antispam//i
 				or $message =~ s/message is probably spam//i
@@ -668,7 +669,8 @@ sub analyse {
 		}
 	} elsif ( $line =~ s/^.+ postfix\/policy-spf\[\d+\]:\s*// ) {
 		if ( $line =~ s/: SPF None \(No applicable sender policy available\): \s*//i
-			or $line =~ s/^Policy action=PREPEND Received-SPF: none //i ) {
+			or $line =~ s/^Policy action=PREPEND Received-SPF: none //i
+			or $line =~ s/^Policy action=DUNNO//i ) {	# TODO not sure on this - some stuff that was "none" is now DUNNO, but "none" is still used for others
 			++$$stats{'postfix:policy:policy-spf:none'};
 		} elsif ( $line =~ s/: Policy action=PREPEND X-Comment: SPF skipped for whitelisted relay//
 			or $line =~ s/^Policy action=PREPEND Authentication-Results: .+; none \(SPF not checked for whitelisted relay\)$// ) {
