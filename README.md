@@ -11,7 +11,7 @@ Test Data, much of which has been sent in by users, may contain identifying info
 See https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 
 ## Dovecot Templates
-See https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
+See https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 
 ## OpenDKIM Templates
 See https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
