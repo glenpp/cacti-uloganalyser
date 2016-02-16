@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333%2B0100%20Dovecot%20stats%20on%20Cacti%20%28via%20SNMP%29/
 #
 package dovecot;
-our $VERSION = 20141222;
+our $VERSION = 20150531;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -110,7 +110,8 @@ sub analyse {
 			$$stats{'dovecot:auth:disallowedchar'} += $multiply;
 		} elsif ( $line =~ s/^Empty username$// ) {
 			$$stats{'dovecot:auth:emptyusername'} += $multiply;
-		} elsif ( $line =~ s/^invalid input// ) {
+		} elsif ( $line =~ s/^invalid input//
+				or $line =~ s/^Invalid base64 data in continued response$// ) {
 			$$stats{'dovecot:auth:invalidinput'} += $multiply;
 		} elsif ( $line =~ s/^Request \d+\.\d timeouted after \d+ secs, state=\d+$// ) {
 			$$stats{'dovecot:auth:timeouted'} += $multiply;
@@ -198,7 +199,9 @@ sub analyse {
 			if ( $type eq 'disconnected' ) { $type = 'login'; }
 			$$stats{"dovecot:$protocol:login:disconnected"} += $multiply;
 			# some dovecot versions give extra info TODO
-			if ( $line =~ s/^Inactivity // ) {
+			if ( $line =~ s/^Inactivity during authentication \(/\(/ ) {
+				# TODO not currently used
+			} elsif ( $line =~ s/^Inactivity \(/\(/ ) {
 				# TODO not currently used
 			} elsif ( $line =~ s/^Too many invalid commands // ) {
 				# TODO not currently used
@@ -346,11 +349,16 @@ print ">$line\n";
 			} else {
 				$$stats{'dovecot:deliver:elsewhere'} += $multiply;
 			}
+		} elsif ( $line =~ s/^[^\s]+:( sieve:)? msgid=.+:\s+(forwarded to)\s+// ) {
+			# generic sieve function not relating to mailbox sorting
+			$$stats{'dovecot:deliver:sieve'} += $multiply;
 		} elsif ( $line =~ s/\w+: msgid=.+: save failed to\s*// ) {
 				$$stats{'dovecot:deliver:fail'} += $multiply;
 		} elsif ( $line =~ s/Disconnect from local: Client quit \(in reset\)// ) {
 			# ignore
 		} elsif ( $line =~ s/Disconnect from local: Connection closed \(in reset\)// ) {
+			# ignore
+		} elsif ( $line =~ s/Disconnect from local: Successful quit// ) {
 			# ignore
 		} elsif ( $IGNOREERRORS and
 			( $line =~ s/^Warning: Transaction log file \/.+\.log was locked for \d+ seconds$//
