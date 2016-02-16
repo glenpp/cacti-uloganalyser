@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20150228;
+our $VERSION = 20160101;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -82,6 +82,7 @@ sub analyse {
 				or $line =~ s/^Set maxRetry = \d+//
 				or $line =~ s/^Set findtime = \d+//
 				or $line =~ s/^Set banTime = \d+//
+				or $line =~ s/^\[\w+\]\s+[\d\.]+ already banned$//
 		) {
 			# ignore regular operation
 		} else {
