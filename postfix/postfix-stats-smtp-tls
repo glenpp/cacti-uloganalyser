@@ -27,6 +27,7 @@ STATS=/var/local/snmp/mail
 printf "%d\n" `grep ^postfix:smtp:TLS= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:TLS:Trusted= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:TLS:Untrusted= $STATS | cut -d '=' -f2`
+printf "%d\n" `grep ^postfix:smtp:TLS:Anonymous= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:TLS:certverifyfail= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:TLS:certverifyfail:other= $STATS | cut -d '=' -f2`
 printf "%d\n" `grep ^postfix:smtp:TLS:certverifyfail:selfsigned= $STATS | cut -d '=' -f2`

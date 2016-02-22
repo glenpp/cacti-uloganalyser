@@ -337,6 +337,9 @@ sub analyse {
 		} elsif ( $line =~ s/^Trusted TLS connection established to\s*// ) {
 			# trusted TLS
 			++$$stats{'postfix:smtp:TLS:Trusted'};
+		} elsif ( $line =~ s/^Anonymous TLS connection established to\s*// ) {
+			# anonymous TLS
+			++$$stats{'postfix:smtp:TLS:Anonymous'};
 		} elsif ( $line =~ s/^Untrusted TLS connection established to\s*// ) {
 			# untrusted TLS
 			++$$stats{'postfix:smtp:TLS:Untrusted'};
