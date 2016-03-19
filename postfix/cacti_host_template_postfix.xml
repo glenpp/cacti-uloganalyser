@@ -756,12 +756,12 @@
 			</hash_100024e46aa93f783eec52e627f3a70c15747b>
 		</items>
 		<inputs>
-			<hash_09002455b66c7b15ff24d0efe3b9098e71b339>
+			<hash_090024c7fe952a8e7bd13d974800ca0bde5cef>
 				<name>Data Source [postfix_smtp_sent]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_0000248a22acbece9e6ddddb48a45cfd8202cb</items>
-			</hash_09002455b66c7b15ff24d0efe3b9098e71b339>
+			</hash_090024c7fe952a8e7bd13d974800ca0bde5cef>
 			<hash_090024760fdd099683ee72b024c1e6479f0db7>
 				<name>Data Source [postfix_smtp_dfroth]</name>
 				<description></description>
@@ -1624,12 +1624,12 @@
 			</hash_100024242c2f893dc27dd085fe2af86bfcb7e4>
 		</items>
 		<inputs>
-			<hash_0900244b12110ab6fcfa1df1d26cff4720c3c9>
+			<hash_090024129568f11ab2a59f7b1d150cc2681b75>
 				<name>Data Source [postfix_smtpd_conn]</name>
 				<description></description>
 				<column_name>task_item_id</column_name>
 				<items>hash_000024050c7e451bacde8d90835e48e83d31e2</items>
-			</hash_0900244b12110ab6fcfa1df1d26cff4720c3c9>
+			</hash_090024129568f11ab2a59f7b1d150cc2681b75>
 			<hash_09002495b073469c3e9929e26d05656b6fec8e>
 				<name>Data Source [postfix_smtpd_warn]</name>
 				<description></description>
@@ -4355,7 +4355,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.5</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.5</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
@@ -4442,7 +4442,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.4</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.4</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
@@ -8705,7 +8705,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.7</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.7</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
@@ -8792,7 +8792,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.8</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.8</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
@@ -8879,7 +8879,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.6</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.6</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
@@ -8966,7 +8966,7 @@
 			<item_005>
 				<data_input_field_id>hash_0700244276a5ec6e3fe33995129041b1909762</data_input_field_id>
 				<t_value></t_value>
-				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.\&quot;postfixsmtptls\&quot;.9</value>
+				<value>NET-SNMP-EXTEND-MIB::nsExtendOutLine.&quot;postfixsmtptls&quot;.9</value>
 			</item_005>
 			<item_006>
 				<data_input_field_id>hash_070024012ccb1d3687d3edb29c002ea66e72da</data_input_field_id>
