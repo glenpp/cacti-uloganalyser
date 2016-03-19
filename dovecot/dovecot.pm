@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20150531;
+our $VERSION = 20160222;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -113,7 +113,8 @@ sub analyse {
 		} elsif ( $line =~ s/^invalid input//
 				or $line =~ s/^Invalid base64 data in continued response$// ) {
 			$$stats{'dovecot:auth:invalidinput'} += $multiply;
-		} elsif ( $line =~ s/^Request \d+\.\d timeouted after \d+ secs, state=\d+$// ) {
+		} elsif ( $line =~ s/^Request \d+\.\d timeouted after \d+ secs, state=\d+$//
+				or $line =~ s/^Request timed out waiting for client to continue authentication \(\d+ secs\)// ) {
 			$$stats{'dovecot:auth:timeouted'} += $multiply;
 		} else {
 			$$stats{'dovecot:auth:other'} += $multiply;
