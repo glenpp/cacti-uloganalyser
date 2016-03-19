@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20160222;
+our $VERSION = 20160319;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -459,6 +459,7 @@ sub analyse {
 			} elsif ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
 					$esmtpcode eq '4.2.1'		# Mailbox diabled (temporary) eg. rate limiting
+					or $esmtpcode eq '4.7.0'	# non-descript security related delay - assume greylist
 					or $esmtpcode eq '4.7.1'	# Delivery not authorized, message refused
 				) )
 				or ( $message ne '' and (
