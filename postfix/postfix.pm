@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20160319;
+our $VERSION = 20160718;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -471,7 +471,8 @@ sub analyse {
 				or $message =~ s/^.*gr[ea]ylist.*$//i
 				or $message =~ s/^.*Gr[ea]y-list.*$//i
 				or $message =~ s/^.*g-r-[ea]-y-l-i-s-t.*$//i
-				or $message =~ s/ http:\/\/kb\.mimecast\.com\/Mimecast_Knowledge_Base\/Administration_Console\/Monitoring\/Mimecast_SMTP_Error_Codes#451 //
+				or $message =~ s/ http:\/\/kb\.mimecast\.com\/Mimecast_Knowledge_Base\/Administration_Console\/Monitoring\/Mimecast_SMTP_Error_Codes#451 //	# old
+				or $message =~ s/^IP temporarily blacklisted - https:\/\/community\.mimecast\.com\/docs\/DOC-1369#451 //	# 20160718
 				or $message =~ s/Internal resource temporarily unavailable - http:\/\/www\.mimecast\.com\/knowledgebase\/KBID10473\.htm//
 				or $message =~ s/Internal resource temporarily unavailable - https:\/\/community\.mimecast\.com\/docs\/DOC-1369#451//
 				or $message =~ s/Maybe later is better//i
