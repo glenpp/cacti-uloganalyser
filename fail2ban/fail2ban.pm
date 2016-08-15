@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20160101;
+our $VERSION = 20160815;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -59,7 +59,7 @@ sub analyse {
 	my $origline = $line;
 	my $multiply = 1;
 	if ( $line !~ s/^.+? fail2ban\.(\w+)\s*:\s+(\w+)\s+//
-		and $line !~ s/^.+? fail2ban\.(\w+)\[\d+\]:\s+(\w+)\s+// ) { return; }
+		and $line !~ s/^.+? fail2ban\.(\w+)\s*\[\d+\]:\s+(\w+)\s+// ) { return; }
 	my ( $component, $level ) = ( $1, $2 );
 	# detect "message repeated N times:"
 	if( $line =~ s/^message repeated (\d+) times: \[\s*(.+)\]$/$2/ ) {
