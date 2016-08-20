@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20160718;
+our $VERSION = 20160820;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -42,6 +42,7 @@ our $IGNOREERRORS = 1;
 # "byrdhuntr"
 # "bluemm"
 # "Simon Beckett"
+# "EmTeedee"
 
 
 
@@ -343,6 +344,9 @@ sub analyse {
 		} elsif ( $line =~ s/^Untrusted TLS connection established to\s*// ) {
 			# untrusted TLS
 			++$$stats{'postfix:smtp:TLS:Untrusted'};
+		} elsif ( $line =~ s/^Verified TLS connection established to\s*// ) {
+			# verified TLS
+			++$$stats{'postfix:smtp:TLS:Verified'};
 		} elsif ( $line =~ s/^certificate verification failed for\s*//
 			or $line =~ s/^server certificate verification failed for\s*// ) {
 			# certificate verification failed for some reason
@@ -592,6 +596,9 @@ sub analyse {
 			} elsif ( $line =~ s/^\(delivered via zarafa service\)// ) {
 				# delivery to zarafa
 				++$$stats{'postfix:local:sent:zarafa'};
+			} elsif ( $line =~ s/^\(delivered via mailman service\)// ) {
+				# delivery to a mailing list manager (MLM)
+				++$$stats{'postfix:local:sent:mlm'};
 			} else {
 				# some other
 				++$$stats{'postfix:local:sent:other'};
