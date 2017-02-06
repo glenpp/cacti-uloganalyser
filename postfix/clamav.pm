@@ -23,10 +23,11 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package clamav;
-our $VERSION = 20110603;
+our $VERSION = 20170206;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
+# "jangrewe" https://github.com/jangrewe
 
 
 sub register {
