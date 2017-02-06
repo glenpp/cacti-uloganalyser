@@ -43,17 +43,17 @@ sub analyse {
 	# clam found something
 	++$$stats{'clamav:found'};
 	if ( $line =~ /(trojan)/i
-		or $line =~ /^Heuristics\.(phishing)\./i
+		or $line =~ /Heuristics\.(phishing)\./i
 		or $line =~ /(phishing)\./i
-		or $line =~ /^(fraud)\./i
-		or $line =~ /^(scam)\./i
-		or $line =~ /^(exploit)\./i
-		or $line =~ /^(virus)\./i
-		or $line =~ /^(worm)\./i
-		or $line =~ /^(malware)\./i
-		or $line =~ /^(spam)\./i
-		or $line =~ /^(archive)\./i
-		or $line =~ /^(suspect)\./i ) {
+		or $line =~ /(fraud)\./i
+		or $line =~ /(scam)\./i
+		or $line =~ /(exploit)\./i
+		or $line =~ /(virus)\./i
+		or $line =~ /(worm)\./i
+		or $line =~ /(malware)\./i
+		or $line =~ /(spam)\./i
+		or $line =~ /(archive)\./i
+		or $line =~ /(suspect)\./i ) {
 		# we know about this - count it
 		++$$stats{"clamav:found:".lc ( $1 )};
 	} else {
