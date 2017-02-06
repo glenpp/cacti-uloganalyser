@@ -40,9 +40,13 @@ sub register {
 sub analyse {
 	my ( $line, $number, $log, $stats ) = @_;
 	my $origline = $line;
-	if ( $line !~ s/^.+ clamav-milter\[\d+\]: Message [\dA-F]+ from <.+> to <.+> .+infected by\s+// ) { return; }
+	if ( $line !~ s/^.+ clamav-milter\[\d+\]: Message [\dA-F]+ from <.+> to <.+> .+infected by\s+//
+		and  $line !~ s/^.+ clamsmtpd: [^:]+: from=.+, to=.+, status=// )
+			{ return; }
+	$line =~ s/^(\w+):/$1./;	# change formatting to use dots instead of : used by clamsmtpd
 	# clam found something
 	++$$stats{'clamav:found'};
+	print "$line\n";
 	if ( $line =~ /(trojan)/i
 		or $line =~ /Heuristics\.(phishing)\./i
 		or $line =~ /(phishing)\./i
