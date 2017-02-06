@@ -10,6 +10,9 @@ rm /tmp/ustat
 ./uloganalyser /tmp/testlog.0 /tmp/testlog \
 	/tmp/ustat */*.pm
 
-# launch tkdiff if we got files
-#[ -f /tmp/ustat -a -f ustat.last ] && tkdiff /tmp/ustat ustat.last
+# diff if we got files
+if [ -f /tmp/ustat -a -f ustat.last ]; then
+	echo "============= diff"
+	diff -u ustat.last /tmp/ustat
+fi
 
