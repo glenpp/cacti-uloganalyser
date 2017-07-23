@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20170722;
+our $VERSION = 20170723;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -293,6 +293,8 @@ sub analyse {
 			# ignore - not interested
 		} elsif ( $line =~ s/^improper command pipelining after \w+ from // ) {
 			# ignore - likely spammers, but maybe log this in the longer term TODO
+		} elsif ( $line =~ s/^proxy-(accept|reject):\s*// ) {
+			# ignore - https://github.com/glenpp/cacti-uloganalyser/issues/1
 		} else {
 			# some other type
 			++$$stats{'postfix:smtpd:other'};
