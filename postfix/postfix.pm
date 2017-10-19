@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20170723;
+our $VERSION = 20171016;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -86,7 +86,7 @@ sub wrapup {
 		foreach my $deferreason (@deferreasons) {
 			$deferreason =~ s/^(\d+)://;
 			print __FILE__.":$1 version $VERSION\n";
-			# get postfix compoent out - it can look like a host
+			# get postfix component out - it can look like a host
 			my $postfixcomp = '';
 			if ( $deferreason =~ s/^.* (postfix\/\w+)\[\d+\]:\s*// ) {
 				$postfixcomp = "$1\\[\\d+\\]:\\s*";
@@ -501,6 +501,7 @@ sub analyse {
 				or $message =~ s/Temporarily rejected//i
 				or $message =~ s/The user you are trying to contact is receiving mail too quickly//i
 				or $message =~ s/Too many messages for this recipient at the moment //i
+				or $message =~ s/Too many recipients received from the sender //i	# this is possibly a misleading message that it greylists over a threshold .... maybe
 				or $message =~ s/too much mail from //i
 				or $message =~ s/Unable to validate [^\s]+ with the MX mailserver for 451 [^\s]+ \(tested with a fake bounce back\)//
 				or $message =~ s/unverified address: Address (lookup failed|verification in progress)//i
