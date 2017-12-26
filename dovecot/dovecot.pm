@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20160222;
+our $VERSION = 20171226;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -293,6 +293,9 @@ sub analyse {
 				$$stats{"dovecot:$protocol:disconnect:other"} += $multiply;
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
+		} elsif ( $line =~ s/Logged out// ) {
+			# 2.2 on this changes from Disconnected - Logged out
+			$$stats{"dovecot:$protocol:disconnect:loggedout"} += $multiply;
 		} elsif ( $line =~ s/Connection closed// ) {
 			$$stats{"dovecot:$protocol:connclosed"} += $multiply;
 		} elsif ( $line =~ s/Server shutting down\.// ) {
