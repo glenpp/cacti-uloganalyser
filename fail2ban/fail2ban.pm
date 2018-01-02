@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20160815;
+our $VERSION = 20171231;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -83,6 +83,7 @@ sub analyse {
 				or $line =~ s/^Set findtime = \d+//
 				or $line =~ s/^Set banTime = \d+//
 				or $line =~ s/^\[\w+\]\s+[\d\.]+ already banned$//
+				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\d\.]+$//	# detections TODO do we want to graph these even though they don't directly result in a ban
 		) {
 			# ignore regular operation
 		} else {
