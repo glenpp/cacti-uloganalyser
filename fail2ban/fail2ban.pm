@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20171231;
+our $VERSION = 20180119;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -89,7 +89,7 @@ sub analyse {
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown fail2ban: $origline\n";
 		}
-	} elsif ( $level eq 'WARNING' ) {
+	} elsif ( $level eq 'WARNING' or $level eq 'NOTICE' ) {
 		if ( $line =~ s/\[([^\]]+)\] Ban [\da-f\.:]+$// ) {
 			if ( exists $CLASSES{$1} ) {
 				if ( ! exists $$stats{"fail2ban:banned:$CLASSES{$1}"} ) {
