@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20180119;
+our $VERSION = 20180121;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -84,6 +84,13 @@ sub analyse {
 				or $line =~ s/^Set banTime = \d+//
 				or $line =~ s/^\[\w+\]\s+[\d\.]+ already banned$//
 				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\d\.]+$//	# detections TODO do we want to graph these even though they don't directly result in a ban
+				or $line =~ s/^rollover performed on \/var\/log\/fail2ban\.log$//
+				or $line =~ s/^Connected to fail2ban persistent database '\/var\/lib\/fail2ban\/fail2ban\.sqlite3'$//
+				or $line =~ s/^Jail '[\w\-]+' uses pyinotify \{\}$//
+				or $line =~ s/^Initiated 'pyinotify' backend$//
+				or $line =~ s/^Set jail log file encoding to UTF-8$//
+				or $line =~ s/^Set maxlines = 10$//
+				or $line =~ s/^Jail \w+ is not a JournalFilter instance$//
 		) {
 			# ignore regular operation
 		} else {
