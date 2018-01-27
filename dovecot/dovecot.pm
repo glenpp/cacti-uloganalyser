@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20171226;
+our $VERSION = 20180127;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -361,6 +361,8 @@ print ">$line\n";
 		} elsif ( $line =~ s/Disconnect from local: Client quit \(in reset\)// ) {
 			# ignore
 		} elsif ( $line =~ s/Disconnect from local: Connection closed \(in reset\)// ) {
+			# ignore
+		} elsif ( $line =~ s/Disconnect from local: Connection closed \(in DATA finished\)// ) {
 			# ignore
 		} elsif ( $line =~ s/Disconnect from local: Successful quit// ) {
 			# ignore
