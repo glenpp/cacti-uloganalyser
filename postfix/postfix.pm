@@ -410,7 +410,9 @@ sub analyse {
 			if ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
 						# See http://tools.ietf.org/html/rfc1893
-					$esmtpcode eq '4.2.2'	# Mailbox full
+					$esmtpcode eq '4.2.0'	# Other or undefined mailbox status
+					or $esmtpcode eq '4.2.2'	# Mailbox full
+					or $esmtpcode eq '4.3.0'	# Other or undefined mail system status
 					or $esmtpcode eq '4.3.1'	# Mail system full
 					or $esmtpcode eq '4.3.2'	# System not accepting network messages
 					or $esmtpcode eq '4.3.5'	# System incorrectly configured
@@ -455,6 +457,8 @@ sub analyse {
 					or $message =~ s/Recipient address rejected: User unknown in (local|virtual) (recipient|mailbox) table//i	# should normally bounce, hence broken server
 					or $message =~ s/^Requested action aborted\s*//i
 					or $message =~ s/Server configuration problem//i
+					or $message =~ s/Recipient address rejected: temporary server error //i
+					or $message =~ s/error in error handling //i
 				) )
 				or $line =~ s/^.* Connection refused$//i
 				or $line =~ s/^.* Connection timed out$//i	# TODO should this be mixed up with in-conversation trimeouts below?
