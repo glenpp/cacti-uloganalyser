@@ -410,6 +410,7 @@ sub analyse {
 			if ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
 						# See http://tools.ietf.org/html/rfc1893
+						# IMPORTANT: These codes should only be specific (not "other" codes like 4.2.0, 4.3.0 etc.) else we risk wrongly identifying status:
 					$esmtpcode eq '4.2.2'	# Mailbox full
 					or $esmtpcode eq '4.3.1'	# Mail system full
 					or $esmtpcode eq '4.3.2'	# System not accepting network messages
@@ -446,6 +447,7 @@ sub analyse {
 					or $message =~ s/Service (not available|Unavailable|is unavailable)//i
 					or $message =~ s/system resources//i
 					or $message =~ s/Temporary (Resources unavailable|failure|lookup failure|service error)//i
+					or $message =~ s/temporary server error//i
 					or $message =~ s/Too many (concurrent|connections|simultaneous connections)//i	# TODO this could actually be a form of greylisting too - ie. we don't know if it's overload or anti-spam
 					or $message =~ s/Too much load//i
 					or $message =~ s/trouble in home directory//i
@@ -464,6 +466,7 @@ sub analyse {
 				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( ( defined $esmtpcode and
 					(	# specific ESMTP codes from RFC1893 - these do seem more consistently used than SMTP codes
+						# IMPORTANT: These codes should only be specific (ie. not "other" codes like 4.2.0) else we risk wrongly identifying status:
 					$esmtpcode eq '4.2.1'		# Mailbox diabled (temporary) eg. rate limiting
 					or $esmtpcode eq '4.7.0'	# non-descript security related delay - assume greylist
 					or $esmtpcode eq '4.7.1'	# Delivery not authorized, message refused
