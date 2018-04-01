@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20171016;
+our $VERSION = 20180331;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
