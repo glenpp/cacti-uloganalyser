@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20180127;
+our $VERSION = 20180530;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -42,6 +42,7 @@ our @DOVEADM = (
 # Jean Deram
 # Alessio
 # "skeletor"
+# "methilnet"
 
 
 sub register {
@@ -418,6 +419,8 @@ print ">$line\n";
 	} elsif ( $line =~ s/auth-worker\(default\): mysql: Connected to localhost \(.+\)//
 			or $line =~ s/auth-worker\(\d+\): mysql\([^\)]+\): Connected to database .+// ) {
 		# ignore
+	} elsif ( $line =~ s/auth-worker\(\d+\): sql\([^,]+,\d+\.\d+\.\d+.\d+,(<[^>]+>)?\): (unknown user|Password mismatch)$// ) {
+		# ignore - auth-worker authentication problems manifest as *-login messages
 	} elsif ( $line =~ s/auth-worker\(\d+\): Debug:\s*// ) {
 		# ignore debug messages
 	} elsif ( $line =~ s/Killed with signal 15 // ) {
