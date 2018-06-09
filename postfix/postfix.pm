@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20180331;
+our $VERSION = 20180605;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -112,13 +112,13 @@ sub wrapup {
 sub analyse {
 	my ( $line, $number, $log, $stats ) = @_;
 	my $origline = $line;
-	if ( $line !~ /^.+ postfix\/[\w\-]+\[\d+\]:\s*/ ) { return; }
+	if ( $line !~ s/^.+ postfix\/([\w\-]+\[\d+\]:.*)$/$1/ ) { return; }
 ############################## pickup ##############################
-	if ( $line =~ /^.+ postfix\/pickup\[\d+\]:/ ) {
+	if ( $line =~ /^pickup\[\d+\]:/ ) {
 		# sent locally
 		++$$stats{'postfix:pickup'};
 ############################### snmpd ##############################
-	} elsif ( $line =~ s/^.+ postfix\/smtpd\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^smtpd\[\d+\]:\s*// ) {
 		if ( $line =~ s/^connect from\s*// ) {
 			# inbound snmp connection
 			++$$stats{'postfix:smtpd:connect'};
@@ -301,7 +301,7 @@ sub analyse {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 ############################### smtp ###############################
-	} elsif ( $line =~ s/^.+ postfix\/smtp\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^smtp\[\d+\]:\s*// ) {
 		if ( $line =~ s/^connect to // ) {
 			# connection (attempted)
 			++$$stats{'postfix:smtp:connect'};
@@ -578,7 +578,7 @@ sub analyse {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
 ########################## local delivery ##########################
-	} elsif ( $line =~ s/^.+ postfix\/(local|virtual|pipe)\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^(local|virtual|pipe)\[\d+\]:\s*// ) {
 		if ( $line =~ s/^[0-9A-F]+: to=.* status=sent\s*// ) {
 			# delivered locally
 			++$$stats{'postfix:local:sent'};
@@ -625,7 +625,7 @@ sub analyse {
 			++$$stats{'postfix:local:other'};
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
-	} elsif ( $line =~ s/^.+ postfix\/lmtp\[\d+\]:\s*// ) {	# TODO
+	} elsif ( $line =~ s/^lmtp\[\d+\]:\s*// ) {	# TODO
 		if ( $line =~ s/^[0-9A-F]+: to=.* status=sent\s*// ) {
 			# delivered
 			++$$stats{'postfix:lmtp:sent'};
@@ -642,21 +642,21 @@ sub analyse {
 			++$$stats{'postfix:lmtp:other'};
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
-	} elsif ( $line =~ s/^.+ postfix\/postdrop\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^postdrop\[\d+\]:\s*// ) {
 		# possible things to monitor: TODO
 		# /^warning: uid=\d+: File too large$/
-	} elsif ( $line =~ s/^.+ postfix\/sendmail\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^sendmail\[\d+\]:\s*// ) {
 		# possible things to monitor: TODO
 		# /^fatal: .+\(\d+\): message file too big/
-	} elsif ( $line =~ s/^.+ postfix\/bounce\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^bounce\[\d+\]:\s*// ) {
 		# ignore.... for now anyway
-	} elsif ( $line =~ s/^.+ postfix\/anvil\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^anvil\[\d+\]:\s*// ) {
 		# ignore
-	} elsif ( $line =~ s/^.+ postfix\/qmgr\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^qmgr\[\d+\]:\s*// ) {
 		# ignore
-	} elsif ( $line =~ s/^.+ postfix\/scache\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^scache\[\d+\]:\s*// ) {
 		# ignore
-	} elsif ( $line =~ s/^.+ postfix\/cleanup\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^cleanup\[\d+\]:\s*// ) {
 		if ( $line =~ s/^[0-9A-F]+: milter-reject: END-OF-MESSAGE from [\w\.\-]+\[[\w\.:]+\]: 5\.7\.1 Blocked by SpamAssassin;\s*// ) {
 			# de-queued by cleanup
 			--$$stats{'postfix:smtpd:QUEUED'};
@@ -665,12 +665,12 @@ sub analyse {
 		} else {
 			# ignore
 		}
-	} elsif ( $line =~ s/^.+ postfix\/error\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^error\[\d+\]:\s*// ) {
 		# ignore
-	} elsif ( $line =~ s/^.+ postfix\/(postfix-)?script\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^(postfix-)?script\[\d+\]:\s*// ) {
 		# ignore - the likes of:
 		# postfix/postfix-script[\d+]: starting the Postfix mail system
-	} elsif ( $line =~ s/^.+ postfix\/trivial-rewrite\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^trivial-rewrite\[\d+\]:\s*// ) {
 		if ( $line =~ s/^table hash:.+ has changed -- restarting// ) {
 			# ignore
 		} elsif ( $IGNOREERRORS and
@@ -680,13 +680,13 @@ sub analyse {
 			# useful to know of others
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
-	} elsif ( $line =~ s/^.+ postfix\/master\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^master\[\d+\]:\s*// ) {
 		if ( $line =~ s/^terminating on signal 15$// ) {
 			# ignore stops
 		} elsif ( $line =~ s/^daemon started -- version [0-9\.]+, configuration \/etc\/postfix$// ) {
 			# ignore starts
 		}
-	} elsif ( $line =~ s/^.+ postfix\/policy-spf\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^policy-spf\[\d+\]:\s*// ) {
 		if ( $line =~ s/: SPF None \(No applicable sender policy available\): \s*//i
 			or $line =~ s/^Policy action=PREPEND Received-SPF: none //i
 			or $line =~ s/^Policy action=DUNNO//i ) {	# TODO not sure on this - some stuff that was "none" is now DUNNO, but "none" is still used for others
@@ -730,10 +730,10 @@ sub analyse {
 			++$$stats{'postfix:policy:policy-spf:other'};
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
 		}
-	} elsif ( $line =~ s/^.+ postfix\/postsuper\[\d+\]:\s*// ) {
+	} elsif ( $line =~ s/^postsuper\[\d+\]:\s*// ) {
 		# ignore
 	} elsif ( $IGNOREERRORS and
-		( $line =~ s/postfix\/proxymap\[\d+\]: warning: connect to mysql server .+: Can't connect to MySQL server on '.+' \(111\)$// ) ) {
+		( $line =~ s/proxymap\[\d+\]: warning: connect to mysql server .+: Can't connect to MySQL server on '.+' \(111\)$// ) ) {
 		# ignore error
 	} else {
 		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
