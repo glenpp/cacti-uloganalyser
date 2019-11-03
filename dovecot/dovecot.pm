@@ -257,7 +257,7 @@ sub analyse {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/^(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?(, session=<\w+>)?: // ) {
+	} elsif ( $line =~ s/^(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?(, session=<\w+>)?(<\d+><[\w\+\/]+>)?: // ) {
 		my $protocol = lc $1;
 		# harvest data stats if available
 		if ( $line =~ s/\s* top=\d+\/(\d+), retr=\d+\/(\d+), del=\d+\/\d+, size=\d+$// ) {
@@ -324,7 +324,7 @@ sub analyse {
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/(deliver|lda)\([^\)]+\)(<\d+><[\w\+]+>)?:\s*// ) {
+	} elsif ( $line =~ s/(deliver|lda)\([^\)]+\)(<\d+><[\w\+\/]+>)?:\s*// ) {
 		# also see lmtp below - some versions use that instead
 		if ( $line =~ s/.* saved mail to\s*// ) {
 			$line =~ s/^'(.+)'$/$1/;	# strips quotes seen in some versions/configurations
