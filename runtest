@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # make up dummy logs
-./testdata2tmp >/tmp/testlog
+./testdata2tmp.pl >/tmp/testlog
 touch /tmp/testlog.0
-./testdata2tmp testdoveadm/\* >/tmp/testdoveadm
+./testdata2tmp.pl testdoveadm/\* >/tmp/testdoveadm
 
 # run uloganalyser against them
 rm /tmp/ustat
