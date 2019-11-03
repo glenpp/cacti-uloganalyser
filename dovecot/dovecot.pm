@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20180530;
+our $VERSION = 20191103;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -324,7 +324,7 @@ sub analyse {
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
-	} elsif ( $line =~ s/(deliver|lda)\([^\)]+\):\s*// ) {
+	} elsif ( $line =~ s/(deliver|lda)\([^\)]+\)(<\d+><[\w\+]+>)?:\s*// ) {
 		# also see lmtp below - some versions use that instead
 		if ( $line =~ s/.* saved mail to\s*// ) {
 			$line =~ s/^'(.+)'$/$1/;	# strips quotes seen in some versions/configurations
