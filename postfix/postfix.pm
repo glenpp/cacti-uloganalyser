@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20180605;
+our $VERSION = 20191103;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -444,6 +444,7 @@ sub analyse {
 					or $message =~ s/Requested action not taken: mailbox unavailable//i
 					or $message =~ s/Requested action aborted: try again later//i
 					or $message =~ s/Resources unavailable temporarily//i
+					or $message =~ s/Server not available//i
 					or $message =~ s/Service (not available|Unavailable|is unavailable)//i
 					or $message =~ s/system resources//i
 					or $message =~ s/Temporary (Resources unavailable|failure|lookup failure|service error)//i
@@ -520,10 +521,15 @@ sub analyse {
 #				++$$stats{'postfix:smtp:deferred:brokenserver'};
 			} elsif ( $line =~ s/^Host or domain not found//i
 				or $line =~ s/^Host or domain name not found//i
-				or $message =~ s/^<.+>: Sender address rejected: Domain not found//i	# these are remote so may be treated separately later TODO
+				# these are remote so may be treated separately later TODO
+				or $message =~ s/^<.+>: Sender address rejected: Domain not found//i
+				or $message =~ s/^<.+>: Sender address rejected: unverified address: Host or domain name not found\. Name service error for //i
+				or $message =~ s/^<.+>: Sender address rejected: undeliverable address: Host or domain name not found. Name service error for //i
+				or $message =~ s/^Sender verification failed//
 				or $message =~ s/^<.+>: Recipient address rejected: Domain not found//i
 				or $message =~ s/^:  \(DNS:NR\)  http:\/\/postmaster\.info\.aol\.com\/errors\/421dnsnr.html \(in reply to end of DATA command\)$//
 				or $message =~ s/^Domain of sender address [^\s]+ does not resolve//i
+				or $message =~ s/^Refused\. The domain of your sender address has no mail exchanger//
 				or $message =~ s/^This system is configured to reject mail from .+ ?\[.+\] \(DNS reverse lookup failed\)//i ) {
 				# dns is broken
 				++$$stats{'postfix:smtp:deferred:dnserror'};
@@ -549,7 +555,7 @@ sub analyse {
 				# some other
 				++$$stats{'postfix:smtp:deferred:other'};
 				# don't squark directly about this - add to the lists of new stuff
-#print "*>$smtpcode\n->$message\n";
+#print "*>$smtpcode $esmtpcode\n->$message\n";
 				push @deferreasons, __LINE__.":\"$origline\"\n";
 				push @deferreasons, __LINE__.":\$message: \"$message\"\n";
 			}
@@ -597,7 +603,7 @@ sub analyse {
 			} elsif ( $line =~ s/^\(forwarded as [0-9A-F]+\)// ) {
 				# forwarded on
 				++$$stats{'postfix:local:sent:forwarded'};
-			} elsif ( $line =~ s/^\(delivered via dovecot service\)// ) {
+			} elsif ( $line =~ s/^\(delivered via dovecot service.*\)// ) {	# TODO do better than .*
 				# delivery to dovecot
 				++$$stats{'postfix:local:sent:dovecot'};
 			} elsif ( $line =~ s/^\(delivered via zarafa service\)// ) {
