@@ -253,7 +253,7 @@ sub analyse {
 			or $line =~ s/Warning: Auth process not responding, delayed sending greeting: //
 			) ) {
 			# ignore errors
-		} elsif ( $line =~ s/^Debug: SSL: +// ) {
+		} elsif ( $line =~ s/^Debug: (SSL: |SSL_get_servername\(\) |SSL alert: )// ) {
 			# ignore debug
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
