@@ -257,7 +257,6 @@ sub analyse {
 			# ignore debug
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
-			print "$line\n";
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/^(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?(, session=<\w+>)?(<\d+><[\w\+\/]+>)?: // ) {
