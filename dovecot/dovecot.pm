@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20191103;
+our $VERSION = 20191110;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -253,8 +253,11 @@ sub analyse {
 			or $line =~ s/Warning: Auth process not responding, delayed sending greeting: //
 			) ) {
 			# ignore errors
+		} elsif ( $line =~ s/^Debug: SSL: +// ) {
+			# ignore debug
 		} else {
 			$$stats{"dovecot:$protocol:login:other"} += $multiply;
+			print "$line\n";
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 		}
 	} elsif ( $line =~ s/^(IMAP|POP3|MANAGESIEVE|imap|pop3|managesieve)(\([^\)]+\))?(, session=<\w+>)?(<\d+><[\w\+\/]+>)?: // ) {
