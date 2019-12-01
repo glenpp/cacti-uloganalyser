@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20191110;
+our $VERSION = 20191130;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -212,7 +212,10 @@ sub analyse {
 			} elsif ( $line !~ /^\(/ ) {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
 			}
-			if ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
+			if ( $line =~ s/^\(disconnected before auth was ready, waited \d+ secs\):// ) {
+				# strictly, could be new category, but basically the same as this
+				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
+			} elsif ( $line =~ s/^\(no auth attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:noauthattempt"} += $multiply;
 			} elsif ( $line =~ s/^\(auth failed, \d+ attempts( in \d+ secs)?\):// ) {
 				$$stats{"dovecot:$protocol:login:disconnected:authfailed"} += $multiply;
