@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
 #
 package opendkim;
-our $VERSION = 20160215;
+our $VERSION = 20191208;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -58,6 +58,8 @@ sub analyse {
 		# ignore - inconsequential: just couldn't lookup key
 	} elsif ( $line =~ /^[0-9A-F]+: DKIM verification successful$/ ) {
 		++$$stats{'opendkim:verifysuccess'};
+	} elsif ( $line =~ s/[0-9A-F]+:\skey retrieval failed// ) {
+		++$$stats{'opendkim:keyretrievalfail'};
 	} elsif ( $line =~ s/^[0-9A-F]+: s=[^\s]+ d=[^\s]+ SSL// ) {
 		# ignore
 	} elsif ( $line =~ s/^ignoring header field 'X-CSA-Complaints;Require-Recipient-Valid-Since'// ) {
@@ -90,8 +92,6 @@ sub analyse {
 #++$$stats{'opendkim:badsignature'};
 #} elsif ( $line =~ s/[0-9A-F]+:\sbad signature data// ) {
 #++$$stats{'opendkim:badsignaturedata'};
-#	} elsif ( $line =~ s/[0-9A-F]+:\skey retrieval failed$// ) {
-#		++$$stats{'opendkim:keyretrievalfail'};
 #} elsif ( $line =~ s/[0-9A-F]+\sDKIM verification successful$// ) {
 #++$$stats{'opendkim:verifysuccess'};
 #	} elsif ( $line =~ s/[0-9A-F]+\scan't parse From: header value //
