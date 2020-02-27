@@ -49,6 +49,7 @@ our %CLASSES = (
 	'apache-noscript' => 'www',
 	'apache-overflows' => 'www',
 	'apache-local' => 'www',
+	'named-refused' => 'dns',
 #	'' => '',
 );
 
