@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20191110;
+our $VERSION = 20200301;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -74,31 +74,41 @@ sub analyse {
 			for (keys %$stats) {
 				if ( /^fail2ban:banned:/ ) { $$stats{$_} = 0; }
 			}
-		} elsif ( $line =~ s/^Changed logging target to \/[^\s]+ for Fail2ban\s*//
-				or $line =~ s/^Log rotation detected for \/[^\s]+//
-				or $line =~ s/^Jail '[^']+' (stopped|started)//
-				or $line =~ s/^Creating new jail '[^']+'//
-				or $line =~ s/^Jail '[^']+' uses (poller|Gamin)//
-				or $line =~ s/^Added logfile = \/[^\s]+//
-				or $line =~ s/^Set maxRetry = \d+//
-				or $line =~ s/^Set findtime = \d+//
-				or $line =~ s/^Set banTime = \d+//
-				or $line =~ s/^\[\w+\]\s+[\d\.]+ already banned$//
-				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\d\.]+(\s+-\s+.*)?$//	# detections TODO do we want to graph these even though they don't directly result in a ban
-				or $line =~ s/^rollover performed on \/var\/log\/fail2ban\.log$//
-				or $line =~ s/^Connected to fail2ban persistent database '\/var\/lib\/fail2ban\/fail2ban\.sqlite3'$//
+		} elsif ( 0	# placeholder for neatness
+				# shutdown
+				or $line =~ s/^Shutdown in progress\.\.\.//
+				or $line =~ s/^Removed logfile: '\/[^\s]+//
+				or $line =~ s/^Jail '[^']+' stopped//
+				or $line =~ s/^Connection to database closed\.//
+				or $line =~ s/^----------------------------------------//
+				# startup
+				or $line =~ s/^Starting Fail2ban v//
+				or $line =~ s/^Connected to fail2ban persistent database//
+				# startup jails
+				or $line =~ s/^Creating new jail '[\w\-]+'//
 				or $line =~ s/^Jail '[\w\-]+' uses pyinotify \{\}$//
 				or $line =~ s/^Initiated 'pyinotify' backend$//
-				or $line =~ s/^Set jail log file encoding to UTF-8$//
-				or $line =~ s/^Set maxlines = 10$//
-				or $line =~ s/^Jail \w+ is not a JournalFilter instance$//
+				or $line =~ s/^maxLines: 1//
+				#or $line =~ s/^Jail '[^']+' uses (poller|Gamin)//
+				or $line =~ s/^Jail [\w\-]+ is not a JournalFilter instance$//
+				or $line =~ s/^Added logfile: '\/[^\s]+//
+				or $line =~ s/^encoding: UTF-8$//
+				or $line =~ s/^maxRetry: \d+//
+				or $line =~ s/^findtime: \d+//
+				or $line =~ s/^banTime: \d+//
+				or $line =~ s/^Jail '[\w\-]+' started//
+				# detection
+				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\d\.]+(\s+-\s+.*)?$//	# detections TODO do we want to graph these even though they don't directly result in a ban
+				# log rotation
+				or $line =~ s/^rollover performed on \/var\/log\/fail2ban\.log$//
+				
 		) {
 			# ignore regular operation
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown fail2ban: $origline\n";
 		}
 	} elsif ( $level eq 'WARNING' or $level eq 'NOTICE' ) {
-		if ( $line =~ s/\[([^\]]+)\] Ban [\da-f\.:]+$// ) {
+		if ( $line =~ s/^\[([\w\-]+)\] (Restore )?Ban [\da-f\.:]+$// ) {
 			if ( exists $CLASSES{$1} ) {
 				if ( ! exists $$stats{"fail2ban:banned:$CLASSES{$1}"} ) {
 					$$stats{"fail2ban:banned:$CLASSES{$1}"} = 0;
@@ -127,6 +137,8 @@ sub analyse {
 				if ( $$stats{"fail2ban:banned:other"} < 0 ) { $$stats{"fail2ban:banned:other"} = 0; }
 			}
 		} elsif ( $line =~ s/\[([^\]]+)\] ([\da-f\.:]+) already banned$// ) {
+			# ignore
+		} elsif ( $line =~ s/^\[[\w\-]+\] Flush ticket\(s\) with iptables-multiport// ) {
 			# ignore
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown fail2ban: $origline\n";
