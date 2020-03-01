@@ -138,7 +138,7 @@ sub analyse {
 			}
 		} elsif ( $line =~ s/\[([^\]]+)\] ([\da-f\.:]+) already banned$// ) {
 			# ignore
-		} elsif ( $line =~ s/^\[[\w\-]+\] Flush ticket\(s\) with iptables-multiport// ) {
+		} elsif ( $line =~ s/^\[[\w\-]+\] Flush ticket\(s\) with // ) {
 			# ignore
 		} else {
 			warn __FILE__." $VERSION:".__LINE__." $log:$number unknown fail2ban: $origline\n";
