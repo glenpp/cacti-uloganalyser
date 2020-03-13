@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20200301;
+our $VERSION = 20200313;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -98,7 +98,7 @@ sub analyse {
 				or $line =~ s/^banTime: \d+//
 				or $line =~ s/^Jail '[\w\-]+' started//
 				# detection
-				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\d\.]+(\s+-\s+.*)?$//	# detections TODO do we want to graph these even though they don't directly result in a ban
+				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\da-f\.:]+(\s+-\s+.*)?$//	# detections TODO do we want to graph these even though they don't directly result in a ban
 				# log rotation
 				or $line =~ s/^rollover performed on \/var\/log\/fail2ban\.log$//
 				
