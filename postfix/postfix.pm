@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20191103;
+our $VERSION = 20200512;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -738,6 +738,10 @@ sub analyse {
 		}
 	} elsif ( $line =~ s/^postsuper\[\d+\]:\s*// ) {
 		# ignore
+	} elsif ( $line =~ s/^dnsblog\[\d+\]:\s*// ) {
+		# ignore - details of rbl
+	} elsif ( $line =~ s/^postscreen\[\d+\]:\s*// ) {
+		# ignore - currently not supported by this
 	} elsif ( $IGNOREERRORS and
 		( $line =~ s/proxymap\[\d+\]: warning: connect to mysql server .+: Can't connect to MySQL server on '.+' \(111\)$// ) ) {
 		# ignore error
