@@ -22,10 +22,11 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20200512;
+our $VERSION = 20200517;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
+our $INCLUDETLSPROXY = 0;	# include tlsproxy connections and TLS stats with smtpd
 
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -742,6 +743,72 @@ sub analyse {
 		# ignore - details of rbl
 	} elsif ( $line =~ s/^postscreen\[\d+\]:\s*// ) {
 		# ignore - currently not supported by this
+	} elsif ( $line =~ s/^tlsproxy\[\d+\]:\s*// ) {
+		# treat as smtpd if enabled else ignore as not supported by this
+		if ( $INCLUDETLSPROXY ) {
+			# note - this is largely a repeat of smtpd code above - TODO improve this
+			# TODO for now we'll only include the cases we have examples of
+			#if ( $line =~ s/^setting up TLS connection from\s*// ) {
+			#	# we are at least trying - TODO currently not used
+			#	++$$stats{'postfix:smtpd:TLS'};
+			#} elsif ( $line =~ s/^Trusted TLS connection established from // ) {
+			#	# trusted TLS
+			#	++$$stats{'postfix:smtpd:TLS:Trusted'};
+			#}
+			if ( $line =~ s/^Anonymous TLS connection established from // ) {
+				# anonymous TLS
+				++$$stats{'postfix:smtpd:TLS:Anonymous'};
+			#} elsif ( $line =~ s/^Untrusted TLS connection established from\s*// ) {
+			#	# untrusted TLS #
+			#	++$$stats{'postfix:smtpd:TLS:Untrusted'};
+			#} elsif ( $line =~ s/^certificate verification failed for\s*//
+			#	or $line =~ s/^client certificate verification failed for\s*// ) {
+			#	# certificate verification failed for some reason
+			#	++$$stats{'postfix:smtpd:TLS:certverifyfail'};
+			#	if ( $line =~ s/^.*:\s*self-signed certificate$// ) {
+			#		# they are using self-signed certificates
+			#		++$$stats{'postfix:smtpd:TLS:certverifyfail:selfsigned'};
+			#	} elsif ( $line =~ s/^.*:\s*untrusted issuer.*$// ) {
+			#		# they are using an CA we don't recognise
+			#		++$$stats{'postfix:smtpd:TLS:certverifyfail:untrusted'};
+			#	} elsif ( $line =~ s/^.*:\s*certificate has expired.*$// ) {
+			#		# they are using an expired certificate
+			#		++$$stats{'postfix:smtpd:TLS:certverifyfail:expired'};
+			#	} elsif ( $line =~ s/^.*:\s*not designated for use as a client certificate$// ) {
+			#		# they are using a certificate not meant for this
+			#		++$$stats{'postfix:smtpd:TLS:certverifyfail:notclient'};
+			#	} else {
+			#		# some other unknown reason
+			#		warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			#		++$$stats{'postfix:smtpd:TLS:certverifyfail:other'};
+			#	}
+	#		} elsif ( $line =~ s/^[^\s]+: Untrusted: subject_CN=, issuer=[^,]+, fingerprint=[\dA-F:]+$// ) {
+				# ignore - alredy should be caught before
+			#} elsif ( $line =~ s/^SSL_accept error from // ) {
+			#	# anonymous TLS
+			#	++$$stats{'postfix:smtpd:SSL:error'};
+			#	# TODO expand on this
+			} elsif ( $line =~ s/^CONNECT from // ) {
+				# inbound snmp connection
+				++$$stats{'postfix:smtpd:connect'};
+				# get ipv4/ipv6 stats
+				if ( $line =~ s/^.*\[[\d+.]+\]// ) {
+					++$$stats{'postfix:smtpd:connect:ipv4'};
+				} elsif ( $line =~ s/^.*\[[\da-f:]+(%eth\d)?\]// ) {
+					++$$stats{'postfix:smtpd:connect:ipv6'};
+				} elsif ( $line =~ s/^.*\[unknown\]// ) {
+					# ignore - it was so brief we didn't get the address
+				} else {
+					warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+				}
+			} elsif ( $line =~ s/^DISCONNECT // ) {
+				# ignore
+			} else {
+				# some other type
+				++$$stats{'postfix:smtpd:other'};
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown: $origline\n";
+			}
+		}
 	} elsif ( $IGNOREERRORS and
 		( $line =~ s/proxymap\[\d+\]: warning: connect to mysql server .+: Can't connect to MySQL server on '.+' \(111\)$// ) ) {
 		# ignore error
