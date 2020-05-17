@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
 #
 package opendkim;
-our $VERSION = 20191208;
+our $VERSION = 20200517;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -67,6 +67,8 @@ sub analyse {
 	} elsif ( $line =~ s/[0-9A-F]+:\ss=ED-DKIM-V3 d=.+ SSL error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block type is not 01; error:04067072:rsa routines:RSA_EAY_PUBLIC_DECRYPT:padding check failed// ) {
 		# ignore - associated with "bad signature data" above TODO
 	} elsif ( $line =~ s/^[0-9A-F]+: message has signatures from // ) {
+		# ignore
+	} elsif ( $line =~ s/^[0-9A-F]+: can't parse From: header value // ) {
 		# ignore
 	} elsif ( $line =~ s/OpenDKIM Filter: mi_stop=1//
 			or $line =~ s/OpenDKIM Filter v\d[\.\d]+ terminating with status 0, errno = 0//
