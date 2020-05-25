@@ -22,7 +22,7 @@ use warnings;
 # See: https://silent.pitt-pladdy.com/blog/_20130324-154457_0000_fail2ban_on_Cacti_via_SNMP/
 #
 package fail2ban;
-our $VERSION = 20200313;
+our $VERSION = 20200525;
 our $DEBUG = 0;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
@@ -36,6 +36,7 @@ sub register {
 }
 
 
+# update this to match your fail2ban configuration
 our %CLASSES = (
 	'postfix' => 'mail',
 	'sasl' => 'mail',
@@ -86,8 +87,8 @@ sub analyse {
 				or $line =~ s/^Connected to fail2ban persistent database//
 				# startup jails
 				or $line =~ s/^Creating new jail '[\w\-]+'//
-				or $line =~ s/^Jail '[\w\-]+' uses pyinotify \{\}$//
-				or $line =~ s/^Initiated 'pyinotify' backend$//
+				or $line =~ s/^Jail '[\w\-]+' uses (pyinotify|systemd|poller) \{\}$//
+				or $line =~ s/^Initiated '(pyinotify|systemd|polling)' backend$//
 				or $line =~ s/^maxLines: 1//
 				#or $line =~ s/^Jail '[^']+' uses (poller|Gamin)//
 				or $line =~ s/^Jail [\w\-]+ is not a JournalFilter instance$//
@@ -101,6 +102,8 @@ sub analyse {
 				or $line =~ s/^\[[\w\-]+\]\s+Found\s+[\da-f\.:]+(\s+-\s+.*)?$//	# detections TODO do we want to graph these even though they don't directly result in a ban
 				# log rotation
 				or $line =~ s/^rollover performed on \/var\/log\/fail2ban\.log$//
+				# misc
+				or $line =~ s/^\[[\w\-]+\] Added journal match for: //
 				
 		) {
 			# ignore regular operation
@@ -118,7 +121,7 @@ sub analyse {
 				$$stats{"fail2ban:banned:$CLASSES{$1}"} += $multiply;
 				if ( $DEBUG ) { print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n"; }
 			} else {
-				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\nupdate %CLASSES to match your configuration\n";
 				$$stats{"fail2ban:banned:other"} += $multiply;
 			}
 		} elsif ( $line =~ s/\[([^\]]+)\] Unban ([\da-f\.:]+)$// ) {
@@ -132,7 +135,7 @@ sub analyse {
 				if ( $$stats{"fail2ban:banned:$CLASSES{$1}"} < 0 ) { $$stats{"fail2ban:banned:$CLASSES{$1}"} = 0; }
 				if ( $DEBUG ) { print $$stats{"fail2ban:banned:$CLASSES{$1}"}."\n"; }
 			} else {
-				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\n";
+				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown class \"$1\" fail2ban: $origline\nupdate %CLASSES to match your configuration\n";
 				$$stats{"fail2ban:banned:other"} -= $multiply;
 				if ( $$stats{"fail2ban:banned:other"} < 0 ) { $$stats{"fail2ban:banned:other"} = 0; }
 			}

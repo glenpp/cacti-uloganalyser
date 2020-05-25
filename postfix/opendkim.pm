@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20150213-225132_0000_opendkim_on_Cacti_via_SNMP/
 #
 package opendkim;
-our $VERSION = 20200517;
+our $VERSION = 20200525;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
 #
@@ -69,6 +69,8 @@ sub analyse {
 	} elsif ( $line =~ s/^[0-9A-F]+: message has signatures from // ) {
 		# ignore
 	} elsif ( $line =~ s/^[0-9A-F]+: can't parse From: header value // ) {
+		# ignore
+	} elsif ( $line =~ s/^[0-9A-F]+: can't determine message sender; accepting// ) {
 		# ignore
 	} elsif ( $line =~ s/OpenDKIM Filter: mi_stop=1//
 			or $line =~ s/OpenDKIM Filter v\d[\.\d]+ terminating with status 0, errno = 0//
