@@ -60,7 +60,7 @@ sub analyse {
 		++$$stats{'opendkim:verifysuccess'};
 	} elsif ( $line =~ s/[0-9A-F]+:\skey retrieval failed// ) {
 		++$$stats{'opendkim:keyretrievalfail'};
-	} elsif ( $line =~ s/^[0-9A-F]+: s=[^\s]+ d=[^\s]+ SSL// ) {
+	} elsif ( $line =~ s/^[0-9A-F]+: s=[^\s]+ d=[^\s]+ (a=rsa-sha\d+ )?SSL// ) {
 		# ignore
 	} elsif ( $line =~ s/^ignoring header field 'X-CSA-Complaints;Require-Recipient-Valid-Since'// ) {
 		# ignore
