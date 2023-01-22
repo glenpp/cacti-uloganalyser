@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
 #
 package postfix;
-our $VERSION = 20200517;
+our $VERSION = 20230116;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -233,6 +233,8 @@ sub analyse {
 				++$$stats{'postfix:smtpd:NOQUEUE:toobig'};
 			} elsif ( $line =~ s/^reject: DATA from [\w\.\-]+\[[\w\.:]+\]: 503 5\.5\.0 <DATA>: Data command rejected: Improper use of SMTP command pipelining;// ) {
 				++$$stats{'postfix:smtpd:NOQUEUE:pipelining'};
+			} elsif ( $line =~ s/^milter-reject: RCPT from [\w\.\-]+\[[\w\.:]+\]: 550 5\.7\.1 // ) {
+				++$$stats{'postfix:smtpd:NOQUEUE:milter'};
 			} else {
 				# other
 				++$$stats{'postfix:smtpd:NOQUEUE:other'};
@@ -280,8 +282,9 @@ sub analyse {
 		} elsif ( $line =~ s/^warning:\s*// ) {
 			# warnings
 			++$$stats{'postfix:smtpd:warning'};
-			# TODO expand on this
+			# TODO expand on this TODO
 			# warning: unknown[89.248.172.122]: SASL LOGIN authentication failed: Invalid authentication mechanism
+			# warning: some.dom[1.2.3.4]: SASL PLAIN authentication failed:
 		} elsif ( $line =~ s/^[\w\.\-]+\[[\w\.:]+\]: (Tr|Untr)usted: subject_CN=.+, issuer=.+, fingerprint=.+$// ) {
 			# ignore - alredy should be caught before
 		} elsif ( $line =~ s/^TLSv1 with cipher // ) {
