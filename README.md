@@ -185,9 +185,6 @@ printf "%dn" `grep ^demo:parameter3= $STATSFILE | cut -d '=' -f 2`
 ### Dovecot Templates
 [dovecot/](dovecot/)
 
-### OpenDKIM Templates
-[opendkim/](opendkim/)
-
 ### Fail2ban Templates
 [fail2ban/](fail2ban/)
 
