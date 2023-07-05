@@ -10,7 +10,7 @@ There are already a load of logfile analysers around, but for the purposes of th
 
 We rely on my [Universal Log Analyser](../) to use the plugins provided here. Please refer to that article and get that working first and then continue configuration for this article.
 
-There are 4 plugins in this case: postfix.pm, dkim.pm, clamav.pm and spamd.pm
+There are 4 plugins in this case: postfix.pm, opendkim.pm, clamav.pm and spamd.pm
 
 These are in the tarball (see later). Place the plugins in the plugin directory (default is **/etc/snmp/uloganalyser-plugin/**)
 
