@@ -1,7 +1,7 @@
 # Postfix stats on Cacti (via SNMP)
 
 This makes use of [Universal Log Analyser](../) for processing logs.
- 	
+
 ## Postfix Stats
 
 Postfix produces a minimum of statistics it's self, but as is common in Unix, it does produce comprehensive logs of activity which provides plenty of material for generating statistics from.

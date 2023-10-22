@@ -13,10 +13,6 @@ It's worth checking the stats file to verify that dovecot stats are in fact bein
 
 ## SNMP Scripts
 
-First, ensure that your SNMP is configured and working as described in my 
-
-## SNMP basics article.
-
 These provide the link for snmpd to pick up the stats and assuming they are in /etc/snmp the config from snmpd.conf-dovecot in /etc/snmp/snmpd.conf
 
 Extension scripts for snmpd are named dovecot-stats-* - put them in a suitable place.... like /etc/snmp
