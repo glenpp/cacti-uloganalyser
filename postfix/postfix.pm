@@ -2,7 +2,7 @@ use strict;
 use warnings;
 # process the mail log and place the results in a file
 
-# Copyright (C) 2009-2015  Glen Pitt-Pladdy
+# Copyright (C) 2009-2023  Glen Pitt-Pladdy
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,10 +19,10 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: https://www.pitt-pladdy.com/blog/_20091122-164951_0000_Postfix_stats_on_Cacti_via_SNMP_/
+# See: https://github.com/glenpp/cacti-uloganalyser/tree/master/postfix
 #
 package postfix;
-our $VERSION = 20230116;
+our $VERSION = 20231022;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -581,6 +581,8 @@ sub analyse {
 		} elsif ( $line =~ s/^[0-9A-F]+: enabling PIX .*// ) {
 			# ignore
 		} elsif ( $line =~ s/^[0-9A-F]+: sender non-delivery notification// ) {
+			# ignore
+		} elsif ( $line =~ s/^[0-9A-F]+: breaking line > \d+ bytes with <CR><LF>SPACE// ) {
 			# ignore
 		} else {
 			# some other
