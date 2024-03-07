@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20191130;
+our $VERSION = 20240210;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -201,7 +201,9 @@ sub analyse {
 			if ( $type eq 'disconnected' ) { $type = 'login'; }
 			$$stats{"dovecot:$protocol:login:disconnected"} += $multiply;
 			# some dovecot versions give extra info TODO
-			if ( $line =~ s/^Inactivity during authentication \(/\(/ ) {
+			if ( $line =~ s/^Aborted login by logging out \(/\(/ ) {
+				# TODO not currently used
+			} elsif ( $line =~ s/^Inactivity during authentication \(/\(/ ) {
 				# TODO not currently used
 			} elsif ( $line =~ s/^Inactivity \(/\(/ ) {
 				# TODO not currently used
@@ -278,7 +280,7 @@ sub analyse {
 		if ( $line =~ s/Disconnected[:\s]*// ) {
 			$line =~ s/Disconnected[:\s]*//;	# some versions repeat
 			$$stats{"dovecot:$protocol:disconnect"} += $multiply;
-			if ( $line =~ /^for inactivity/ ) {
+			if ( $line =~ /^for inactivity/ or $line =~ /^Inactivity/ ) {	# +newer version
 				$$stats{"dovecot:$protocol:disconnect:inactivity"} += $multiply;
 			} elsif ( $line =~ /^Logged out/ ) {
 				$$stats{"dovecot:$protocol:disconnect:loggedout"} += $multiply;
@@ -289,6 +291,9 @@ sub analyse {
 				$$stats{"dovecot:$protocol:disconnect:append"} += $multiply;
 			} elsif ( $line =~ /Internal error occurred\. Refer to server log for more information\./ ) {
 				$$stats{"dovecot:$protocol:disconnect:internalerror"} += $multiply;
+			} elsif ( $line =~ /^Connection closed/ ) {
+				$$stats{"dovecot:$protocol:connclosed"} += $multiply;	# TODO dup from below
+				$$stats{"dovecot:$protocol:disconnect:connclosed"} += $multiply;
 			} elsif ( $line eq ''
 				or $line eq 'Disconnected' ) {
 				$$stats{"dovecot:$protocol:disconnect:none"} += $multiply;
