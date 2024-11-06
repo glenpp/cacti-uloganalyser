@@ -21,8 +21,6 @@ use warnings;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 #
-# See: https://www.pitt-pladdy.com/blog/_20110615-093433_0100_Universal_Log_Analyser_and_snmpd_extension_scripts/
-#
 my $VERSION = 20150516;
 #
 # Thanks for ideas, unhandled log lines, patches and feedback to:
