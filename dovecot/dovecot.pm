@@ -22,7 +22,7 @@ use warnings;
 # See: https://www.pitt-pladdy.com/blog/_20110625-123333_0100_Dovecot_stats_on_Cacti_via_SNMP_/
 #
 package dovecot;
-our $VERSION = 20240210;
+our $VERSION = 20241229;
 our $REQULOGANALYSER = 20131006;
 
 our $IGNOREERRORS = 1;
@@ -210,6 +210,8 @@ sub analyse {
 			} elsif ( $line =~ s/^Too many invalid commands // ) {
 				# TODO not currently used
 			} elsif ( $line =~ s/^Connection queue full // ) {
+				# TODO not currently used
+			} elsif ( $line =~ s/^Connection closed: read\(size=\d+\) failed: Connection reset by peer // ) {
 				# TODO not currently used
 			} elsif ( $line !~ /^\(/ ) {
 				warn __FILE__." $VERSION:".__LINE__." $log:$number unknown dovecot: $origline\n";
